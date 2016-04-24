@@ -217,7 +217,8 @@ if (TARGET === 'build') {
                 {
                     test: /\.(css|scss)$/,
                     loader: ExtractTextPlugin.extract('style', 'css!sass')
-                }
+                },
+                { test: /\.png$/, loader: "url-loader?mimetype=image/png" }
             ]
         },
         plugins: [
