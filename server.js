@@ -31,6 +31,12 @@ app.get('/[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}', (req, res) => {
   });
 });
 
+app.get('/status', function (request, response) {
+  response.send({
+    ok: 'true'
+  });
+});
+
 // API
 api.get('/documents/:uuid', (req, res) => {
   const uuid = req.params.uuid;
