@@ -155,7 +155,6 @@ export default class App extends Component {
   render() {
     return (
       <div className="layout">
-        <Header />
         <MessageBoxes
           messages={this.state.messages}
           closeMessageBox={this.removeMessage.bind(this)}
@@ -165,7 +164,6 @@ export default class App extends Component {
           content={this.state.document.get('content')}
           onContentUpdate={this.updateContent.bind(this)}
         />
-        <Footer version={this.props.version} />
       </div>
     );
   }

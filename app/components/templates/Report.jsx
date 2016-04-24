@@ -50,35 +50,35 @@ export default class Report extends BaseTemplate {
       <article style={reportStyle}>
         <header>
           <div style={companyStyle}>
-            <img src={data.company.logo_url} alt={`${data.company.name} logo`} />
+            <img src={data.company.logo_url} alt={`${data.company.name} logo`}/>
           </div>
           <h1>Activity report</h1>
           <table style={metaStyle}>
             <tbody>
-              <tr>
-                <th>Project</th>
-                <td>{data.project}</td>
-              </tr>
-              <tr>
-                <th>Reporter</th>
-                <td>{data.reporter}</td>
-              </tr>
-              <tr>
-                <th>Date</th>
-                <td>{data.date}</td>
-              </tr>
-              <tr>
-                <th>Location</th>
-                <td>{data.location}</td>
-              </tr>
-              <tr>
-                <th>Reference</th>
-                <td>{data.reference}</td>
-              </tr>
-              <tr>
-                <th>Version</th>
-                <td>{data.version}</td>
-              </tr>
+            <tr>
+              <th>Project</th>
+              <td>{data.project}</td>
+            </tr>
+            <tr>
+              <th>Reporter</th>
+              <td>{data.reporter}</td>
+            </tr>
+            <tr>
+              <th>Date</th>
+              <td>{data.date}</td>
+            </tr>
+            <tr>
+              <th>Location</th>
+              <td>{data.location}</td>
+            </tr>
+            <tr>
+              <th>Reference</th>
+              <td>{data.reference}</td>
+            </tr>
+            <tr>
+              <th>Version</th>
+              <td>{data.version}</td>
+            </tr>
             </tbody>
           </table>
         </header>

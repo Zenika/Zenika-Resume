@@ -1,0 +1,258 @@
+.preview {
+  margin: 0;
+  padding: 0;
+}
+
+.preview .rendered {
+  padding: 0;
+  position: relative;
+}
+
+.preview * {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px !important;
+  line-height: 22px;
+  color: #333 !important;
+}
+
+.logo {
+  background-image: url('img/logo-zenika.png');
+  background-size: 169px 38px;
+  width: 169px;
+  height: 38px;
+  margin: 20px 20px -10px;
+}
+
+.header1, .header2, .header3 {
+  width: 100%;
+}
+
+.header1 {
+  background-image: url('img/header1.png');
+  background-size: 100% 26px;
+  height: 26px;
+}
+
+.header2 {
+  background-image: url('img/header2.png');
+  background-size: 100% 45px;
+  height: 45px;
+}
+
+.header3 {
+  background-image: url('img/header3.png');
+  background-size: 100% 21px;
+  height: 21px;
+}
+
+.presentation {
+  color: white;
+  background-image: url('img/red-pixel.png');
+  position: relative;
+  min-height: 60px;
+  line-height: normal;
+}
+
+.presentation .name {
+  position: absolute;
+  top: 10px;
+  left: 20px;
+  font-size: 42px !important;
+  font-weight: bold;
+}
+
+.presentation .role {
+  position: absolute;
+  font-weight: bold;
+  text-align: left;
+  right: 20px;
+  font-size: 20px !important;
+  top: -8px;
+}
+
+.presentation .experience {
+  position: absolute;
+  text-align: left;
+  right: 20px;
+  font-size: 20px !important;
+  top: 16px;
+}
+
+.description {
+  color: white;
+  background-image: url('img/grey-pixel.png');
+  min-height: 78px;
+  overflow: hidden;
+  padding: 0 20px;
+  position: relative;
+  line-height: normal;
+}
+
+.description > ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  float: right;
+  width: 25%;
+  font-size: 16px !important;
+  text-transform: uppercase;
+  text-align: right;
+  display: inline-block;
+}
+
+.description > ul:first-child {
+  width: 50%;
+  font-weight: bold;
+  font-size: 20px !important;
+  text-transform: none;
+  text-align: left;
+
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.description > ul > li > ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 2px 0 0;
+  font-size: 20px !important;
+  text-transform: none;
+}
+
+.expertise {
+  float: left;
+  width: 33%;
+  padding: 20px 60px 20px 20px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.expertise .title, .mission-title .title {
+  font-size: 16px !important;
+  text-transform: uppercase;
+  margin-bottom: 0px;
+  display: inline-block;
+}
+
+.expertise ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.expertise .expertise-icon {
+  margin-top: 14px;
+  display: inline-block;
+}
+
+.mission-title {
+  position: absolute;
+  left: 33%;
+  padding: 20px 20px 0px 0px;
+}
+
+.chunk {
+  padding: 0;
+  margin: 0 0 14px;
+  position: relative;
+}
+
+.chunk h1, .chunk h2 {
+  font-size: 14px !important;
+  font-weight: bold;
+  padding: 0;
+}
+
+.chunk h1 {
+  padding: 55px 0 14px 0;
+}
+
+.chunk h2 {
+  margin: 0 0 14px 0;
+  position: absolute;
+  top: -49px;
+  right: 20px;
+}
+
+.chunk ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.chunk ul li p {
+  padding: 0;
+  margin: 0;
+}
+
+.chunk ul li > ul li::before {
+  content: '\25CF';
+  width: 12px;
+  display: inline-block;
+  font-size: 8px !important;
+  vertical-align: 3px;
+}
+
+.chunk ul li > ul {
+  margin-bottom: 14px;
+}
+
+/*first*/
+.experience {
+  margin-left: 33%;
+  padding: 0 20px 0 0;
+}
+
+/*others*/
+.experience ~ .experience {
+  margin-left: 0;
+  padding: 0 20px;
+}
+
+@media print {
+  .preview .presentation *, .preview .description * {
+    color: white !important;
+    line-height: normal !important;
+  }
+
+  .layout .editor .preview{
+    overflow: auto !important;
+    height: auto !important;
+  }
+
+  .experience {
+    page-break-inside: avoid !important;
+  }
+
+  .chunk-page-break {
+    page-break-before: always !important;
+  }
+}
+
+.preview .presentation *, .preview .description * {
+  color: white !important;
+  line-height: normal !important;
+}
+
+.preview .description ul * {
+  font-size: 20px !important;
+}
+
+.preview .description ul span {
+  font-size: 16px !important;
+}
+
+.experience {
+  page-break-inside: avoid !important;
+}
+
+.chunk-page-break {
+  page-break-before: always !important;
+}
+
+.presentation .experience {
+  padding: 0;
+  margin: 0;
+}

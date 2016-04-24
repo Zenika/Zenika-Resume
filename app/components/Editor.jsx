@@ -18,7 +18,7 @@ export default class Editor extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      template: '',
+      template: 'resume',
       pos: 0,
       mode: EditorModes.PREVIEW
     };
@@ -79,9 +79,6 @@ export default class Editor extends Component {
         loaded={this.props.loaded}
         loadedClassName={`editor ${this.state.mode}`}
       >
-        <TemplateForm
-          doUpdateTemplate={this.updateTemplate.bind(this)}
-        />
         <Markdown
           raw={this.props.content}
           onChange={this.props.onContentUpdate}

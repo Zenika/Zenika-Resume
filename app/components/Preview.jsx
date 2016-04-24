@@ -43,7 +43,7 @@ class PreviewChunk extends Component {
 
   render() {
     return (
-      <div className="chunk">
+      <div className='chunk'>
         <span dangerouslySetInnerHTML={this.getHTML()} />
       </div>
     );
@@ -168,6 +168,13 @@ export default class Preview extends Component {
     return chunks;
   }
 
+  hasRule(chunk, rule){
+    if(chunk.filter(token => token.content.indexOf(rule) != -1).length > 0){
+      return true;
+    }
+    return false;
+  }
+
   render() {
     let content = [(
       <div className="preview-loader" key="preview-loader">
@@ -188,17 +195,52 @@ export default class Preview extends Component {
       // Get chunks to render from tokens
       const chunks = this.getChunks(this.matter.content, markdownItEnv);
 
-      content = chunks.map((chunk, key) => {
-        return (
+      content = [];
+      let experiences = undefined;
+
+      for(var i = 0; i < chunks.length ; i++){
+        var chunk = chunks[i];
+
+        if(this.hasRule(chunk, '--break-page')){
+          content.push (
+            <div className='chunk-page-break'>&nbsp;</div>
+          );
+          continue;
+        }
+
+        if(this.hasRule(chunk, '--experience-start')){
+          experiences = [];
+          continue;
+        }
+
+        if(this.hasRule(chunk, '--experience-end')){
+          content.push(
+            (
+              <div className="experience">
+                {experiences}
+              </div>
+            )
+          );
+          experiences = undefined;
+          continue;
+        }
+
+        let preview = (
           <PreviewChunk
-            key={`ck-${key.toString()}`}
+            key={`ck-${i.toString()}`}
             markdownIt={this.markdownIt}
             emojione={this.emojione}
             chunk={chunk}
             markdownItEnv={markdownItEnv}
           />
         );
-      }, this);
+
+        if(experiences){
+          experiences.push(preview);
+        }else{
+          content.push(preview);
+        }
+      }
     }
 
     // Compile selected template with given data

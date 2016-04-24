@@ -190,7 +190,8 @@ if (TARGET === 'dev' || !TARGET) {
                 {
                     test: /\.css$/,
                     loaders: ['style', 'css']
-                }
+                },
+                { test: /\.png$/, loader: "url-loader?mimetype=image/png" }
             ]
         },
         plugins: [

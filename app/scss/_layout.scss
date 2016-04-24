@@ -25,7 +25,7 @@ $vertical-handler-width: 40px;
 @function editor-height($breakpoint){
     $header-footer-height: header-height($breakpoint) + footer-height($breakpoint);
 
-    @return calc(100vh - #{$header-footer-height});
+    @return calc(100vh);
 };
 
 /* -- styles -- */

@@ -1,0 +1,473 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800,300,300italic,400italic,600italic,700italic,800italic'
+          rel='stylesheet' type='text/css'>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Open Sans', sans-serif;
+            color: #333;
+            font-size: 14px;
+            line-height: 22px;
+        }
+
+        .logo {
+            background-image: url('img/logo-zenika.png');
+            background-size: 169px 38px;
+            width: 169px;
+            height: 38px;
+            margin: 20px 20px -10px;
+        }
+
+        .header1, .header2, .header3 {
+            width: 100%;
+        }
+
+        .header1 {
+            background-image: url('img/header1.png');
+            background-size: 100% 26px;
+            height: 26px;
+        }
+
+        .header2 {
+            background-image: url('img/header2.png');
+            background-size: 100% 45px;
+            height: 45px;
+        }
+
+        .header3 {
+            background-image: url('img/header3.png');
+            background-size: 100% 21px;
+            height: 21px;
+        }
+
+        .presentation {
+            color: white;
+            background-image: url('img/red-pixel.png');
+            position: relative;
+            min-height: 60px;
+            line-height: normal;
+        }
+
+        .presentation .name {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            font-size: 42px;
+            font-weight: bold;
+        }
+
+        .presentation .role {
+            position: absolute;
+            font-weight: bold;
+            text-align: left;
+            right: 20px;
+            font-size: 20px;
+            top: -8px;
+        }
+
+        .presentation .experience {
+            position: absolute;
+            text-align: left;
+            right: 20px;
+            font-size: 20px;
+            top: 16px;
+        }
+
+        .description {
+            color: white;
+            background-image: url('img/grey-pixel.png');
+            min-height: 78px;
+            overflow: hidden;
+            padding: 0 20px;
+            position: relative;
+            line-height: normal;
+        }
+
+        .description > ul {
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+            float: right;
+            width: 25%;
+            font-size: 16px;
+            text-transform: uppercase;
+            text-align: right;
+            display: inline-block;
+        }
+
+        .description > ul:first-child {
+            width: 50%;
+            font-weight: bold;
+            font-size: 20px;
+            text-transform: none;
+            text-align: left;
+
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .description > ul > li > ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 2px 0 0;
+            font-size: 20px;
+            text-transform: none;
+        }
+
+        .expertise {
+            float: left;
+            width: 33%;
+            padding: 20px 60px 20px 20px;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        .expertise .title, .mission-title .title {
+            font-size: 16px;
+            text-transform: uppercase;
+            margin-bottom: 0px;
+            display: inline-block;
+        }
+
+        .expertise ul {
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+        }
+
+        .expertise .expertise-icon {
+            margin-top: 14px;
+            display: inline-block;
+        }
+
+        .mission-title {
+            position: absolute;
+            left: 33%;
+            padding: 20px 20px 0px 0px;
+        }
+
+        .chunk {
+            padding: 0;
+            margin: 0 0 14px;
+            position: relative;
+        }
+
+        .chunk h1, .chunk h2 {
+            font-size: 14px;
+            padding: 0;
+        }
+
+        .chunk h1 {
+            padding: 55px 0 14px 0;
+        }
+
+        .chunk h2 {
+            margin: 0 0 14px 0;
+            position: absolute;
+            top: -33px;
+            right: 20px;
+        }
+
+        .chunk ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .chunk ul li > ul li::before {
+            content: '\25CF';
+            width: 12px;
+            display: inline-block;
+            font-size: 8px;
+            vertical-align: 3px;
+        }
+
+        .chunk ul li > ul {
+            margin-bottom: 14px;
+        }
+
+        /*first*/
+        .experience {
+            margin-left: 33%;
+            padding: 0 20px 0 0;
+        }
+
+        /*others*/
+        .experience ~ .experience {
+            margin-left: 0;
+            padding: 0 20px;
+        }
+
+        @media print {
+            .experience {
+                page-break-inside: avoid;
+            }
+
+            .chunk-break-page {
+                page-break-before: always;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="logo"></div>
+<div class="header1"></div>
+<div class="presentation">
+    <span class="name">Rory Williams</span>
+    <span class="role">assistant du docteur</span>
+    <span class="experience">2 ans d'expérience</span>
+</div>
+<div class="header2"></div>
+<div class="description">
+    <ul>
+        <li>Consultant</li>
+        <li>Développeur Java</li>
+        <li>Agile</li>
+    </ul>
+    <ul>
+        <li>
+            Formateur
+            <ul>
+                <li>Angular JS</li>
+                <li>Angular 2</li>
+                <li>Ecplise RCP</li>
+            </ul>
+        </li>
+    </ul>
+    <ul>
+        <li>
+            Conférencier
+            <ul>
+                <li>Devoxx</li>
+                <li>Mix IT</li>
+            </ul>
+        </li>
+    </ul>
+</div>
+<div class="header3"></div>
+<div class="expertise">
+    <span class="title">Expertise</span>
+    <ul>
+        <li><span class="expertise-icon">✈</span></li>
+        <li>JAVA / JEE</li>
+        <li>EJB 3.2, Servlet, JSP, JAXB, JPA, JMS, JDBC</li>
+        <li><span class="expertise-icon">✈</span></li>
+        <li>Spring (Core, Batch, Boot), CDI, XML, XSL, XSD, JUnit, Jenkins, Jrules, Hibernate, Struts, Velocity</li>
+        <li><span class="expertise-icon">✈</span></li>
+        <li>Weblogic 9/11/12, Tomcat 7, Glassfish</li>
+        <li><span class="expertise-icon">✈</span></li>
+        <li>Oracle 10g, MySQL</li>
+        <li><span class="expertise-icon">✈</span></li>
+        <li>Subversion, GIT, Intellij, STS</li>
+        <li><span class="expertise-icon">✈</span></li>
+        <li>Scrum</li>
+    </ul>
+</div>
+
+<div class="mission-title">
+    <span class="title">Dernière mission</span>
+</div>
+
+<div class="experience">
+    <div class="chunk">
+        <h1>
+            Consultant JAVA EE
+        </h1>
+    </div>
+    <div class="chunk">
+        <h2>
+            Depuis Février 2014
+        </h2>
+    </div>
+
+    <div class="chunk">
+        BNP Paribas CIB- Equipe Feeds&Recs
+    </div>
+
+    <div class="chunk">
+        <ul>
+            <li>Projet Feeds, application gérant</li>
+            <li>
+                <ul>
+                    <li>Les Alimentations inter-applicatives Middle Office/Back Office</li>
+                    <li>Les descentes des flux financiers du Front vers le Back (Murex/ Ubix / Calypso…)</li>
+                    <li>Les Réconciliations Clearers/Front Office et Middle Office/Back Office : Paramétrage/ Reporting
+                        des
+                        réconciliations via Intellimatch (SUNGARD) et Business Object
+                    </li>
+                    <li>(Équipe de 7 personnes)</li>
+                </ul>
+            </li>
+            <li>
+                Mission et tâches principales :
+            </li>
+            <li>
+                <ul>
+                    <li>La maintenance et l’amélioration des EAI/ESB qui régissent les flux de données afin d’intégrer
+                        un
+                        ensemble
+                        d’applications hétérogènes
+                    </li>
+                    <li>Amélioration des outils de test existants</li>
+                    <li>Proposer, concevoir et développer de nouveaux outils de tests</li>
+                    <li>Conception et développement des outils de reportings</li>
+                    <li>Analyse, conception et réalisation d’un PoC pour un nouvel EAI</li>
+                </ul>
+            </li>
+            <li>
+                Environnement technique : JAVA 8/6, JEE, Spring 3/4 (Core, Boot, Batch), Maven (2/3), Jrules,Tibco BW
+                (5.7),
+                JUnit,
+                Weblogic 9/11/12, XML, XSD, oracle 10g, CDI, Lombok, GIT, SVN, Jenkins,EJB 3.2
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="chunk chunk-break-page">
+    <span data-reactid=".0.2.3.0.$ck-9.0">&nbsp;</span>
+</div>
+
+<div class="experience">
+    <div class="chunk">
+        <h1>
+            Consultant JAVA EE
+        </h1>
+    </div>
+    <div class="chunk">
+        <h2>
+            Depuis Février 2014
+        </h2>
+    </div>
+
+    <div class="chunk">
+        BNP Paribas CIB- Equipe Feeds&Recs
+    </div>
+
+    <div class="chunk">
+        <ul>
+            <li>Projet Feeds, application gérant</li>
+            <li>
+                <ul>
+                    <li>Les Alimentations inter-applicatives Middle Office/Back Office</li>
+                    <li>Les descentes des flux financiers du Front vers le Back (Murex/ Ubix / Calypso…)</li>
+                    <li>Les Réconciliations Clearers/Front Office et Middle Office/Back Office : Paramétrage/ Reporting
+                        des
+                        réconciliations via Intellimatch (SUNGARD) et Business Object
+                    </li>
+                    <li>(Équipe de 7 personnes)</li>
+                </ul>
+            </li>
+            <li>
+                Mission et tâches principales :
+            </li>
+            <li>
+                <ul>
+                    <li>La maintenance et l’amélioration des EAI/ESB qui régissent les flux de données afin d’intégrer
+                        un
+                        ensemble
+                        d’applications hétérogènes
+                    </li>
+                    <li>Amélioration des outils de test existants</li>
+                    <li>Proposer, concevoir et développer de nouveaux outils de tests</li>
+                    <li>Conception et développement des outils de reportings</li>
+                    <li>Analyse, conception et réalisation d’un PoC pour un nouvel EAI</li>
+                </ul>
+            </li>
+            <li>
+                Environnement technique : JAVA 8/6, JEE, Spring 3/4 (Core, Boot, Batch), Maven (2/3), Jrules,Tibco BW
+                (5.7),
+                JUnit,
+                Weblogic 9/11/12, XML, XSD, oracle 10g, CDI, Lombok, GIT, SVN, Jenkins,EJB 3.2
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="experience">
+    <div class="chunk">
+        <h1>
+            Consultant JAVA EE
+        </h1>
+    </div>
+    <div class="chunk">
+        <h2>
+            Depuis Février 2014
+        </h2>
+    </div>
+
+    <div class="chunk">
+        BNP Paribas CIB- Equipe Feeds&Recs
+    </div>
+
+    <div class="chunk">
+        <ul>
+            <li>Projet Feeds, application gérant</li>
+            <li>
+                <ul>
+                    <li>Les Alimentations inter-applicatives Middle Office/Back Office</li>
+                    <li>Les descentes des flux financiers du Front vers le Back (Murex/ Ubix / Calypso…)</li>
+                    <li>Les Réconciliations Clearers/Front Office et Middle Office/Back Office : Paramétrage/ Reporting
+                        des
+                        réconciliations via Intellimatch (SUNGARD) et Business Object
+                    </li>
+                    <li>(Équipe de 7 personnes)</li>
+                </ul>
+            </li>
+            <li>
+                Environnement technique : JAVA 8/6, JEE, Spring 3/4 (Core, Boot, Batch), Maven (2/3), Jrules,Tibco BW
+                (5.7),
+                JUnit,
+                Weblogic 9/11/12, XML, XSD, oracle 10g, CDI, Lombok, GIT, SVN, Jenkins,EJB 3.2
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="experience">
+    <div class="chunk">
+        <h1>
+            Consultant JAVA EE
+        </h1>
+    </div>
+    <div class="chunk">
+        <h2>
+            Depuis Février 2014
+        </h2>
+    </div>
+
+    <div class="chunk">
+        BNP Paribas CIB- Equipe Feeds&Recs
+    </div>
+
+    <div class="chunk">
+        <ul>
+            <li>Projet Feeds, application gérant</li>
+            <li>
+                <ul>
+                    <li>Les Alimentations inter-applicatives Middle Office/Back Office</li>
+                    <li>Les descentes des flux financiers du Front vers le Back (Murex/ Ubix / Calypso…)</li>
+                    <li>Les Réconciliations Clearers/Front Office et Middle Office/Back Office : Paramétrage/ Reporting
+                        des
+                        réconciliations via Intellimatch (SUNGARD) et Business Object
+                    </li>
+                    <li>(Équipe de 7 personnes)</li>
+                </ul>
+            </li>
+            <li>
+                Environnement technique : JAVA 8/6, JEE, Spring 3/4 (Core, Boot, Batch), Maven (2/3), Jrules,Tibco BW
+                (5.7),
+                JUnit,
+                Weblogic 9/11/12, XML, XSD, oracle 10g, CDI, Lombok, GIT, SVN, Jenkins,EJB 3.2
+            </li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>
