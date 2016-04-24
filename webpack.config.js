@@ -61,14 +61,6 @@ const common = {
         // see: https://github.com/isagalaev/highlight.js/issues/895 and
         // https://github.com/webpack/webpack/issues/1721
         noParse: [ /autoit\.js$/ ],
-        // Loaders that run *before* others loaders
-        preLoaders: [
-            {
-                test: /\.jsx?$/,
-                loaders: ['eslint'],
-                include: PATHS.app
-            }
-        ],
         // Loaders are transformations that are applied on a resource file of
         // an application
         loaders: [
