@@ -22,7 +22,7 @@ other2:
 expertises:
   1: --expertise-archive
   2: JAVA / JEE, EJB 3.2, Servlet
-  3: --expertise-archive
+  3: --expertise-leaf
   4: Spring (Core, Batch, Boot), CDI, XML, XSL, XSD, JUnit, Jenkins, Jrules, Hibernate, Struts, Velocity
 ---
     
