@@ -20,7 +20,7 @@ export default class Footer extends Component {
     return (
       <footer className="main">
         <div className="credits">
-          Build by&nbsp;
+          Zenika Resume - Beta - Build by&nbsp;
           <a href="http://zenika.com/">Zenika</a>&nbsp;
           Powered by&nbsp;
           <a href="https://github.com/TailorDev/monod">Monod</a>&nbsp;
