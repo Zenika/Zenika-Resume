@@ -1,6 +1,6 @@
 /* eslint max-len: 0 */
 export const Config = {
-  APP_NAME: 'monod',
+  APP_NAME: 'Zenika Resume',
   DEFAULT_CONTENT: [
 `---
 name: Rory Williams

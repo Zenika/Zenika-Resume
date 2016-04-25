@@ -1,6 +1,6 @@
 {
-  "name": "monod",
-  "description": "TailorDev Cool, Secure, and Offline-First Markdown Editor.",
+  "name": "Zenika Resume",
+  "description": "Zenika resume with markdown editor.",
   "website": "https://github.com/TailorDev/monod",
   "repository": "https://github.com/TailorDev/monod",
   "env": {
