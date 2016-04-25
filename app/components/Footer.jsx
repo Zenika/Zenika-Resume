@@ -1,27 +1,38 @@
-import React, { PropTypes } from 'react';
-import Sync from './Sync';
+import React, {PropTypes, Component} from 'react';
 
-const { string } = PropTypes;
+const {string} = PropTypes;
 
+export default class Footer extends Component {
+  showHelp(){
+    let modal = document.getElementById('help-modal');
+    if(!modal){
+      return;
+    }
 
-const Footer = (props) =>
-  <footer className="main">
-    <div className="version">
-      <span className="git-ref">
-        <i className="fa fa-code-fork"></i>&nbsp;{props.version}
-      </span>
-    </div>
+    if(modal.style.display == 'block'){
+      modal.style.display = 'none';
+    }else{
+      modal.style.display = 'block';
+    }
+  }
 
-    <Sync />
-
-    <div className="credits">
-      By the good folks at <a href="https://tailordev.fr" title="Read more about us" target="_blank">TailorDev</a>, 2016.
-    </div>
-  </footer>
-;
+  render() {
+    return (
+      <footer className="main">
+        <div className="credits">
+          Build by&nbsp;
+          <a href="http://zenika.com/">Zenika</a>&nbsp;
+          Powered by&nbsp;
+          <a href="https://github.com/TailorDev/monod">Monod</a>&nbsp;
+          from the good folks at <a href="https://tailordev.fr" title="Read more about us" target="_blank">TailorDev</a>,
+          2016.
+        </div>
+        <a className="btn" onClick={this.showHelp}><i className="fa fa-question-circle-o" aria-hidden="true"></i> de l'aide</a>
+      </footer>
+    );
+  }
+}
 
 Footer.propTypes = {
   version: string.isRequired
 };
-
-export default Footer;

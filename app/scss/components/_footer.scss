@@ -4,13 +4,32 @@
 
 footer.main {
     padding: 0.5rem 1rem;
-    background-color: $td-blue;
-    color: $white;
+    background-color: #acafaa;
+    color: white;
     font-family: $footer-font-family;
     font-size: $footer-font-size;
 
     .credits {
         float: left;
+    }
+
+    a, a:hover{
+        color: white;
+        text-decoration: underline;
+    }
+
+    a:hover{
+        text-decoration: none;
+    }
+
+    a.btn{
+        float: right;
+        background-color: white;
+        color: #acafaa;
+        padding: 3px;
+        text-decoration: none;
+        border-radius: 7px;
+        line-height: 12px;
     }
 
     .version {

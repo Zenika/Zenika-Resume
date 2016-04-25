@@ -11,6 +11,7 @@
 @include foundation-table;
 @include foundation-callout;
 @include foundation-close-button;
+@include foundation-reveal;
 
 /* -- FontAwesome -- */
 $fa-font-path: '~font-awesome/fonts';
@@ -36,3 +37,21 @@ $fa-font-path: '~font-awesome/fonts';
 
 // Misc
 @import 'print';
+
+
+.reveal{
+  padding-left: 25%;
+  padding-right: 25%;
+  top: 0;
+  bottom: 35px;
+  left: 0;
+  right: 0;
+  border: 0;
+  border-radius: 0;
+  position: absolute;
+  max-width: 100%;
+  width: 100%;
+  .lead {
+    font-weight: bold;
+  }
+}

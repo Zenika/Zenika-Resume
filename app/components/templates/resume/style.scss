@@ -143,7 +143,7 @@
 }
 
 .expertise .expertise-icon {
-  margin-top: 14px;
+  margin-top: 70px;
   display: inline-block;
 }
 
@@ -254,5 +254,46 @@
 
 .presentation .experience {
   padding: 0;
+
   margin: 0;
+}
+
+.expertise-icon{
+  zoom : 0.25;
+  &.archive{
+    background-image: url('img/icons/expertise-archive.png');
+    background-size: 75px 70px;
+    width: 75px;
+    height: 70px;
+  }
+  &.cloud{
+    background-image: url('img/icons/expertise-cloud.png');
+    background-size: 90px 57px;
+    width: 90px;
+    height: 57px;
+  }
+  &.file{
+    background-image: url('img/icons/expertise-file.png');
+    background-size: 60px 69px;
+    width: 60px;
+    height: 69px;
+  }
+  &.flag{
+    background-image: url('img/icons/expertise-flag.png');
+    background-size: 71px 77px;
+    width: 71px;
+    height: 77px;
+  }
+  &.leaf{
+    background-image: url('img/icons/expertise-leaf.png');
+    background-size: 69px 74px;
+    width: 69px;
+    height: 74px;
+  }
+  &.talk{
+    background-image: url('img/icons/expertise-talk.png');
+    background-size: 81px 75px;
+    width: 81px;
+    height: 75px;
+  }
 }

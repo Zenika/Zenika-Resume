@@ -23,9 +23,10 @@ $vertical-handler-width: 40px;
 };
 
 @function editor-height($breakpoint){
-    $header-footer-height: header-height($breakpoint) + footer-height($breakpoint);
+    /*$header-footer-height: header-height($breakpoint) + footer-height($breakpoint);*/
+    $header-footer-height: footer-height($breakpoint);
 
-    @return calc(100vh);
+    @return calc(100vh - #{$header-footer-height});
 };
 
 /* -- styles -- */

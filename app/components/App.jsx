@@ -152,9 +152,87 @@ export default class App extends Component {
     });
   }
 
+  hideHelp(){
+    let modal = document.getElementById('help-modal');
+
+    if(modal.style.display == 'block'){
+      modal.style.display = 'none';
+    }else{
+      modal.style.display = 'block';
+    }
+  }
+
   render() {
     return (
       <div className="layout">
+        <div className="reveal" id="help-modal" data-reveal>
+          <h1>Ouf je suis sauvé!</h1>
+          <p className="lead">Impression en pdf</p>
+          <p>
+            L'application a été testé avec Chrome. Il est possible de demander dans <br/>
+            le navigateur l'impression de la page de maniere classique ou dans un PDF.<br/>
+            <br/>
+            Pour que s'affiche correctement, il faut s'assurer de certains paramètres dans<br/>
+            le panneau d'impression. Déplier les options en cliquant sur 'Plus de paramètres'<br/>
+            puis dans la section Options, Graphiques d'arrière-plan doit être coché.<br/>
+            Pour un meilleur effet, jouez avec les marges (Aucun, par exemple).
+          </p>
+          <p className="lead">Décrire une expérience</p>
+          <p>
+            Les experiences doivent être délimitées par des marquers pour définir<br/>
+            les styles qui doivent être appliqués :<br/>
+            --experience-start<br/>
+            --experience-end<br/>
+            <br/>
+            Entre ces deux marquers, le premier élément doit être un titre :<br/>
+            # Votre role pour la mission<br/>
+            <br/>
+            Le deuxiement élément doit être un titre de second niveau :<br/>
+            ## Le nom du client<br/>
+            <br/>
+            Pour créer une section avec un descriptif puis des points, il faut avoir<br/>
+            deux niveaux de liste<br/>
+            * La description de votre paragraphe<br/>
+              * Un détail<br/>
+              * puis un autre<br/><br/>
+          </p>
+
+          <p className="lead">Déclaration des variables</p>
+          <p>
+            Au début du document, se situe une section entre '---'. Dans cette<br/>
+            section il doit être définit un certain nombre de variables (nom prénom,<br/>
+            role, expérience, ...). Les variables manquantes seront alors affiché dans<br/>
+            le template avec [nomdevariable].<br/>
+            Pour les listes il est possible d'ajouter autant d'élément que souhaité, il<br/>
+            suffit d'incrémenter le nombre.<br/><br/>
+          </p>
+
+          <p className="lead">Utilisation des images pour les expertises</p>
+          <p>
+            Il existe un nombre limité d'icon pour illustrer les expertises. Pour les<br/>
+            utiliser, il faut fans la liste d'expertise utiliser un marquer de la forme :<br/>
+            --expertise-archive.<br/>
+            <br/>
+            Voici l'ensemble des marquers disponibles:<br/>
+            --expertise-archive<br/>
+            --expertise-cloud<br/>
+            --expertise-file<br/>
+            --expertise-flag<br/>
+            --expertise-leaf<br/>
+            --expertise-talk<br/><br/>
+          </p>
+
+          <p className="lead">Sauter à la page suivante</p>
+          <p>
+            Le marquer permet de sauter une page, c'est surtout utile pour définir<br/>
+            ce qui doit être affiché sur la premiere page :<br/>
+            --break-page<br/>
+          </p>
+
+          <button className="close-button" data-close aria-label="Close modal" type="button" onClick={this.hideHelp}>
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
         <MessageBoxes
           messages={this.state.messages}
           closeMessageBox={this.removeMessage.bind(this)}
@@ -164,6 +242,7 @@ export default class App extends Component {
           content={this.state.document.get('content')}
           onContentUpdate={this.updateContent.bind(this)}
         />
+        <Footer version={this.props.version} />
       </div>
     );
   }

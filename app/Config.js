@@ -2,27 +2,77 @@
 export const Config = {
   APP_NAME: 'monod',
   DEFAULT_CONTENT: [
-    '---',
-    'hello: world! # YAML Front Matter (for templates)',
-    '---',
-    '',
-    'Introducing Monod',
-    '=================',
-    '',
-    '> **TL;DR** Monod is an [Open Source](https://github.com/TailorDev/monod) React-based Markdown editor. You can use it anytime (offline mode), share documents with anyone (encrypted), and render your content with a set of templates. This editor is brought to you by the good folks at [TailorDev](https://twitter.com/_TailorDev), as part of [a **Le lab** experiment (#2)](https://tailordev.fr/blog/2016/04/15/le-lab-2-offline-first-document-sharing-templates-monod-is-back/).',
-    '',
-    '### :fa-info-circle: Quick start',
-    '',
-    '* :pencil: As soon as you modify this document, you get a new unique document. That is yours, so feel free to write anything you want. We support [CommonMark](http://commonmark.org/), and you can write `code`, FontAwesome icons :fa-flag:, and, obviously, Emoji too! :clap:;',
-    '* :family: Let your friends review your content by **sharing** the **full URL** with them;',
-    '* :page_facing_up: You can export your document as **PDF** using the in-browser print feature (`Cmd + P` or `Ctrl + P` on Windows);',
-    '* :airplane: Monod is Offline-First, meaning you can use it all the time. When you go back online, it automatically synchronizes your work;',
-    '* :lock: Everything is **encrypted in the browser** (_i.e._ on your laptop), the server does not have access or any way to decrypt your documents;',
-    '* :warning: There is no document management system: be sure to bookmark or write the full URLs of your documents somewhere.',
-    '',
-    'Read more about how and why we built Monod at: https://tailordev.fr/blog/.',
-    '',
-    '---',
-    '*[Let us know your thoughts](mailto:hello@tailordev.fr?subject=About%20Monod). We would :heart: to hear from you!*'
+`---
+name: Rory Williams
+role: assistant du docteur
+experience: 2 ans d'expérience
+roles:
+  1: Consultant
+  2: Développeur Java
+  3: Scrum Master
+other1:
+  title: Conférencier
+  1: Devoxx
+  2: Mix IT
+other2:
+  title: Formateur
+  1: Angular JS
+  2: Angular 2
+  3: Ecplise RCP
+expertises:
+  1: --expertise-archive
+  2: JAVA / JEE, EJB 3.2, Servlet
+  3: --expertise-archive
+  4: Spring (Core, Batch, Boot), CDI, XML, XSL, XSD, JUnit, Jenkins, Jrules, Hibernate, Struts, Velocity
+---
+    
+--experience-start
+
+# Consultant
+
+## BNP Paribas CIB- Equipe Feeds&Recs
+
+* Projet Feeds, application gérant
+  * Les Alimentations inter-applicatives Middle Office/Back Office
+  * Les descentes des flux financiers du Front vers le Back (Murex/ Ubix / Calypso…)
+  * Les Réconciliations Clearers/Front Office et Middle Office/Back Office : Paramétrage/ Reporting des réconciliations via Intellimatch (SUNGARD) et Business Object
+  * (Équipe de 7 personnes)
+
+* Mission et tâches principales :
+  * La maintenance et l’amélioration des EAI/ESB qui régissent les flux de données afin d’intégrer un ensemble d’applications hétérogènes
+  * Amélioration des outils de test existants
+  * Proposer, concevoir et développer de nouveaux outils de tests
+  * Conception et développement des outils de reportings
+  * Analyse, conception et réalisation d’un PoC pour un nouvel EAI
+  
+* **Environnement technique : JAVA 8/6, JEE, Spring 3/4 (Core, Boot, Batch), Maven (2/3), Jrules,Tibco BW (5.7), JUnit, Weblogic 9/11/12, XML, XSD, oracle 10g, CDI, Lombok, GIT, SVN, Jenkins,EJB 3.2**
+
+--experience-end
+
+--break-page
+
+--experience-start
+
+# Consultant
+
+## BNP Paribas CIB- Equipe Feeds&Recs
+
+* Projet Feeds, application gérant
+  * Les Alimentations inter-applicatives Middle Office/Back Office
+  * Les descentes des flux financiers du Front vers le Back (Murex/ Ubix / Calypso…)
+  * Les Réconciliations Clearers/Front Office et Middle Office/Back Office : Paramétrage/ Reporting des réconciliations via Intellimatch (SUNGARD) et Business Object
+  * (Équipe de 7 personnes)
+
+* Mission et tâches principales :
+  * La maintenance et l’amélioration des EAI/ESB qui régissent les flux de données afin d’intégrer un ensemble d’applications hétérogènes
+  * Amélioration des outils de test existants
+  * Proposer, concevoir et développer de nouveaux outils de tests
+  * Conception et développement des outils de reportings
+  * Analyse, conception et réalisation d’un PoC pour un nouvel EAI
+  
+* **Environnement technique : JAVA 8/6, JEE, Spring 3/4 (Core, Boot, Batch), Maven (2/3), Jrules,Tibco BW (5.7), JUnit, Weblogic 9/11/12, XML, XSD, oracle 10g, CDI, Lombok, GIT, SVN, Jenkins,EJB 3.2**
+
+--experience-end
+`
   ].join('\n')
 };
