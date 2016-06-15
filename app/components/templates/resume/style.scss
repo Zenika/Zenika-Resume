@@ -154,7 +154,7 @@
 }
 
 .chunk {
-  padding: 0;
+  padding: 0 20px;
   margin: 0 0 14px;
   position: relative;
 }
@@ -208,7 +208,7 @@
 /*others*/
 .experience ~ .experience {
   margin-left: 0;
-  padding: 0 20px;
+  padding: 0;
 }
 
 @media print {
