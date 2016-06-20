@@ -20,17 +20,17 @@ const PATHS  = {
     build: path.join(__dirname, 'build')
 };
 
-const VERSION = () => {
-  var v;
+const VERSION = function(){
+    var v;
 
-  try {
-    v = process.env.SOURCE_VERSION || process.env.SHA || childProcess.execSync('git rev-parse HEAD').toString();
-  } catch (e) {
-    // occurs with Heroku deploy button for instance
-    v = 'unknown';
-  }
+    try {
+        v = process.env.SOURCE_VERSION || process.env.SHA || childProcess.execSync('git rev-parse HEAD').toString();
+    } catch (e) {
+        // occurs with Heroku deploy button for instance
+        v = 'unknown';
+    }
 
-  return v;
+    return v;
 }();
 
 // Used to configure Babel (see: `.babelrc` file)
