@@ -10,7 +10,7 @@
 
 .preview * {
   font-family: 'Open Sans', sans-serif;
-  font-size: 14px !important;
+  font-size: 14px;
   line-height: 22px;
   color: #333 !important;
 }
@@ -88,36 +88,36 @@
   line-height: normal;
 }
 
-.description > ul {
+.description .center {
+  text-align: center !important;
+}
+
+.preview .description .table {
   margin: 0;
   padding: 0;
   list-style-type: none;
-  float: right;
-  width: 25%;
-  font-size: 16px !important;
-  text-transform: uppercase;
-  text-align: right;
-  display: inline-block;
+  
+  font-size: 20px !important;
+  
 }
 
-.description > ul:first-child {
-  width: 50%;
+/*.description > table ul:first-child {
   font-weight: bold;
   font-size: 20px !important;
   text-transform: none;
   text-align: left;
-
-  position: absolute;
   top: 50%;
   transform: translateY(-50%);
+}*/
+
+.premiereColonne{
+  width: 39%;
+  display: inline-block;
 }
 
-.description > ul > li > ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 2px 0 0;
-  font-size: 20px !important;
-  text-transform: none;
+.colonne {
+  width: 29%;
+  display: inline-block;
 }
 
 .expertise {
@@ -234,14 +234,6 @@
 .preview .presentation *, .preview .description * {
   color: white !important;
   line-height: normal !important;
-}
-
-.preview .description ul * {
-  font-size: 20px !important;
-}
-
-.preview .description ul span {
-  font-size: 16px !important;
 }
 
 .experience {

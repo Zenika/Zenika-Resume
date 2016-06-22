@@ -12,37 +12,46 @@ expertises:
   4: Spring (Core, Batch, Boot), CDI, XML, XSL, XSD, JUnit, Jenkins, Jrules, Hibernate, Struts, Velocity
 ---
 
---header-start
+--header-start 
+
 --center-start
+
 Architecte – UX Designer – ScrumMaster - Développeur Front Senior
+
 --center-end
 
 --table-start
 
 --column-start
-    portfolio : [ggaulard.github.io](ggaulard.github.io)
-    exemple de code : [codepen.io/ggaulard](codepen.io/ggaulard)
-    email : guillaume.gaulard@zenika.com
+
+* portfolio : [ggaulard.github.io](ggaulard.github.io)
+* exemple de code : [codepen.io/ggaulard](codepen.io/ggaulard)
+* email : guillaume.gaulard@zenika.com
+
 --column-end
 
 --column-start
 
-  #**FORMATEUR**
-    * Angular JS
-    * Angular 2
-    * Ecplise RCP
+# **FORMATEUR**
+  * Angular JS
+  * Angular 2
+  * Ecplise RCP 
+
 --column-end
 
 --column-start
-  #**CONFERENCIER**
-    * Devoxx
-    * Mix IT
+
+# **CONFERENCIER**
+  * Devoxx
+  * Mix IT 
+
 --column-end
 
 --table-end
 
 --header-end
     
+
 --experience-start
 
 # Consultant
