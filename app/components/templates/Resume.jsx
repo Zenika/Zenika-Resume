@@ -38,7 +38,7 @@ export default class Resume extends BaseTemplate {
       data = this.transformToIconIfRequired(data);
       array.push(data);
       return true;
-    } 
+    }
     return false;
   }
 
@@ -85,7 +85,7 @@ export default class Resume extends BaseTemplate {
         </li>
         <li>
           {list}
-        </li> 
+        </li>
       </ul>
     );
   }
@@ -112,10 +112,7 @@ export default class Resume extends BaseTemplate {
           <span className="title">Expertise</span>
           {expertises}
         </div>
-        <div className="mission-title">
-            <span className="title">{data.titre}</span>
-        </div>
-          {this.props.contentExperience}
+        {this.props.contentExperience}
       </div>
     );
   }
