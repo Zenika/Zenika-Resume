@@ -201,6 +201,7 @@
        contentExp = [];
        contentDescr = [];
        let contentAll = [];
+       let isFirstPage = true;
 
        for(var i = 0; i < chunks.length ; i++){
          var chunk = chunks[i];
@@ -302,9 +303,13 @@
 
              chunk = chunks[++i];
             }
+            let className = "experience";
+            if(isFirstPage){
+              className += " first-page";
+            }
             contentExp.push(
              (
-               <div className="experience">
+               <div className={className}>
                  {experiences}
                </div>
              )
@@ -313,6 +318,7 @@
           }
 
           if(this.hasRule(chunk, '--break-page')){
+           isFirstPage = false;
            contentExp.push (
              <div className='chunk-page-break'>&nbsp;</div>
            );

@@ -236,14 +236,13 @@
 
 /*first*/
 .experience {
-  margin-left: 34%;
   margin-bottom: 40px;
-}
-
-/*others*/
-.experience ~ .experience {
   margin-left: 0;
   padding: 0;
+}
+
+.experience.first-page {
+  margin-left: 34%;
 }
 
 @media print {
