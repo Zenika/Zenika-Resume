@@ -71,14 +71,13 @@ export default class PreviewFlag {
             </div>
           )
         );
-
+        chunk = chunks[++i];
       }
-      chunk = chunks[++i];
+
       description = [];
       var classColonne = "premiereColonne";
       if (this.hasRule(chunk, '--table-start')) {
         chunk = chunks[++i];
-
         while (chunk && !this.hasRule(chunk, '--table-end')) {
           let columns = [];
           if (this.hasRule(chunk, '--column-start')) {
@@ -110,6 +109,7 @@ export default class PreviewFlag {
           )
         );
       }
+      chunk = chunks[++i];
     }
 
     return i;
