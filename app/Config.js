@@ -32,7 +32,7 @@ expertises:
 
 --column-start
 
-# **FORMATEUR**
+# **Formateur**
   * Angular JS
   * Angular 2
   * Ecplise RCP
@@ -41,7 +41,7 @@ expertises:
 
 --column-start
 
-# **CONFERENCIER**
+# **Conférencier**
   * Devoxx
   * Mix IT
 

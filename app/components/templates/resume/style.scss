@@ -95,8 +95,9 @@
     padding: 0;
     margin: 0;
 
-    h1 {
+    h1, ul {
        font-size: 20px !important;
+       text-transform: initial !important;
     }
 
     h1, p {
@@ -121,12 +122,16 @@
     h1, h2, h3 {
       padding: 0;
       margin: 0;
+      text-transform: initial !important;
     }
   }
 
   .center {
     p, h1, h2, h3 {
       text-align: center !important;
+      width: 100%;
+      font-weight: bold;
+      text-transform: initial !important;
     }
   }
 
@@ -136,15 +141,6 @@
     list-style-type: none;
   }
 }
-
-/*.description > table ul:first-child {
-  font-weight: bold;
-  font-size: 20px !important;
-  text-transform: none;
-  text-align: left;
-  top: 50%;
-  transform: translateY(-50%);
-}*/
 
 .expertise {
   float: left;
@@ -159,6 +155,7 @@
   font-size: 16px !important;
   text-transform: uppercase;
   margin-bottom: 0px;
+  font-weight: bold;
   display: inline-block;
 }
 
@@ -170,6 +167,7 @@
   margin: 0;
   padding: 0;
   list-style-type: none;
+  color: #959694 !important;
 }
 
 .expertise .expertise-icon {
@@ -197,6 +195,7 @@
 
 .experience .chunk h1 {
   padding: 0px 0 14px 0;
+  text-transform: none;
 }
 
 .experience .chunk h3 {
