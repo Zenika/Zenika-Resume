@@ -18,7 +18,7 @@ titre: Audit
 
 --center-start
 
-Architecte – UX Designer – ScrumMaster - Développeur Front Senior
+# Architecte – UX Designer – ScrumMaster - Développeur Front Senior
 
 --center-end
 
@@ -26,8 +26,8 @@ Architecte – UX Designer – ScrumMaster - Développeur Front Senior
 
 --column-start
 
-* portfolio : [ggaulard.github.io](ggaulard.github.io)
-* exemple de code : [codepen.io/ggaulard](codepen.io/ggaulard)
+* portfolio : ggaulard.github.io
+* exemple de code : codepen.io/ggaulard
 * email : guillaume.gaulard@zenika.com
 
 --column-end

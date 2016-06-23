@@ -71,7 +71,7 @@
      this.props.previewLoader().then((deps) => {
        this.markdownIt = deps.markdownIt('commonmark', {
          html: false,
-         linkify: true,
+         linkify: false,
          typographer: true,
          highlight: (str, lang) => {
            if (lang && deps.hljs.getLanguage(lang)) {
