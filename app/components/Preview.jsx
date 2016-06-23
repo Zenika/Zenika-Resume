@@ -208,11 +208,11 @@
           description = [];
           if(this.hasRule(chunk, '--header-start')){
             chunk = chunks[++i];
-            while(!this.hasRule(chunk, '--header-end')){
+            while(chunk && !this.hasRule(chunk, '--header-end')){
 
               if(this.hasRule(chunk, '--center-start')){
                 chunk = chunks[++i];
-                while(!this.hasRule(chunk, '--center-end')){
+                while(chunk && !this.hasRule(chunk, '--center-end')){
                   let preview = (
                    <PreviewChunk
                     key={`ck-${i.toString()}`}
@@ -240,11 +240,11 @@
               if(this.hasRule(chunk, '--table-start')){
                 chunk = chunks[++i];
 
-                while(!this.hasRule(chunk, '--table-end')){
+                while(chunk && !this.hasRule(chunk, '--table-end')){
                    let columns = [];
                    if(this.hasRule(chunk, '--column-start')){
                       chunk = chunks[++i];
-                      while(!this.hasRule(chunk, '--column-end')){
+                      while(chunk && !this.hasRule(chunk, '--column-end')){
                         let preview = (
                          <PreviewChunk
                           key={`ck-${i.toString()}`}
@@ -282,13 +282,13 @@
 
 
             }
-
+            continue;
           }
 
           experiences = [];
           if(this.hasRule(chunk, '--section-start')){
             chunk = chunks[++i];
-            while(!this.hasRule(chunk, '--section-end')){
+            while(chunk && !this.hasRule(chunk, '--section-end')){
              let preview = (
               <PreviewChunk
                key={`ck-${i.toString()}`}
@@ -309,13 +309,26 @@
                </div>
              )
            );
+           continue;
           }
 
           if(this.hasRule(chunk, '--break-page')){
            contentExp.push (
              <div className='chunk-page-break'>&nbsp;</div>
            );
+           continue;
           }
+
+          let preview = (
+           <PreviewChunk
+            key={`ck-${i.toString()}`}
+            markdownIt={this.markdownIt}
+            emojione={this.emojione}
+            chunk={chunk}
+            markdownItEnv={markdownItEnv}
+           />
+          );
+          contentExp.push(preview);
 
          }
 
