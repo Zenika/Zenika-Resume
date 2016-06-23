@@ -13,23 +13,6 @@ export default class Resume extends BaseTemplate {
     return {
       name: '[name]',
       experience: '[experience]',
-      roles: {
-        1: '[roles/1]',
-        2: '[roles/2]',
-        3: '[roles/3]'
-      },
-      other1: {
-        title: '[other1/title]',
-        1: '[other1/1]',
-        2: '[other1/2]',
-        3: '[other1/3]'
-      },
-      other2: {
-        title: '[other2/title]',
-        1: '[other2/1]',
-        2: '[other2/2]',
-        3: '[other2/3]'
-      },
       expertises: {
         1: '[expertises/1]',
         2: '[expertises/2]',
@@ -54,7 +37,7 @@ export default class Resume extends BaseTemplate {
       data = this.transformToIconIfRequired(data);
       array.push(data);
       return true;
-    }
+    } 
     return false;
   }
 
@@ -101,19 +84,13 @@ export default class Resume extends BaseTemplate {
         </li>
         <li>
           {list}
-        </li>
+        </li> 
       </ul>
     );
   }
 
   render() {
     const data = this.getData();
-
-    const description = [
-      this.createList(data, 'roles'),
-      this.createTitledList(data, 'other1'),
-      this.createTitledList(data, 'other2')
-    ].filter(item => !!item);
 
     const expertises = this.createList(data, 'expertises');
 
@@ -127,7 +104,7 @@ export default class Resume extends BaseTemplate {
         </div>
         <div className="header2"></div>
         <div className="description">
-          {description}
+          {this.props.contentDescription}
         </div>
         <div className="header3"></div>
         <div className="expertise">
@@ -136,8 +113,7 @@ export default class Resume extends BaseTemplate {
         </div>
         <div className="mission-title">
         </div>
-
-        {this.props.content}
+          {this.props.contentExperience}
       </div>
     );
   }

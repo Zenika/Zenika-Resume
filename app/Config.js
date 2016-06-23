@@ -5,25 +5,52 @@ export const Config = {
 `---
 name: Rory Williams
 experience: 2 ans d'expérience
-roles:
-  1: Consultant
-  2: Développeur Java
-  3: Scrum Master
-other1:
-  title: Conférencier
-  1: Devoxx
-  2: Mix IT
-other2:
-  title: Formateur
-  1: Angular JS
-  2: Angular 2
-  3: Ecplise RCP
 expertises:
   1: --expertise-archive
   2: "JAVA / JEE, EJB 3.2, Servlet"
   3: --expertise-leaf
   4: "Spring (Core, Batch, Boot), CDI, XML, XSL, XSD, JUnit, Jenkins, Jrules, Hibernate, Struts, Velocity"
 ---
+
+--header-start
+
+--center-start
+
+Architecte – UX Designer – ScrumMaster - Développeur Front Senior
+
+--center-end
+
+--table-start
+
+--column-start
+
+* portfolio : [ggaulard.github.io](ggaulard.github.io)
+* exemple de code : [codepen.io/ggaulard](codepen.io/ggaulard)
+* email : guillaume.gaulard@zenika.com
+
+--column-end
+
+--column-start
+
+# **FORMATEUR**
+  * Angular JS
+  * Angular 2
+  * Ecplise RCP
+
+--column-end
+
+--column-start
+
+# **CONFERENCIER**
+  * Devoxx
+  * Mix IT
+
+--column-end
+
+--table-end
+
+--header-end
+
 
 # Audit
 
