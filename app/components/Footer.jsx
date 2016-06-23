@@ -10,9 +10,14 @@ export default class Footer extends Component {
     }
 
     if(modal.style.display == 'block'){
+      history.back();
       modal.style.display = 'none';
     }else{
+      history.pushState(null, 'zenika-resume aide', window.location.href+"?help");
       modal.style.display = 'block';
+      window.onhashchange = function() {
+        modal.style.display = 'none';
+      }
     }
   }
 

@@ -156,9 +156,8 @@ export default class App extends Component {
     let modal = document.getElementById('help-modal');
 
     if(modal.style.display == 'block'){
+      history.back();
       modal.style.display = 'none';
-    }else{
-      modal.style.display = 'block';
     }
   }
 

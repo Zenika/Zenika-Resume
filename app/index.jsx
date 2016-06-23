@@ -18,4 +18,9 @@ const store = new Store('documents', events, apiEndpoint, localforage);
 const controller = new Controller({ store }, events);
 
 require('offline-plugin/runtime').install();
+
+if((window.location.href + '').indexOf('?help') != -1){
+  history.replaceState(null, 'zenika-resume', (window.location.href + '').split('?help')[0]);
+}
+
 ReactDOM.render(<App version={appVersion} controller={controller} />, appElement);

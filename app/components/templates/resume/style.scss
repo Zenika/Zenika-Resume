@@ -97,8 +97,8 @@
     margin: 0;
 
     h1, ul {
-       font-size: 20px !important;
-       text-transform: initial !important;
+      font-size: 20px !important;
+      text-transform: initial !important;
     }
 
     h1, p {
@@ -332,4 +332,8 @@
 
 .content {
   padding: 0 20px;
+}
+
+.close-button {
+  position: fixed;
 }
