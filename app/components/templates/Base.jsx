@@ -37,6 +37,5 @@ export default class Base extends Component {
 }
 
 Base.propTypes = {
-  content: array.isRequired,
   data: object.isRequired
 };

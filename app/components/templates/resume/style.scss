@@ -246,6 +246,8 @@
 }
 
 @media print {
+  html { overflow: hidden; }
+
   .preview .presentation *, .preview .description * {
     color: white !important;
     line-height: normal !important;
