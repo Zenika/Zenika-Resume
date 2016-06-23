@@ -181,8 +181,8 @@ export default class App extends Component {
           <p>
             Les experiences doivent être délimitées par des marquers pour définir<br/>
             les styles qui doivent être appliqués :<br/>
-            --experience-start<br/>
-            --experience-end<br/>
+            --section-start<br/>
+            --section-end<br/>
             <br/>
             Entre ces deux marquers, le premier élément doit être un titre :<br/>
             # Votre role pour la mission<br/>
@@ -190,11 +190,15 @@ export default class App extends Component {
             Le deuxiement élément doit être un titre de second niveau :<br/>
             ## Le nom du client<br/>
             <br/>
+            Le troisième élément doit être une date: <br/>
+            ## Les dates de la mission <br/>
+            <br/>
             Pour créer une section avec un descriptif puis des points, il faut avoir<br/>
             deux niveaux de liste<br/>
             * La description de votre paragraphe<br/>
-              * Un détail<br/>
-              * puis un autre<br/><br/>
+            &nbsp; &nbsp; * Un détail<br/>
+            &nbsp; &nbsp; * puis un autre<br/>
+            <br/>
           </p>
 
           <p className="lead">Déclaration des variables</p>
@@ -227,6 +231,12 @@ export default class App extends Component {
             Le marquer permet de sauter une page, c'est surtout utile pour définir<br/>
             ce qui doit être affiché sur la premiere page :<br/>
             --break-page<br/>
+          </p>
+
+          <p className="lead">Astuce pour les expertises</p>
+          <p>
+            Afin de rajouter les expertises, il faut les mettre entre " ". <br/>
+            Exemple: "Spring (Core, Batch), Java" <br/>
           </p>
 
           <button className="close-button" data-close aria-label="Close modal" type="button" onClick={this.hideHelp}>
