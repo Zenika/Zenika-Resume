@@ -24,9 +24,9 @@ expertises:
 
 --column-start
 
-* portfolio : ggaulard.github.io
-* exemple de code : codepen.io/ggaulard
-* email : guillaume.gaulard@zenika.com
+* Portfolio : ggaulard.github.io
+* Exemples de code : codepen.io/ggaulard
+* E-mail : guillaume.gaulard@zenika.com
 
 --column-end
 
@@ -51,7 +51,7 @@ expertises:
 
 --header-end
 
-# Audit
+# Dernière expérience
 
 --section-start
 

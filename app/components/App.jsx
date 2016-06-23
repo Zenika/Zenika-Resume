@@ -214,7 +214,7 @@ export default class App extends Component {
           <p className="lead">Utilisation des images pour les expertises</p>
           <p>
             Il existe un nombre limité d'icon pour illustrer les expertises. Pour les<br/>
-            utiliser, il faut fans la liste d'expertise utiliser un marquer de la forme :<br/>
+            utiliser, il faut dans la liste d'expertise utiliser un marquer de la forme :<br/>
             --expertise-archive.<br/>
             <br/>
             Voici l'ensemble des marquers disponibles:<br/>
