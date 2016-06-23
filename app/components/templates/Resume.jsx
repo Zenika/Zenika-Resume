@@ -23,8 +23,8 @@ export default class Resume extends BaseTemplate {
     };
   }
 
-  transformToIconIfRequired(data){
-    if(data.indexOf('--expertise-') == 0){
+  transformToIconIfRequired(data) {
+    if (data.indexOf('--expertise-') == 0) {
       const className = 'expertise-icon ' + data.split('--expertise-')[1];
       return (
         <span className={className}></span>
@@ -112,7 +112,9 @@ export default class Resume extends BaseTemplate {
           <span className="title">Expertise</span>
           {expertises}
         </div>
-        {this.props.contentExperience}
+        <div>
+          {this.props.contentExperience}
+        </div>
       </div>
     );
   }
