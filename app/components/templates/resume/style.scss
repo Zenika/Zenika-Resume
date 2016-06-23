@@ -88,24 +88,24 @@
   line-height: normal;
 
   & * {
-     font-size: 16px !important;
+    font-size: 16px !important;
   }
- 
+
   .chunk {
     padding: 0;
     margin: 0;
 
     h1 {
-       font-size: 20px !important;
+      font-size: 20px !important;
     }
 
     h1, p {
-       padding: 20px 0 0px;
-       margin: 0;
+      padding: 20px 0 0px;
+      margin: 0;
     }
   }
 
-  .premiereColonne{
+  .premiereColonne {
     width: 49%;
   }
 
@@ -148,21 +148,21 @@
 
 .expertise {
   float: left;
-  width: 33%;
+  width: 35%;
   padding: 20px 60px 20px 20px;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 
-.expertise .title, .mission-title .title, .chunk h1  {
+.expertise .title, .mission-title .title, .chunk h1 {
   font-size: 16px !important;
   text-transform: uppercase;
   margin-bottom: 0px;
   display: inline-block;
 }
 
-.chunk h1  {
+.chunk h1 {
   margin: 20px 0 0 0;
 }
 
@@ -236,8 +236,7 @@
 
 /*first*/
 .experience {
-  margin-left: 33%;
-  padding: 0 20px 0 0;
+  margin-left: 34%;
 }
 
 /*others*/
@@ -252,7 +251,7 @@
     line-height: normal !important;
   }
 
-  .layout .editor .preview{
+  .layout .editor .preview {
     overflow: auto !important;
     height: auto !important;
   }
@@ -285,42 +284,46 @@
   margin: 0;
 }
 
-.expertise-icon{
-  zoom : 0.25;
-  &.archive{
+.expertise-icon {
+  zoom: 0.25;
+  &.archive {
     background-image: url('img/icons/expertise-archive.png');
     background-size: 75px 70px;
     width: 75px;
     height: 70px;
   }
-  &.cloud{
+  &.cloud {
     background-image: url('img/icons/expertise-cloud.png');
     background-size: 90px 57px;
     width: 90px;
     height: 57px;
   }
-  &.file{
+  &.file {
     background-image: url('img/icons/expertise-file.png');
     background-size: 60px 69px;
     width: 60px;
     height: 69px;
   }
-  &.flag{
+  &.flag {
     background-image: url('img/icons/expertise-flag.png');
     background-size: 71px 77px;
     width: 71px;
     height: 77px;
   }
-  &.leaf{
+  &.leaf {
     background-image: url('img/icons/expertise-leaf.png');
     background-size: 69px 74px;
     width: 69px;
     height: 74px;
   }
-  &.talk{
+  &.talk {
     background-image: url('img/icons/expertise-talk.png');
     background-size: 81px 75px;
     width: 81px;
     height: 75px;
   }
+}
+
+.content {
+  padding: 0 20px;
 }

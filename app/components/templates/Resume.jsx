@@ -112,7 +112,7 @@ export default class Resume extends BaseTemplate {
           <span className="title">Expertise</span>
           {expertises}
         </div>
-        <div>
+        <div className="content">
           {this.props.contentExperience}
         </div>
       </div>
