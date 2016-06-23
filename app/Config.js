@@ -51,7 +51,6 @@ Architecte – UX Designer – ScrumMaster - Développeur Front Senior
 
 --header-end
 
-
 # Audit
 
 --section-start
@@ -125,18 +124,17 @@ Architecte – UX Designer – ScrumMaster - Développeur Front Senior
 
 --section-end
 
-# Loisir
 
+# Loisirs
 *
   * Musique
   * Photographie
 
-# Langue
-
+# Langues
 *
   * Français
   * Anglais
-
+  
 `
   ].join('\n')
 };

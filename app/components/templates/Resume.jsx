@@ -13,6 +13,7 @@ export default class Resume extends BaseTemplate {
     return {
       name: '[name]',
       experience: '[experience]',
+      titre: '[titre]',
       expertises: {
         1: '[expertises/1]',
         2: '[expertises/2]',
@@ -37,7 +38,7 @@ export default class Resume extends BaseTemplate {
       data = this.transformToIconIfRequired(data);
       array.push(data);
       return true;
-    } 
+    }
     return false;
   }
 
@@ -84,7 +85,7 @@ export default class Resume extends BaseTemplate {
         </li>
         <li>
           {list}
-        </li> 
+        </li>
       </ul>
     );
   }
@@ -111,9 +112,7 @@ export default class Resume extends BaseTemplate {
           <span className="title">Expertise</span>
           {expertises}
         </div>
-        <div className="mission-title">
-        </div>
-          {this.props.contentExperience}
+        {this.props.contentExperience}
       </div>
     );
   }
