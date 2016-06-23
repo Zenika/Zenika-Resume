@@ -4,7 +4,6 @@ export const Config = {
   DEFAULT_CONTENT: [
 `---
 name: Rory Williams
-role: assistant du docteur
 experience: 2 ans d'expérience
 roles:
   1: Consultant
@@ -21,12 +20,14 @@ other2:
   3: Ecplise RCP
 expertises:
   1: --expertise-archive
-  2: JAVA / JEE, EJB 3.2, Servlet
+  2: "JAVA / JEE, EJB 3.2, Servlet"
   3: --expertise-leaf
-  4: Spring (Core, Batch, Boot), CDI, XML, XSL, XSD, JUnit, Jenkins, Jrules, Hibernate, Struts, Velocity
+  4: "Spring (Core, Batch, Boot), CDI, XML, XSL, XSD, JUnit, Jenkins, Jrules, Hibernate, Struts, Velocity"
 ---
-    
---experience-start
+
+# Audit
+
+--section-start
 
 # Consultant
 
@@ -44,14 +45,14 @@ expertises:
   * Proposer, concevoir et développer de nouveaux outils de tests
   * Conception et développement des outils de reportings
   * Analyse, conception et réalisation d’un PoC pour un nouvel EAI
-  
+
 * **Environnement technique : JAVA 8/6, JEE, Spring 3/4 (Core, Boot, Batch), Maven (2/3), Jrules,Tibco BW (5.7), JUnit, Weblogic 9/11/12, XML, XSD, oracle 10g, CDI, Lombok, GIT, SVN, Jenkins,EJB 3.2**
 
---experience-end
+--section-end
 
 --break-page
 
---experience-start
+--section-start
 
 # Consultant
 
@@ -69,10 +70,23 @@ expertises:
   * Proposer, concevoir et développer de nouveaux outils de tests
   * Conception et développement des outils de reportings
   * Analyse, conception et réalisation d’un PoC pour un nouvel EAI
-  
+
 * **Environnement technique : JAVA 8/6, JEE, Spring 3/4 (Core, Boot, Batch), Maven (2/3), Jrules,Tibco BW (5.7), JUnit, Weblogic 9/11/12, XML, XSD, oracle 10g, CDI, Lombok, GIT, SVN, Jenkins,EJB 3.2**
 
---experience-end
+--section-end
+
+# Loisir
+
+*
+  * Musique
+  * Photographie
+
+# Langue
+
+*
+  * Français
+  * Anglais
+
 `
   ].join('\n')
 };

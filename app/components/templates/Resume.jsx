@@ -12,7 +12,6 @@ export default class Resume extends BaseTemplate {
   getDefaultData() {
     return {
       name: '[name]',
-      role: '[role]',
       experience: '[experience]',
       roles: {
         1: '[roles/1]',
@@ -124,7 +123,6 @@ export default class Resume extends BaseTemplate {
         <div className="header1"></div>
         <div className="presentation">
           <span className="name">{data.name}</span>
-          <span className="role">{data.role}</span>
           <span className="experience">{data.experience}</span>
         </div>
         <div className="header2"></div>
@@ -137,7 +135,6 @@ export default class Resume extends BaseTemplate {
           {expertises}
         </div>
         <div className="mission-title">
-          <span className="title">Dernière mission</span>
         </div>
 
         {this.props.content}

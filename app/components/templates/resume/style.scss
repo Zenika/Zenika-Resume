@@ -159,7 +159,7 @@
   position: relative;
 }
 
-.chunk h1, .chunk h2 {
+.chunk h1, .chunk h2, .chunk h3 {
   font-size: 14px !important;
   font-weight: bold;
   padding: 0;
@@ -167,6 +167,11 @@
 
 .chunk h1 {
   padding: 55px 0 14px 0;
+}
+
+.chunk h3 {
+  padding: 0 0 14px 0;
+  margin-top: -24px;
 }
 
 .chunk h2 {

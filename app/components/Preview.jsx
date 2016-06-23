@@ -201,6 +201,8 @@ export default class Preview extends Component {
       for(var i = 0; i < chunks.length ; i++){
         var chunk = chunks[i];
 
+        console.log('chunk', i, chunk)
+
         if(this.hasRule(chunk, '--break-page')){
           content.push (
             <div className='chunk-page-break'>&nbsp;</div>
@@ -208,12 +210,12 @@ export default class Preview extends Component {
           continue;
         }
 
-        if(this.hasRule(chunk, '--experience-start')){
+        if(this.hasRule(chunk, '--section-start')){
           experiences = [];
           continue;
         }
 
-        if(this.hasRule(chunk, '--experience-end')){
+        if(this.hasRule(chunk, '--section-end')){
           content.push(
             (
               <div className="experience">
