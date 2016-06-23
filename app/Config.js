@@ -10,6 +10,8 @@ expertises:
   2: "JAVA / JEE, EJB 3.2, Servlet"
   3: --expertise-leaf
   4: "Spring (Core, Batch, Boot), CDI, XML, XSL, XSD, JUnit, Jenkins, Jrules, Hibernate, Struts, Velocity"
+
+titre: Audit
 ---
 
 --header-start
@@ -50,9 +52,6 @@ Architecte – UX Designer – ScrumMaster - Développeur Front Senior
 --table-end
 
 --header-end
-
-
-# Audit
 
 --section-start
 
@@ -102,18 +101,23 @@ Architecte – UX Designer – ScrumMaster - Développeur Front Senior
 
 --section-end
 
-# Loisir
+--section-start
 
+# Loisirs
 *
   * Musique
   * Photographie
 
-# Langue
+--section-end
 
+--section-start
+
+# Langues
 *
   * Français
   * Anglais
 
+--section-end
 `
   ].join('\n')
 };

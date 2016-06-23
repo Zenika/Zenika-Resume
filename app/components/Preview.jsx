@@ -282,7 +282,7 @@
 
 
             }
-
+            continue;
           }
 
           experiences = [];
@@ -309,13 +309,28 @@
                </div>
              )
            );
+            continue;
           }
 
           if(this.hasRule(chunk, '--break-page')){
            contentExp.push (
              <div className='chunk-page-break'>&nbsp;</div>
            );
+           continue;
           }
+
+          let preview = (
+               <PreviewChunk
+                key={`ck-${i.toString()}`}
+                markdownIt={this.markdownIt}
+                emojione={this.emojione}
+                chunk={chunk}
+                markdownItEnv={markdownItEnv}
+               />
+               );
+          contentExp.push(
+            <div>{preview}</div>
+           );
 
          }
 

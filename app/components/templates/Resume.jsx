@@ -13,6 +13,7 @@ export default class Resume extends BaseTemplate {
     return {
       name: '[name]',
       experience: '[experience]',
+      titre: '[titre]',
       expertises: {
         1: '[expertises/1]',
         2: '[expertises/2]',
@@ -112,6 +113,7 @@ export default class Resume extends BaseTemplate {
           {expertises}
         </div>
         <div className="mission-title">
+            <span className="title">{data.titre}</span>
         </div>
           {this.props.contentExperience}
       </div>
