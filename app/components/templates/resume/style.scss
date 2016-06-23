@@ -208,7 +208,7 @@
   margin: 0 0 14px 0;
   position: absolute;
   top: -49px;
-  right: 20px;
+  right: 0px;
 }
 
 .chunk ul {
@@ -246,7 +246,10 @@
 }
 
 @media print {
-  html { overflow: hidden; }
+  
+  .preview .rendered {
+    overflow: hidden;
+  }
 
   .preview .presentation *, .preview .description * {
     color: white !important;
