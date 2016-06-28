@@ -16,7 +16,8 @@ expertises:
 
 --center-start
 
-# Architecte – UX Designer – ScrumMaster - Développeur Front Senior
+# Architecte – ScrumMaster - Développeur Front Senior
+rory.williaws@zenika.box.com
 
 --center-end
 
@@ -24,9 +25,8 @@ expertises:
 
 --column-start
 
-* Portfolio : ggaulard.github.io
-* Exemples de code : codepen.io/ggaulard
-* E-mail : guillaume.gaulard@zenika.com
+* Portfolio : bbc.in/1OCrHKk
+* Exemples de code : codepen.io/phenax/pen/WQXerz
 
 --column-end
 
@@ -124,6 +124,7 @@ expertises:
 
 --section-end
 
+--break-page
 
 # Loisirs
 *
