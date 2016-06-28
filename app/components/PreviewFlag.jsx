@@ -116,6 +116,10 @@ export default class PreviewFlag {
     return i;
   }
 
+  getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
   generateSection(chunks, i, isFirstPage, contentDescr, contentExp, markdownItEnv, markdownIt, emojione) {
     let experiences = [];
     let chunk = chunks[++i];
@@ -129,6 +133,13 @@ export default class PreviewFlag {
     let className = "experience";
     if (isFirstPage) {
       className += " first-page";
+    }else{
+      let background = this.getRandomInt(1,4);
+      while(this.lastBackground == background){
+        background = this.getRandomInt(1,4);
+      }
+      this.lastBackground = background;
+      className += " background" + background;
     }
     contentExp.push(
       (

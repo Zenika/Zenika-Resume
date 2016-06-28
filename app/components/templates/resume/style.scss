@@ -231,19 +231,48 @@
   vertical-align: 3px;
 }
 
-.chunk ul li > ul {
+.chunk ul li > ul, .chunk ul > li {
   margin-bottom: 14px;
+}
+
+.chunk ul > li > ul > li {
+  margin-bottom: 0;
+}
+
+.description {
+  .chunk ul li > ul, .chunk ul > li {
+    margin-bottom: 0;
+  }
 }
 
 /*first*/
 .experience {
-  margin-bottom: 40px;
-  margin-left: 0;
-  padding: 0;
+  padding: 30px 0 0;
+  margin: 0 0 40px;
+  background-size: 100% 20px;
+  background-repeat: no-repeat;
+
 }
 
 .experience.first-page {
-  margin-left: 34%;
+  padding: 0 0 0;
+  margin: 0 0 40px 34%;
+}
+
+.experience.background1 {
+  background-image: url('img/section-header1.png');
+}
+
+.experience.background2 {
+  background-image: url('img/section-header2.png');
+}
+
+.experience.background3 {
+  background-image: url('img/section-header3.png');
+}
+
+.experience.background4 {
+  background-image: url('img/section-header4.png');
 }
 
 @media print {
@@ -282,6 +311,7 @@
 
 .chunk-page-break {
   page-break-before: always !important;
+  height: 0px;
 }
 
 .presentation .experience {
