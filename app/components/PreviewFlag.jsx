@@ -108,8 +108,9 @@ export default class PreviewFlag {
             </div>
           )
         );
+
+        chunk = chunks[++i];
       }
-      chunk = chunks[++i];
     }
 
     return i;
