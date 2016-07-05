@@ -1,0 +1,1 @@
+create table resume (id serial primary key, content text, uuid text, path text, version integer, last_modified timestamp);

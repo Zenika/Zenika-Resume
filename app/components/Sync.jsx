@@ -1,5 +1,5 @@
-import React, { Component, PropTypes } from 'react';
-import { Events } from '../Store';
+import React, {Component, PropTypes} from 'react';
+import {Events} from '../Store';
 
 const DEFAULT_DURATION = 5;
 const MAX_DURATION = 600;
@@ -22,10 +22,10 @@ export default class Sync extends Component {
 
       if (0 < counter) {
         counter--;
-        this.setState({ counter: counter });
+        this.setState({counter: counter});
 
         if (0 === counter) {
-          this.setState({ counter: DEFAULT_DURATION });
+          this.setState({counter: DEFAULT_DURATION});
           this.context.controller.dispatch('action:sync');
         }
       }
@@ -80,10 +80,8 @@ export default class Sync extends Component {
     return (
       <div className="sync">
         <span className={this.state.offline ? 'status is-offline' : 'status is-online'}>
-          <i
-            title={title}
-            className={this.state.offline ? 'fa fa-toggle-off' : 'fa fa-toggle-on'}
-          ></i>
+          <i title={title}
+             className={this.state.offline ? 'fa fa-toggle-off' : 'fa fa-toggle-on'}></i>
           {offlineStatus}
         </span>
       </div>

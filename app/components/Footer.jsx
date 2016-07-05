@@ -1,21 +1,22 @@
 import React, {PropTypes, Component} from 'react';
+import Sync from './Sync';
 
 const {string} = PropTypes;
 
 export default class Footer extends Component {
-  showHelp(){
+  showHelp() {
     let modal = document.getElementById('help-modal');
-    if(!modal){
+    if (!modal) {
       return;
     }
 
-    if(modal.style.display == 'block'){
+    if (modal.style.display == 'block') {
       history.back();
       modal.style.display = 'none';
-    }else{
-      history.pushState(null, 'zenika-resume aide', window.location.href+"?help");
+    } else {
+      history.pushState(null, 'zenika-resume aide', window.location.href + "?help");
       modal.style.display = 'block';
-      window.onhashchange = function() {
+      window.onhashchange = function () {
         modal.style.display = 'none';
       }
     }
@@ -24,6 +25,7 @@ export default class Footer extends Component {
   render() {
     return (
       <footer className="main">
+
         <div className="credits">
           Zenika Resume - Beta - Build by&nbsp;
           <a href="http://zenika.com/">Zenika</a>&nbsp;
@@ -32,7 +34,9 @@ export default class Footer extends Component {
           from the good folks at <a href="https://tailordev.fr" title="Read more about us" target="_blank">TailorDev</a>,
           2016.
         </div>
-        <a className="btn" onClick={this.showHelp}><i className="fa fa-question-circle-o" aria-hidden="true"></i> de l'aide</a>
+        <a className="btn" onClick={this.showHelp}><i className="fa fa-question-circle-o" aria-hidden="true"></i> de
+          l'aide</a>
+        <Sync />
       </footer>
     );
   }

@@ -3,13 +3,18 @@ const compression = require('compression');
 const bodyParser = require('body-parser');
 const path = require('path');
 const fs = require('fs');
+const moment = require('moment');
 
 const app = express();
 const api = express.Router();
 
+const pg = require('pg');
+
 // config
 const staticPath = path.join(__dirname, '/build');
 const dataDir = process.env.MONOD_DATA_DIR || path.join(__dirname, '/data');
+
+var databaseUrl = process.env.DATABASE_URL || 'postgres://localhost/resume';
 
 app.set('port', process.env.PORT || 3000);
 app.set('etag', false);
@@ -19,6 +24,32 @@ app.use(compression());
 app.use(express.static(staticPath));
 app.use(bodyParser.json());
 app.use(api);
+
+function executeQueryWithCallback(query, params, response, callback) {
+  pg.connect(databaseUrl, function (err, client, done) {
+    try {
+      if (!client) {
+        return;
+      }
+      client.query(query, params, function (err, result) {
+        done();
+        if (err) {
+          console.error(err);
+          response.send("Error " + err);
+        }
+        else {
+          callback(result);
+        }
+      });
+    } catch (error) {
+      try {
+        done();
+      } catch (error) {
+        // nothing to do just keep the program running
+      }
+    }
+  });
+}
 
 const isValidId = (uuid) => {
   return /[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}/.test(uuid);
@@ -42,13 +73,19 @@ api.get('/documents/:uuid', (req, res) => {
     return res.status(400).json();
   }
 
-  return fs.readFile(path.join(dataDir, uuid), (err, data) => {
-    if (err) {
-      return res.status(404).json();
-    }
-
-    return res.json(JSON.parse(data));
-  });
+  executeQueryWithCallback(
+    'SELECT id, content, uuid, path, version, last_modified FROM resume where uuid=($1)',
+    [uuid],
+    res,
+    function (data) {
+      if(data.rows.length != 1){
+        res.status(404);
+        return;
+      }
+      data = data.rows[0];
+      data.last_modified = moment(data.last_modified).toDate().getTime();
+      res.status(200).json(data);
+    });
 });
 
 api.put('/documents/:uuid', (req, res) => {
@@ -59,23 +96,39 @@ api.put('/documents/:uuid', (req, res) => {
     return res.status(400).json();
   }
 
-  const filename = path.join(dataDir, uuid);
-
-  return fs.readFile(filename, (readErr, data) => {
-    const document = readErr ? {} : JSON.parse(data);
-
-    document.uuid = uuid;
-    document.content = req.body.content;
-    document.last_modified = Date.now();
-
-    fs.writeFile(filename, JSON.stringify(document), (err) => {
-      if (err) {
-        return res.status(500).json();
+  executeQueryWithCallback(
+    'SELECT id, content, uuid, path, version, last_modified FROM resume where uuid=($1)',
+    [uuid],
+    res,
+    function (data) {
+      var document = {};
+      document.uuid = uuid;
+      document.content = req.body.content;
+      document.last_modified = moment().format('YYYY-MM-DD HH:mm:ss');
+      console.log(data + " select from update");
+      var sql = '';
+      if (data.rows.length == 0) {
+        sql = 'INSERT into resume (content, uuid, path, version, last_modified) VALUES($1, $2, $3, $4, $5) RETURNING id';
+      } else {
+        sql = 'UPDATE resume SET content = $1, path = $3, version = $4, last_modified = $5 where uuid = $2';
       }
-
-      return res.status(readErr ? 201 : 200).json(document);
+      executeQueryWithCallback(
+        sql,
+        [
+          document.content,
+          document.uuid,
+          '',
+          1,
+          document.last_modified
+        ],
+        res,
+        function (result) {
+          console.log("update done");
+          document.last_modified = moment(document.last_modified).toDate().getTime();
+          res.status(200).json(document);
+        }
+      );
     });
-  });
 });
 
 // Listen only when doing: `node app/server.js`

@@ -3,10 +3,10 @@ import uuid from 'uuid';
 import sjcl from 'sjcl';
 import request from 'superagent';
 import Document from './Document';
-import { Config } from './Config';
+import {Config} from './Config';
 import Immutable from 'immutable';
 
-const { Promise } = global;
+const {Promise} = global;
 
 export const Events = {
   NO_DOCUMENT_ID: 'store:no-document-id',
@@ -134,13 +134,17 @@ export default class Store {
    * Synchronize current document between local and server databases
    */
   sync() {
+    console.log('start sync');
     if (this.state.document.isNew()) {
       return Promise.resolve(this.state);
     }
 
     if (this.state.document.hasNeverBeenSync()) {
+      console.log('sync never been');
       return this._serverPersist();
     }
+
+    console.log('sync ');
 
     return request
       .get(`${this.endpoint}/documents/${this.state.document.get('uuid')}`)
@@ -155,6 +159,8 @@ export default class Store {
           content: res.body.content,
           last_modified: res.body.last_modified
         });
+
+        console.log(serverDoc.get('last_modified'), localDoc.get('last_modified'), localDoc.get('last_modified_locally'));
 
         if (serverDoc.get('last_modified') === localDoc.get('last_modified')) {
           // here, document on the server has not been updated, so we can
@@ -220,9 +226,9 @@ export default class Store {
                   content: encryptedContent
                 }).toJS()
               )
-              .then(() => {
-                return Promise.resolve(fork);
-              });
+                .then(() => {
+                  return Promise.resolve(fork);
+                });
             })
             .then((fork) => {
               // now, we can update the former doc with server content
@@ -275,7 +281,7 @@ export default class Store {
 
   // Pure / side-effect free method
   encrypt(content, secret) {
-    return Promise.resolve(sjcl.encrypt(secret, content, { ks: 256 }));
+    return Promise.resolve(sjcl.encrypt(secret, content, {ks: 256}));
   }
 
   // Impure / side-effect free method
@@ -309,33 +315,33 @@ export default class Store {
     return this
       .encrypt(doc.get('content'), secret)
       .then((encryptedContent) => {
-        return request
-          .put(`${this.endpoint}/documents/${doc.get('uuid')}`)
-          .set('Accept', 'application/json')
-          .set('Content-Type', 'application/json')
-          .send({
-            content: encryptedContent
-          })
-          .then(this._handleRequestSuccess.bind(this))
-          .catch(this._handleRequestError.bind(this))
-          .then((res) => {
-            this._setState(
-              {
-                document: new Document({
-                  uuid: doc.get('uuid'),
-                  content: doc.get('content'),
-                  last_modified: res.body.last_modified,
-                  last_modified_locally: null
-                }),
-                secret: secret
-              },
-              Events.SYNCHRONIZE
-            );
+          return request
+            .put(`${this.endpoint}/documents/${doc.get('uuid')}`)
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json')
+            .send({
+              content: encryptedContent
+            })
+            .then(this._handleRequestSuccess.bind(this))
+            .catch(this._handleRequestError.bind(this))
+            .then((res) => {
+              this._setState(
+                {
+                  document: new Document({
+                    uuid: doc.get('uuid'),
+                    content: doc.get('content'),
+                    last_modified: res.body.last_modified,
+                    last_modified_locally: null
+                  }),
+                  secret: secret
+                },
+                Events.SYNCHRONIZE
+              );
 
-            return this._localPersist();
-          });
-      }
-    );
+              return this._localPersist();
+            });
+        }
+      );
   }
 
   _handleRequestSuccess(res) {

@@ -1,21 +1,20 @@
 .sync {
   float: right;
-  margin-top: 0.1rem;
 
   .status {
     padding: 0.4rem 0.5rem 0.3rem;
     margin-right: 0.1rem;
     border-radius: $global-radius;
-    background-color: darken($td-blue, 10%);
+    background-color: transparent;
     color: $white;
   }
 
   .is-offline {
-    color: map-get($foundation-palette, warning) !important;
+    color: white !important;
   }
 
   .is-online {
-    color: $td-green !important;
+    color: white !important;
   }
 
 
