@@ -93,11 +93,17 @@ export default class Store {
         return this
           .decrypt(document.get('content'), secret)
           .then((decryptedContent) => {
+            let metadata = document.get('metadata');
+            try{
+              metadata = document.get('metadata').toJS();
+            }catch(err){
+
+            }
             this._setState({
               document: new Document({
                 uuid: document.get('uuid'),
                 content: decryptedContent,
-                metadata: document.get('metadata').toJS(),
+                metadata: metadata,
                 last_modified: document.get('last_modified'),
                 last_modified_locally: document.get('last_modified_locally')
               }),
