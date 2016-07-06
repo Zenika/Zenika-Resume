@@ -1,0 +1,26 @@
+.menu {
+  height: 35px;
+  background-color: #acafaa;
+  color: white;
+  position: relative;
+
+  .tabs{
+    position: absolute;
+    left: 5px;
+    top: 5px;
+    height: 30px;
+
+    .tab{
+      height: 25px;
+      display: inline-block;
+      width: 100px;
+      border-radius: 7px;
+      text-align: center;
+
+      &.selected{
+        background-color: white;
+        color:#acafaa;
+      }
+    }
+  }
+}

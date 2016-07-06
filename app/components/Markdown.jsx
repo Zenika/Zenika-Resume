@@ -1,11 +1,13 @@
-import React, { Component, PropTypes } from 'react';
+import React, {Component, PropTypes} from 'react';
+import ReactDOM from 'react-dom';
 import MarkdownLoader from './loaders/Markdown';
-import CodeMirror from 'codemirror';
-import { Events } from '../Store';
+import CodeMirror from './codemirror';
+import {Events} from '../Store';
+import ResumeFrom from './templates/ResumeForm';
 
 import 'codemirror/lib/codemirror.css';
 
-const { func, string } = PropTypes;
+const {func, string, object} = PropTypes;
 
 export default class Markdown extends Component {
 
@@ -31,7 +33,19 @@ export default class Markdown extends Component {
 
       // Set default value
       this.codeMirror.setValue(defaultValue);
+
+      ReactDOM.render(<ResumeFrom
+        ref={(form) => this.form = form}
+        metadata={this.props.metadata}
+        onChange={this.props.onChangeMetadata}/>, document.getElementsByClassName('CodeMirror-form')[0]);
     });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    //console.log('componentWillReceiveProps', nextProps.metadata);
+    if (JSON.stringify(nextProps.metadata) !== JSON.stringify(this.props.metadata)) {
+      this.form.setState({metadata: nextProps.metadata});
+    }
   }
 
   componentDidMount() {
@@ -46,9 +60,10 @@ export default class Markdown extends Component {
     });
   }
 
-  shouldComponentUpdate() {
-    return false;
-  }
+  /*
+   shouldComponentUpdate() {
+   return false;
+   }*/
 
   getCodeMirror() {
     return this.codeMirror;
@@ -58,14 +73,14 @@ export default class Markdown extends Component {
     const newValue = this.getCodeMirror().getDoc().getValue();
 
     // Update the value -> rendering
-    this.props.onChange(newValue);
+    this.props.onChangeContent(newValue);
 
     // Update scrolling position (ensure rendering is visible)
     this.handleScroll();
   }
 
   handleScroll() {
-    const { top, height, clientHeight } = this.getCodeMirror().getScrollInfo();
+    const {top, height, clientHeight} = this.getCodeMirror().getScrollInfo();
     this.props.doUpdatePosition(top / (height - clientHeight));
   }
 
@@ -75,7 +90,7 @@ export default class Markdown extends Component {
         <textarea
           ref="markdownTextarea"
           placeholder="Type your *markdown* content here"
-          onChange={this.props.onChange}
+          onChange={this.props.onChangeContent}
           value={this.props.raw}
           autoComplete="off"
         />
@@ -86,7 +101,9 @@ export default class Markdown extends Component {
 
 Markdown.propTypes = {
   raw: string.isRequired,
-  onChange: func.isRequired,
+  metadata: object.isRequired,
+  onChangeContent: func.isRequired,
+  onChangeMetadata: func.isRequired,
   doUpdatePosition: func.isRequired
 };
 

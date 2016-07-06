@@ -3,10 +3,9 @@ import Loader from 'react-loader';
 
 import Markdown from './Markdown';
 import Preview from './Preview';
-import TemplateForm from './TemplateForm';
 import VerticalHandler from './VerticalHandler';
 
-const { bool, func, string } = PropTypes;
+const { bool, func, string, object } = PropTypes;
 
 export const EditorModes = {
   FOCUS: 'focus',
@@ -81,7 +80,9 @@ export default class Editor extends Component {
       >
         <Markdown
           raw={this.props.content}
-          onChange={this.props.onContentUpdate}
+          metadata={this.props.metadata}
+          onChangeContent={this.props.onContentUpdate}
+          onChangeMetadata={this.props.onMetadataUpdate}
           doUpdatePosition={this.updatePosition.bind(this)}
         />
         <VerticalHandler
@@ -90,6 +91,7 @@ export default class Editor extends Component {
         />
         <Preview
           raw={this.props.content}
+          metadata={this.props.metadata}
           pos={this.state.pos}
           template={this.state.template}
         />
@@ -100,8 +102,10 @@ export default class Editor extends Component {
 
 Editor.propTypes = {
   loaded: bool.isRequired,
+  metadata: object.isRequired,
   content: string.isRequired,
-  onContentUpdate: func.isRequired
+  onContentUpdate: func.isRequired,
+  onMetadataUpdate: func.isRequired
 };
 
 Editor.contextTypes = {

@@ -1,16 +1,14 @@
 import Immutable from 'immutable';
-import React, { Component, PropTypes } from 'react';
-import { Events } from '../Store';
+import React, {Component, PropTypes} from 'react';
+import {Events} from '../Store';
 import Document from '../Document';
 import debounce from 'lodash.debounce';
 
-import Header from './Header';
 import Editor from './Editor';
 import Footer from './Footer';
 import MessageBoxes from './MessageBox';
 
-const { object, string } = PropTypes;
-
+const {object, string} = PropTypes;
 
 export default class App extends Component {
   constructor(props, context) {
@@ -23,6 +21,7 @@ export default class App extends Component {
     };
 
     this.updateContent = debounce(this.updateContent, 150);
+    this.updateMetadata = debounce(this.updateMetadata, 150);
   }
 
   getChildContext() {
@@ -126,24 +125,37 @@ export default class App extends Component {
     });
 
     if (!window.history.state || !window.history.state.uuid ||
-        (window.history.state && window.history.state.uuid &&
-        doc.get('uuid') !== window.history.state.uuid)
+      (window.history.state && window.history.state.uuid &&
+      doc.get('uuid') !== window.history.state.uuid)
     ) {
-      window.history.pushState({ uuid: doc.get('uuid') }, `Monod - ${doc.get('uuid')}`, uri);
+      window.history.pushState({uuid: doc.get('uuid')}, `Monod - ${doc.get('uuid')}`, uri);
     }
   }
 
   updateContent(newContent) {
     const doc = this.state.document;
-
     if (doc.content !== newContent) {
-      this.props.controller.dispatch('action:update', new Document({
-        uuid: doc.get('uuid'),
-        content: newContent,
-        last_modified: doc.get('last_modified'),
-        last_modified_locally: doc.get('last_modified_locally')
-      }));
+      this.updateDocument(doc.metadata, newContent);
     }
+  }
+
+  updateMetadata(newMetadata) {
+    const doc = this.state.document;
+    if (JSON.stringify(doc.metadata) !== JSON.stringify(newMetadata)) {
+      this.updateDocument(newMetadata, doc.content);
+    }
+  }
+
+  updateDocument(metadata, content) {
+    const doc = this.state.document;
+
+    this.props.controller.dispatch('action:update', new Document({
+      uuid: doc.get('uuid'),
+      content: content,
+      metadata: metadata,
+      last_modified: doc.get('last_modified'),
+      last_modified_locally: doc.get('last_modified_locally')
+    }));
   }
 
   removeMessage(index) {
@@ -152,10 +164,10 @@ export default class App extends Component {
     });
   }
 
-  hideHelp(){
+  hideHelp() {
     let modal = document.getElementById('help-modal');
 
-    if(modal.style.display == 'block'){
+    if (modal.style.display == 'block') {
       history.back();
       modal.style.display = 'none';
     }
@@ -249,9 +261,11 @@ export default class App extends Component {
         <Editor
           loaded={this.state.loaded}
           content={this.state.document.get('content')}
+          metadata={this.state.document.get('metadata')}
           onContentUpdate={this.updateContent.bind(this)}
+          onMetadataUpdate={this.updateMetadata.bind(this)}
         />
-        <Footer version={this.props.version} />
+        <Footer version={this.props.version}/>
       </div>
     );
   }

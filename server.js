@@ -74,15 +74,16 @@ api.get('/documents/:uuid', (req, res) => {
   }
 
   executeQueryWithCallback(
-    'SELECT id, content, uuid, path, version, last_modified FROM resume where uuid=($1)',
+    'SELECT id, uuid, content, metadata, path, version, last_modified FROM resume where uuid=($1)',
     [uuid],
     res,
     function (data) {
-      if(data.rows.length != 1){
+      if (data.rows.length != 1) {
         res.status(404);
         return;
       }
       data = data.rows[0];
+      data.metadata = JSON.parse(data.metadata);
       data.last_modified = moment(data.last_modified).toDate().getTime();
       res.status(200).json(data);
     });
@@ -104,13 +105,14 @@ api.put('/documents/:uuid', (req, res) => {
       var document = {};
       document.uuid = uuid;
       document.content = req.body.content;
+      document.metadata = JSON.stringify(req.body.metadata);
       document.last_modified = moment().format('YYYY-MM-DD HH:mm:ss');
       console.log(data + " select from update");
       var sql = '';
       if (data.rows.length == 0) {
-        sql = 'INSERT into resume (content, uuid, path, version, last_modified) VALUES($1, $2, $3, $4, $5) RETURNING id';
+        sql = 'INSERT into resume (content, uuid, path, version, last_modified, metadata) VALUES($1, $2, $3, $4, $5, $6) RETURNING id';
       } else {
-        sql = 'UPDATE resume SET content = $1, path = $3, version = $4, last_modified = $5 where uuid = $2';
+        sql = 'UPDATE resume SET content = $1, path = $3, version = $4, last_modified = $5, metadata = $6 where uuid = $2';
       }
       executeQueryWithCallback(
         sql,
@@ -119,7 +121,8 @@ api.put('/documents/:uuid', (req, res) => {
           document.uuid,
           '',
           1,
-          document.last_modified
+          document.last_modified,
+          document.metadata,
         ],
         res,
         function (result) {

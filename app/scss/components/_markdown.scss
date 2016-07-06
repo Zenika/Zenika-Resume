@@ -4,13 +4,55 @@
 
 .markdown {
 
-    & > textarea {
-        display: none;
+  & > textarea {
+    display: none;
+  }
+
+  .CodeMirror {
+    height: inherit;
+    line-height: 18px;
+    font-size: 14px !important;
+  }
+
+  .CodeMirror-form {
+    .form {
+      margin: 0 30px 0 35px;
+      .name-experience {
+        input {
+          width: 50%;
+          display: inline;
+          margin: 0;
+        }
+      }
+      .description-area {
+        textarea {
+          margin: 0;
+          width: 100% !important;
+          max-width: 100%;
+        }
+      }
+      .table {
+        textarea {
+          width: 33.333333%;
+          max-width: 33.333333%;
+          display: inline;
+          margin: 0;
+          vertical-align: top;
+          height: 100px;
+        }
+      }
     }
 
-    .CodeMirror {
-        height: inherit;
-        line-height: 18px;
-        font-size: 14px !important;
+    [type='text'], textarea {
+      border-radius: 0px;
+      background-color: transparent;
+      font-size: 0.8rem;
+      border: 0px solid white;
+      box-shadow: none;
     }
+
+    [type='text'] {
+      height: 2rem;
+    }
+  }
 }

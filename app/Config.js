@@ -1,6 +1,21 @@
 /* eslint max-len: 0 */
 export const Config = {
   APP_NAME: 'Zenika Resume',
+  DEFAULT_METADATA: {
+    name: 'Rory Williams',
+    experience: '2 ans d\'expérience',
+    description: `#Architecte – ScrumMaster - Développeur Front Senior
+rory.williaws@zenika.box.com`,
+    column1: `* Portfolio : bbc.in/1OCrHKk
+* Exemples de code : codepen.io/phenax/pen/WQXerz`,
+    column2: `# **Formateur**
+  * Angular JS
+  * Angular 2
+  * Ecplise RCP`,
+    column3: `# **Conférencier**
+  * Devoxx
+  * Mix IT`
+  },
   DEFAULT_CONTENT: [
 `---
 name: Rory Williams

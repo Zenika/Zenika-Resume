@@ -84,7 +84,9 @@ export default class Preview extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    return this.props.raw !== nextProps.raw || this.props.template !== nextProps.template;
+    return this.props.raw !== nextProps.raw ||
+      this.props.template !== nextProps.template ||
+      this.props.metadata !== nextProps.metadata;
   }
 
   /**
@@ -154,7 +156,7 @@ export default class Preview extends Component {
         }).component;
 
       page = (
-        <Template contentExperience={contentExp} contentDescription={contentDescr} data={data}/>
+        <Template contentExperience={contentExp} contentDescription={contentDescr} data={this.props.metadata}/>
       );
     }
 
@@ -171,6 +173,7 @@ export default class Preview extends Component {
 
 Preview.propTypes = {
   raw: string.isRequired,
+  metadata: object.isRequired,
   template: string.isRequired,
   pos: number.isRequired,
   previewLoader: func.isRequired

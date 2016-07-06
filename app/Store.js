@@ -84,6 +84,7 @@ export default class Store {
             return Promise.resolve(new Document({
               uuid: res.body.uuid,
               content: res.body.content,
+              metadata: res.body.metadata,
               last_modified: res.body.last_modified
             }));
           });
@@ -96,6 +97,7 @@ export default class Store {
               document: new Document({
                 uuid: document.get('uuid'),
                 content: decryptedContent,
+                metadata: document.get('metadata'),
                 last_modified: document.get('last_modified'),
                 last_modified_locally: document.get('last_modified_locally')
               }),
@@ -121,6 +123,7 @@ export default class Store {
       document: new Document({
         uuid: document.get('uuid'),
         content: document.get('content'),
+        metadata: document.get('metadata'),
         last_modified: document.get('last_modified'),
         last_modified_locally: Date.now()
       }),
@@ -157,6 +160,7 @@ export default class Store {
         const serverDoc = new Document({
           uuid: res.body.uuid,
           content: res.body.content,
+          metadata: res.body.metadata,
           last_modified: res.body.last_modified
         });
 
@@ -184,6 +188,7 @@ export default class Store {
                 const updatedDocument = new Document({
                   uuid: serverDoc.get('uuid'),
                   content: decryptedContent,
+                  metadata: serverDoc.get('metadata'),
                   last_modified: serverDoc.get('last_modified')
                 });
 
@@ -215,7 +220,8 @@ export default class Store {
             .then((encryptedContent) => {
               const fork = new Document({
                 uuid: uuid.v4(),
-                content: localDoc.content
+                content: localDoc.content,
+                metadata: localDoc.metadata
               });
 
               // persist fork'ed document
@@ -223,7 +229,8 @@ export default class Store {
                 fork.get('uuid'),
                 new Document({
                   uuid: fork.get('uuid'),
-                  content: encryptedContent
+                  content: encryptedContent,
+                  metadata: fork.metadata
                 }).toJS()
               )
                 .then(() => {
@@ -235,6 +242,7 @@ export default class Store {
               const former = new Document({
                 uuid: serverDoc.get('uuid'),
                 content: serverDoc.get('content'),
+                metadata: serverDoc.get('metadata'),
                 last_modified: serverDoc.get('last_modified')
               });
 
@@ -297,6 +305,7 @@ export default class Store {
           new Document({
             uuid: doc.get('uuid'),
             content: encryptedContent,
+            metadata: doc.get('metadata'),
             last_modified: doc.get('last_modified'),
             last_modified_locally: doc.get('last_modified_locally')
           }).toJS()
@@ -320,7 +329,8 @@ export default class Store {
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json')
             .send({
-              content: encryptedContent
+              content: encryptedContent,
+              metadata: doc.get('metadata')
             })
             .then(this._handleRequestSuccess.bind(this))
             .catch(this._handleRequestError.bind(this))
@@ -330,6 +340,7 @@ export default class Store {
                   document: new Document({
                     uuid: doc.get('uuid'),
                     content: doc.get('content'),
+                    metadata: doc.get('metadata'),
                     last_modified: res.body.last_modified,
                     last_modified_locally: null
                   }),
