@@ -138,3 +138,18 @@ $vertical-handler-width: 40px;
         }
     }
 }
+
+
+.viewMode {
+    .markdown {
+        display: none !important;
+    }
+    .vertical-handler {
+        display: none;
+    }
+    .editor{
+        height: 100%;
+        margin: 0 auto;
+        max-width: 800px;
+    }
+}

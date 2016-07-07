@@ -3,44 +3,54 @@
  */
 
 footer.main {
-    padding: 0.5rem 1rem;
-    background-color: #acafaa;
+  padding: 0.5rem 1rem;
+  background-color: #acafaa;
+  color: white;
+  font-family: $footer-font-family;
+  font-size: $footer-font-size;
+
+  .credits {
+    float: left;
+  }
+
+  a, a:hover {
     color: white;
-    font-family: $footer-font-family;
-    font-size: $footer-font-size;
+    text-decoration: underline;
+  }
 
-    .credits {
-        float: left;
+  a:hover {
+    text-decoration: none;
+  }
+
+  a.btn {
+    float: right;
+    background-color: white;
+    color: #acafaa;
+    padding: 3px;
+    text-decoration: none;
+    border-radius: 7px;
+    line-height: 12px;
+  }
+
+  .version {
+    float: right;
+    margin-top: 0.1rem;
+
+    .git-ref {
+      padding: 0.4rem 0.5rem 0.3rem;
+      border-radius: $global-radius;
+      background-color: darken($td-blue, 10%);
+      color: $white;
     }
+  }
 
-    a, a:hover{
-        color: white;
-        text-decoration: underline;
-    }
+  .viewLink{
+    float: right;
+  }
+}
 
-    a:hover{
-        text-decoration: none;
-    }
-
-    a.btn{
-        float: right;
-        background-color: white;
-        color: #acafaa;
-        padding: 3px;
-        text-decoration: none;
-        border-radius: 7px;
-        line-height: 12px;
-    }
-
-    .version {
-        float: right;
-        margin-top: 0.1rem;
-
-        .git-ref {
-            padding: 0.4rem 0.5rem 0.3rem;
-            border-radius: $global-radius;
-            background-color: darken($td-blue, 10%);
-            color: $white;
-        }
-    }
+.viewMode {
+  footer {
+    display: none;
+  }
 }

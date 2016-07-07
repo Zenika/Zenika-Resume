@@ -4,6 +4,7 @@ import uuid from 'uuid';
 
 export default class Document extends Record({
   uuid: uuid.v4(),
+  path: null,
   content: Config.DEFAULT_CONTENT,
   metadata: Config.DEFAULT_METADATA,
   last_modified: null, // defined by the server

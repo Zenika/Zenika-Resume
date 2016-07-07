@@ -10,6 +10,8 @@ const api = express.Router();
 
 const pg = require('pg');
 
+const buildPath = require('./build-path');
+
 // config
 const staticPath = path.join(__dirname, '/build');
 const dataDir = process.env.MONOD_DATA_DIR || path.join(__dirname, '/data');
@@ -64,14 +66,16 @@ app.get('/[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}', (req, res) => {
 
 app.use('/', express.static('.'));
 
+function buildDocumentFromQueryResult(data) {
+  data = data.rows[0];
+  data.metadata = JSON.parse(data.metadata);
+  data.last_modified = moment(data.last_modified).toDate().getTime();
+  return data;
+}
+
 // API
 api.get('/documents/:uuid', (req, res) => {
   const uuid = req.params.uuid;
-
-  // request validation
-  if (!isValidId(uuid)) {
-    return res.status(400).json();
-  }
 
   executeQueryWithCallback(
     'SELECT id, uuid, content, metadata, path, version, last_modified FROM resume where uuid=($1)',
@@ -79,13 +83,21 @@ api.get('/documents/:uuid', (req, res) => {
     res,
     function (data) {
       if (data.rows.length != 1) {
-        res.status(404);
-        return;
+        executeQueryWithCallback(
+          'SELECT id, content, metadata, path, version, last_modified FROM resume where path=($1)',
+          [uuid],
+          res,
+          function (data) {
+            if (data.rows.length != 1) {
+              res.status(404);
+              return;
+            }
+            data.uuid = '';
+            res.status(200).json(buildDocumentFromQueryResult(data));
+          });
+      } else {
+        res.status(200).json(buildDocumentFromQueryResult(data));
       }
-      data = data.rows[0];
-      data.metadata = JSON.parse(data.metadata);
-      data.last_modified = moment(data.last_modified).toDate().getTime();
-      res.status(200).json(data);
     });
 });
 
@@ -114,12 +126,15 @@ api.put('/documents/:uuid', (req, res) => {
       } else {
         sql = 'UPDATE resume SET content = $1, path = $3, version = $4, last_modified = $5, metadata = $6 where uuid = $2';
       }
+
+      let path = buildPath(req.body.metadata.name + '');
+
       executeQueryWithCallback(
         sql,
         [
           document.content,
           document.uuid,
-          '',
+          path,
           1,
           document.last_modified,
           document.metadata,

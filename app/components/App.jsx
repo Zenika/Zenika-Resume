@@ -128,7 +128,9 @@ export default class App extends Component {
       (window.history.state && window.history.state.uuid &&
       doc.get('uuid') !== window.history.state.uuid)
     ) {
-      window.history.pushState({uuid: doc.get('uuid')}, `Monod - ${doc.get('uuid')}`, uri);
+      if (uri.indexOf('undefined') == -1) {
+        window.history.pushState({uuid: doc.get('uuid')}, `Monod - ${doc.get('uuid')}`, uri);
+      }
     }
   }
 
@@ -153,6 +155,7 @@ export default class App extends Component {
       uuid: doc.get('uuid'),
       content: content,
       metadata: metadata,
+      path: doc.get('path'),
       last_modified: doc.get('last_modified'),
       last_modified_locally: doc.get('last_modified_locally')
     }));
@@ -174,8 +177,22 @@ export default class App extends Component {
   }
 
   render() {
+    let viewMode = '';
+
+    if (!this.state.document.uuid) {
+      viewMode = 'viewMode';
+    }
+
+    let style = {
+      display: 'none'
+    }
+
+    if (this.state.loaded) {
+      style = {};
+    }
+
     return (
-      <div className="layout">
+      <div className={`layout ${viewMode}`} style={style}>
         <div className="reveal" id="help-modal" data-reveal>
           <h1>Ouf je suis sauvé!</h1>
           <p className="lead">Impression en pdf</p>
@@ -265,7 +282,7 @@ export default class App extends Component {
           onContentUpdate={this.updateContent.bind(this)}
           onMetadataUpdate={this.updateMetadata.bind(this)}
         />
-        <Footer version={this.props.version}/>
+        <Footer version={this.props.version} metadata={this.state.document.get('metadata')}/>
       </div>
     );
   }

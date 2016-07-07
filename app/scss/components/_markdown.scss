@@ -32,6 +32,7 @@
         }
       }
       .table {
+        margin: 0 0 10px;
         textarea {
           width: 33.333333%;
           max-width: 33.333333%;
@@ -54,5 +55,14 @@
     [type='text'] {
       height: 2rem;
     }
+  }
+}
+
+.viewMode {
+  .markdown {
+    display: none !important;
+  }
+  .vertical-handler {
+    display: none;
   }
 }

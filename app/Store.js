@@ -27,7 +27,7 @@ export default class Store {
       // we automatically create a default document, but it might not be used
       document: new Document(),
       // we automatically generate a secret, but it might not be used
-      secret: sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 10), 0),
+      secret: this.buildSecret(),
     };
 
     this.events = events;
@@ -38,6 +38,11 @@ export default class Store {
       name: Config.APP_NAME,
       storeName: name,
     });
+  }
+
+  buildSecret() {
+    //return sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 10), 0);
+    return '';
   }
 
   /**
@@ -85,6 +90,7 @@ export default class Store {
               uuid: res.body.uuid,
               content: res.body.content,
               metadata: res.body.metadata,
+              path: res.body.path,
               last_modified: res.body.last_modified
             }));
           });
@@ -94,16 +100,17 @@ export default class Store {
           .decrypt(document.get('content'), secret)
           .then((decryptedContent) => {
             let metadata = document.get('metadata');
-            try{
+            try {
               metadata = document.get('metadata').toJS();
-            }catch(err){
-
+            } catch (err) {
             }
+
             this._setState({
               document: new Document({
                 uuid: document.get('uuid'),
                 content: decryptedContent,
                 metadata: metadata,
+                path: document.get('path'),
                 last_modified: document.get('last_modified'),
                 last_modified_locally: document.get('last_modified_locally')
               }),
@@ -130,6 +137,7 @@ export default class Store {
         uuid: document.get('uuid'),
         content: document.get('content'),
         metadata: document.get('metadata'),
+        path: document.get('path'),
         last_modified: document.get('last_modified'),
         last_modified_locally: Date.now()
       }),
@@ -155,8 +163,14 @@ export default class Store {
 
     console.log('sync ');
 
+    let uri = `${this.endpoint}/documents/${this.state.document.get('uuid')}`;
+
+    if (uri.indexOf('undefined') != -1) {
+      return;
+    }
+
     return request
-      .get(`${this.endpoint}/documents/${this.state.document.get('uuid')}`)
+      .get(uri)
       .set('Accept', 'application/json')
       .set('Content-Type', 'application/json')
       .then(this._handleRequestSuccess.bind(this))
@@ -167,6 +181,7 @@ export default class Store {
           uuid: res.body.uuid,
           content: res.body.content,
           metadata: res.body.metadata,
+          path: res.body.path,
           last_modified: res.body.last_modified
         });
 
@@ -194,6 +209,7 @@ export default class Store {
                 const updatedDocument = new Document({
                   uuid: serverDoc.get('uuid'),
                   content: decryptedContent,
+                  path: serverDoc.get('path'),
                   metadata: serverDoc.get('metadata'),
                   last_modified: serverDoc.get('last_modified')
                 });
@@ -218,7 +234,7 @@ export default class Store {
           // ... but I also modified it so... let's fork \o/
 
           // generate a new secret for fork'ed document
-          const forkSecret = sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 10), 0);
+          const forkSecret = this.buildSecret();
 
           // what we want is to create a fork
           return this
@@ -227,7 +243,8 @@ export default class Store {
               const fork = new Document({
                 uuid: uuid.v4(),
                 content: localDoc.content,
-                metadata: localDoc.metadata
+                metadata: localDoc.metadata,
+                path: localDoc.path
               });
 
               // persist fork'ed document
@@ -236,7 +253,8 @@ export default class Store {
                 new Document({
                   uuid: fork.get('uuid'),
                   content: encryptedContent,
-                  metadata: fork.metadata
+                  metadata: fork.metadata,
+                  path: fork.path
                 }).toJS()
               )
                 .then(() => {
@@ -249,6 +267,7 @@ export default class Store {
                 uuid: serverDoc.get('uuid'),
                 content: serverDoc.get('content'),
                 metadata: serverDoc.get('metadata'),
+                path: serverDoc.get('path'),
                 last_modified: serverDoc.get('last_modified')
               });
 
@@ -284,6 +303,7 @@ export default class Store {
 
   // Pure / side-effect free method
   decrypt(content, secret) {
+    secret = '';
     try {
       return Promise.resolve(sjcl.decrypt(secret, content));
     } catch (e) {
@@ -295,6 +315,7 @@ export default class Store {
 
   // Pure / side-effect free method
   encrypt(content, secret) {
+    secret = '';
     return Promise.resolve(sjcl.encrypt(secret, content, {ks: 256}));
   }
 
@@ -312,6 +333,7 @@ export default class Store {
             uuid: doc.get('uuid'),
             content: encryptedContent,
             metadata: doc.get('metadata'),
+            path: doc.get('path'),
             last_modified: doc.get('last_modified'),
             last_modified_locally: doc.get('last_modified_locally')
           }).toJS()
@@ -336,7 +358,8 @@ export default class Store {
             .set('Content-Type', 'application/json')
             .send({
               content: encryptedContent,
-              metadata: doc.get('metadata')
+              metadata: doc.get('metadata'),
+              path: doc.get('path')
             })
             .then(this._handleRequestSuccess.bind(this))
             .catch(this._handleRequestError.bind(this))
@@ -347,6 +370,7 @@ export default class Store {
                     uuid: doc.get('uuid'),
                     content: doc.get('content'),
                     metadata: doc.get('metadata'),
+                    path: doc.get('path'),
                     last_modified: res.body.last_modified,
                     last_modified_locally: null
                   }),
