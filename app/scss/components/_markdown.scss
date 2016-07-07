@@ -10,8 +10,8 @@
 
   .CodeMirror {
     height: inherit;
-    line-height: 18px;
-    font-size: 14px !important;
+    line-height: 16px;
+    font-size: 12px !important;
   }
 
   .CodeMirror-form {
@@ -46,7 +46,7 @@
     [type='text'], textarea {
       border-radius: 0px;
       background-color: transparent;
-      font-size: 0.8rem;
+      font-size: 12px;
       border: 0px solid white;
       box-shadow: none;
     }
