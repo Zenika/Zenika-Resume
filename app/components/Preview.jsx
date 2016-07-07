@@ -129,6 +129,8 @@ export default class Preview extends Component {
     )];
     let contentDescr = [];
     let data = {};
+    let htmlData = {};
+
     if (this.markdownIt) {
 
       // Markdown document environment (links references, footnotes, etc.)
@@ -138,13 +140,21 @@ export default class Preview extends Component {
       this.matter = grayMatter(this.props.raw);
       data = this.matter.data;
 
+      const buildChunck = (raw) =>
+        this.getChunks(grayMatter(raw).content, markdownItEnv);
+
+      htmlData.description = buildChunck(this.props.metadata.description);
+      htmlData.column1 = buildChunck(this.props.metadata.column1);
+      htmlData.column2 = buildChunck(this.props.metadata.column2);
+      htmlData.column3 = buildChunck(this.props.metadata.column3);
+
       // Get chunks to render from tokens
       const chunks = this.getChunks(this.matter.content, markdownItEnv);
 
       contentExp = [];
       contentDescr = [];
 
-      new PreviewFlag().generate(chunks, contentDescr, contentExp, markdownItEnv, this.markdownIt, this.emojione);
+      new PreviewFlag().generate(chunks, contentDescr, contentExp, markdownItEnv, htmlData, this.markdownIt, this.emojione);
     }
     let page = undefined;
     // Compile selected template with given data
@@ -156,7 +166,10 @@ export default class Preview extends Component {
         }).component;
 
       page = (
-        <Template contentExperience={contentExp} contentDescription={contentDescr} data={this.props.metadata}/>
+        <Template contentExperience={contentExp}
+                  contentDescription={contentDescr}
+                  data={this.props.metadata}
+                  htmlData={htmlData}/>
       );
     }
 

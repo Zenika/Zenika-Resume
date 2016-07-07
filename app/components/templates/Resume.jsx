@@ -90,6 +90,29 @@ export default class Resume extends BaseTemplate {
     );
   }
 
+  buildDescription(data) {
+    const description = [];
+
+    return (
+      <div className="description">
+        <div className="center">
+          {data.description}
+        </div>
+        <div className="table">
+          <div className="premiereColonne">
+            {data.column1}
+          </div>
+          <div className="colonne">
+            {data.column2}
+          </div>
+          <div className="colonne">
+            {data.column3}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   render() {
     const data = this.getData();
 
@@ -104,9 +127,7 @@ export default class Resume extends BaseTemplate {
           <span className="experience">{data.experience}</span>
         </div>
         <div className="header2"></div>
-        <div className="description">
-          {this.props.contentDescription}
-        </div>
+        {this.buildDescription(this.props.htmlData)}
         <div className="header3"></div>
         <div className="expertise">
           <span className="title">Expertise</span>

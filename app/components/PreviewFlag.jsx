@@ -133,10 +133,10 @@ export default class PreviewFlag {
     let className = "experience";
     if (isFirstPage) {
       className += " first-page";
-    }else{
-      let background = this.getRandomInt(1,4);
-      while(this.lastBackground == background){
-        background = this.getRandomInt(1,4);
+    } else {
+      let background = this.getRandomInt(1, 4);
+      while (this.lastBackground == background) {
+        background = this.getRandomInt(1, 4);
       }
       this.lastBackground = background;
       className += " background" + background;
@@ -152,15 +152,23 @@ export default class PreviewFlag {
     return i;
   }
 
-  generate(chunks, contentDescr, contentExp, markdownItEnv, markdownIt, emojione) {
+  buildHTML(chunks) {
+    return chunks.map((chunk, index) => this.buildPreview('metadata-' + index, chunk, this.markdownItEnv))
+  }
+
+  generate(chunks, contentDescr, contentExp, markdownItEnv, htmlData, markdownIt, emojione) {
     let experiences = undefined;
     let description = undefined;
-
     let isFirstPage = true;
 
     this.markdownItEnv = markdownItEnv;
     this.markdownIt = markdownIt;
     this.emojione = emojione;
+
+    htmlData.description = this.buildHTML(htmlData.description);
+    htmlData.column1 = this.buildHTML(htmlData.column1);
+    htmlData.column2 = this.buildHTML(htmlData.column2);
+    htmlData.column3 = this.buildHTML(htmlData.column3);
 
     for (var i = 0; i < chunks.length; i++) {
       var chunk = chunks[i];

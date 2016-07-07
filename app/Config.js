@@ -4,7 +4,7 @@ export const Config = {
   DEFAULT_METADATA: {
     name: 'Rory Williams',
     experience: '2 ans d\'expérience',
-    description: `#Architecte – ScrumMaster - Développeur Front Senior
+    description: `# Architecte – ScrumMaster - Développeur Front Senior
 rory.williaws@zenika.box.com`,
     column1: `* Portfolio : bbc.in/1OCrHKk
 * Exemples de code : codepen.io/phenax/pen/WQXerz`,
@@ -17,56 +17,7 @@ rory.williaws@zenika.box.com`,
   * Mix IT`
   },
   DEFAULT_CONTENT: [
-`---
-name: Rory Williams
-experience: 2 ans d'expérience
-expertises:
-  1: --expertise-archive
-  2: "JAVA / JEE, EJB 3.2, Servlet"
-  3: --expertise-leaf
-  4: "Spring (Core, Batch, Boot), CDI, XML, XSL, XSD, JUnit, Jenkins, Jrules, Hibernate, Struts, Velocity"
----
-
---header-start
-
---center-start
-
-# Architecte – ScrumMaster - Développeur Front Senior
-rory.williaws@zenika.box.com
-
---center-end
-
---table-start
-
---column-start
-
-* Portfolio : bbc.in/1OCrHKk
-* Exemples de code : codepen.io/phenax/pen/WQXerz
-
---column-end
-
---column-start
-
-# **Formateur**
-  * Angular JS
-  * Angular 2
-  * Ecplise RCP
-
---column-end
-
---column-start
-
-# **Conférencier**
-  * Devoxx
-  * Mix IT
-
---column-end
-
---table-end
-
---header-end
-
-# Dernière expérience
+`# Dernière expérience
 
 --section-start
 
