@@ -127,7 +127,7 @@ api.put('/documents/:uuid', (req, res) => {
         sql = 'UPDATE resume SET content = $1, path = $3, version = $4, last_modified = $5, metadata = $6 where uuid = $2';
       }
 
-      let path = buildPath(req.body.metadata.name + '');
+      var path = buildPath(req.body.metadata.name + '');
 
       executeQueryWithCallback(
         sql,
