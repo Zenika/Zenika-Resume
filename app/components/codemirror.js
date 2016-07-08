@@ -1152,6 +1152,7 @@
 
   function handlePaste(e, cm) {
     var pasted = e.clipboardData && e.clipboardData.getData("text/plain");
+
     if (pasted) {
       e.preventDefault();
       if (!cm.isReadOnly() && !cm.options.disableInput)
@@ -1292,6 +1293,9 @@
       on(te, "copy", prepareCopyCut);
 
       on(display.scroller, "paste", function(e) {
+        if(hasSomeParentTheClass(e.target,'CodeMirror-form')){
+          return;
+        }
         if (eventInWidget(display, e) || signalDOMEvent(cm, e)) return;
         cm.state.pasteIncoming = true;
         input.focus();
