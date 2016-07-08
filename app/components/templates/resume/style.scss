@@ -150,6 +150,12 @@
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
+
+  .chunk {
+    h1{
+      font-size: 12px !important;
+    }
+  }
 }
 
 .expertise .title, .mission-title .title, .chunk h1 {
