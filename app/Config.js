@@ -17,7 +17,20 @@ rory.williaws@zenika.box.com`,
   * Mix IT`
   },
   DEFAULT_CONTENT: [
-`# Dernière expérience
+`--expertise-start
+
+--expertise-archive
+
+JAVA / JEE, EJB 3.2, Servlet"
+
+--expertise-leaf
+
+Spring (Core, Batch, Boot), CDI, XML, XSL, XSD, JUnit, Jenkins, Jrules, Hibernate, Struts, Velocity
+
+--expertise-end
+
+
+# Dernière expérience
 
 --section-start
 

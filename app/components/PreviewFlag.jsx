@@ -52,66 +52,36 @@ PreviewChunk.propTypes = {
 
 export default class PreviewFlag {
 
+  transformToIconIfRequired(data) {
+    if (data.indexOf('--expertise-') == 0) {
+      const className = 'expertise-icon ' + data.split('--expertise-')[1];
+      return (
+        <span className={className}></span>
+      );
+    }
+    return data;
+  }
+
   generateHeader(chunks, i, contentDescr, contentExp, markdownItEnv, markdownIt, emojione) {
     let description = [];
     let chunk = chunks[++i];
 
-    while (chunk && !this.hasRule(chunk, '--header-end')) {
-      if (this.hasRule(chunk, '--center-start')) {
-        chunk = chunks[++i];
-        while (chunk && !this.hasRule(chunk, '--center-end')) {
-          let preview = this.buildPreview(i, chunk, markdownItEnv);
-          description.push(preview);
-          chunk = chunks[++i];
-        }
-        contentDescr.push(
-          (
-            <div className="center">
-              {description}
-            </div>
-          )
-        );
-        chunk = chunks[++i];
+    while (chunk && !this.hasRule(chunk, '--expertise-end')) {
+      if (this.hasRule(chunk, '--expertise-')) {
+        description.push(this.transformToIconIfRequired(chunk.map((c)=>c.content).join('')));
+      } else {
+        description.push(this.buildPreview(i, chunk, markdownItEnv));
       }
-
-      description = [];
-      var classColonne = "premiereColonne";
-      if (this.hasRule(chunk, '--table-start')) {
-        chunk = chunks[++i];
-        while (chunk && !this.hasRule(chunk, '--table-end')) {
-          let columns = [];
-          if (this.hasRule(chunk, '--column-start')) {
-            chunk = chunks[++i];
-            while (chunk && !this.hasRule(chunk, '--column-end')) {
-              let preview = this.buildPreview(i, chunk, markdownItEnv);
-
-              columns.push(preview);
-              chunk = chunks[++i];
-            }
-          }
-
-          description.push(
-            (
-              <div className={classColonne}>
-                {columns}
-              </div>
-            )
-          );
-          classColonne = "colonne";
-          chunk = chunks[++i];
-        }
-
-        contentDescr.push(
-          (
-            <div className="table">
-              {description}
-            </div>
-          )
-        );
-
-        chunk = chunks[++i];
-      }
+      chunk = chunks[++i];
     }
+
+    contentDescr.push(
+      (
+        <ul>
+          {description.map((d)=>(<li>{d}</li>))}
+        </ul>
+      )
+    );
 
     return i;
   }
@@ -173,7 +143,7 @@ export default class PreviewFlag {
     for (var i = 0; i < chunks.length; i++) {
       var chunk = chunks[i];
 
-      if (this.hasRule(chunk, '--header-start')) {
+      if (this.hasRule(chunk, '--expertise-start')) {
         i = this.generateHeader(chunks, i, contentDescr, contentExp, markdownItEnv, markdownIt, emojione);
         continue;
       }

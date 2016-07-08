@@ -10,17 +10,7 @@ import './resume/style.scss';
 export default class Resume extends BaseTemplate {
 
   getDefaultData() {
-    return {
-      name: '[name]',
-      experience: '[experience]',
-      titre: '[titre]',
-      expertises: {
-        1: '[expertises/1]',
-        2: '[expertises/2]',
-        3: '[expertises/3]',
-        4: '[expertises/4]'
-      }
-    };
+    return {};
   }
 
   transformToIconIfRequired(data) {
@@ -131,7 +121,7 @@ export default class Resume extends BaseTemplate {
         <div className="header3"></div>
         <div className="expertise">
           <span className="title">Expertise</span>
-          {expertises}
+          {this.props.contentDescription}
         </div>
         <div className="content">
           {this.props.contentExperience}
