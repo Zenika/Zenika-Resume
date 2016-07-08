@@ -88,7 +88,7 @@ api.get('/documents/:uuid', (req, res) => {
           [uuid],
           res,
           function (data) {
-            if (data.rows.length != 1) {
+            if (data.rows.length < 1) {
               res.status(404);
               return;
             }
