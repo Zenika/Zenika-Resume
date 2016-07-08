@@ -84,7 +84,7 @@ api.get('/documents/:uuid', (req, res) => {
     function (data) {
       if (data.rows.length != 1) {
         executeQueryWithCallback(
-          'SELECT id, content, metadata, path, version, last_modified FROM resume where path=($1)',
+          'SELECT id, content, metadata, path, version, last_modified FROM resume where path=($1) ORDER BY last_modified DESC',
           [uuid],
           res,
           function (data) {
