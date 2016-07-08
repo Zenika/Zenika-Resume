@@ -64,6 +64,12 @@ app.get('/[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}', (req, res) => {
   });
 });
 
+app.get('/[a-z-]+', (req, res) => {
+  res.sendFile('index.html', {
+    root: staticPath
+  });
+});
+
 app.use('/', express.static('.'));
 
 function buildDocumentFromQueryResult(data) {
