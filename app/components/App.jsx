@@ -72,7 +72,7 @@ export default class App extends Component {
             The document you were working on has been updated by a third,
             and you are now working on a fork. You can still find the original
             (and updated) document:&nbsp;
-            <a href={`/${state.document.uuid}#${state.secret}`}>here</a>.
+            <a href={`/${state.document.uuid}`}>here</a>.
           </span>
         ),
         type: 'warning'
@@ -80,7 +80,7 @@ export default class App extends Component {
 
       this.loadAndRedirect(
         state.fork.document,
-        `/${state.fork.document.uuid}#${state.fork.secret}`,
+        `/${state.fork.document.uuid}`,
         message
       );
     });
@@ -103,7 +103,7 @@ export default class App extends Component {
     this.props.controller.on(`${Events.SYNCHRONIZE}, ${Events.CHANGE}`, (state) => {
       this.loadAndRedirect(
         state.document,
-        `/${state.document.uuid}#${state.secret}`
+        `/${state.document.uuid}`
       );
     });
 
