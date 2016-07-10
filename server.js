@@ -70,14 +70,15 @@ app.get('/logout', function (req, res) {
 app.use((req, res, next)=> {
   if (req.originalUrl == '/') {
     if (isUserConnectedAndZenika(req)) {
-      return next();
+      next();
+    } else if (isUserConnected(req)) {
+      res.redirect('/not-zenika.html');
+    } else {
+      res.redirect('/login/google');
     }
-    if (isUserConnected(req)) {
-      return res.redirect('/not-zenika.html');
-    }
-    return res.redirect('/login/google');
+  } else {
+    next();
   }
-  return next();
 }, express.static(staticPath));
 
 passport.serializeUser(function (user, done) {
@@ -90,9 +91,10 @@ passport.deserializeUser(function (obj, done) {
 
 function ensureAuthenticated(req, res, next) {
   if (isUserConnectedAndZenika(req)) {
-    return next();
+    next();
+  } else {
+    res.redirect('/login/google?uuid=' + req.originalUrl.split('/')[1]);
   }
-  return res.redirect('/login/google?uuid=' + req.originalUrl.split('/')[1]);
 }
 
 function executeQueryWithCallback(query, params, response, callback) {
@@ -147,9 +149,9 @@ app.get('/login/google/callback',
   passport.authenticate('google', {failureRedirect: '/login'}),
   function (req, res) {
     if (req.session.requestedUuid) {
-      return res.redirect('/' + req.session.requestedUuid);
+      res.redirect('/' + req.session.requestedUuid);
     } else {
-      return res.redirect('/');
+      res.redirect('/');
     }
   });
 
@@ -211,19 +213,21 @@ function findByUuid(req, res, uuid) {
 // API
 api.get('/documents/:uuid', (req, res) => {
   const uuid = req.params.uuid;
-  return findByPath(req, res, uuid);
+  findByPath(req, res, uuid);
 });
 
 api.put('/documents/:uuid', bodyParser.json(), (req, res) => {
   const uuid = req.params.uuid;
 
   if (!isUserConnectedAndZenika(req)) {
-    return res.redirect('/login/google?uuid' + uuid);
+    res.redirect('/login/google?uuid' + uuid);
+    return;
   }
 
   // request validation
   if (!req.body.content) {
-    return res.status(400).json();
+    res.status(400).json();
+    return;
   }
 
   executeQueryWithCallback(
@@ -267,7 +271,8 @@ api.put('/documents/:uuid', bodyParser.json(), (req, res) => {
 // API
 api.get('/resumes', (req, res) => {
   if (!isUserConnectedAndZenika(req)) {
-    return res.status(401).json();
+    res.status(401).json();
+    return;
   }
 
   executeQueryWithCallback(
@@ -275,7 +280,7 @@ api.get('/resumes', (req, res) => {
     [],
     res,
     function (data) {
-      res.status(200).json(data.rows.map((row)=>{
+      res.status(200).json(data.rows.map((row)=> {
         row.metadata = JSON.parse(row.metadata);
         return row;
       }));
