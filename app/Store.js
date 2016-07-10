@@ -18,6 +18,7 @@ export const Events = {
   DECRYPTION_FAILED: 'store:decryption_failed',
   CONFLICT: 'store:conflict',
   UPDATE_WITHOUT_CONFLICT: 'store:update-without-conflict',
+  AUTHENTICATION_REQUIRED: 'store:authentication-required',
 };
 
 export default class Store {
@@ -392,6 +393,12 @@ export default class Store {
   }
 
   _handleRequestError(err) {
+    if(err.response && 401 === err.response.statusCode) {
+      this.events.emit(Events.AUTHENTICATION_REQUIRED, this.state);
+
+      return Promise.reject(new Error('document not found'));
+    }
+
     if (err.response && 404 === err.response.statusCode) {
       this.events.emit(Events.DOCUMENT_NOT_FOUND, this.state);
 

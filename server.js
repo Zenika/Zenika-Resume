@@ -12,6 +12,9 @@ const pg = require('pg');
 
 const buildPath = require('./build-path');
 
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+
 // config
 const staticPath = path.join(__dirname, '/build');
 const dataDir = process.env.MONOD_DATA_DIR || path.join(__dirname, '/data');
@@ -23,9 +26,72 @@ app.set('etag', false);
 
 // middlewares
 app.use(compression());
-app.use(express.static(staticPath));
-app.use(bodyParser.json());
+app.use(require('cookie-parser')());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(require('express-session')({secret: 'keyboard cat', resave: true, saveUninitialized: true}));
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(api);
+
+function isUserConnectedAndZenika(req) {
+  if(req.session.isZenika){
+    return true;
+  }
+  if (req.user &&
+    req.user.emails
+      .map((email)=> email.value)
+      .join('')
+      .indexOf('@zenika') != -1
+  ) {
+    req.session.isZenika = true;
+    return true;
+  }
+  return false;
+}
+
+function isUserConnected(req) {
+  if (req.user) {
+    return true;
+  }
+  return false;
+}
+
+app.get('/logout', function(req, res){
+  req.logOut();
+  req.session.destroy(function (err) {
+    res.redirect('/');
+  });
+});
+
+app.use((req, res, next)=> {
+  if (req.originalUrl == '/') {
+    if (isUserConnectedAndZenika(req)) {
+      return next();
+    }
+    if(isUserConnected(req)){
+      res.redirect('/not-zenika.html');
+      return;
+    }
+    res.redirect('/login/google');
+    return;
+  }
+  return next();
+}, express.static(staticPath));
+
+passport.serializeUser(function (user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function (obj, done) {
+  done(null, obj);
+});
+
+function ensureAuthenticated(req, res, next) {
+  if (isUserConnectedAndZenika(req)) {
+    return next();
+  }
+  res.redirect('/login/google?uuid=' + req.originalUrl.split('/')[1]);
+}
 
 function executeQueryWithCallback(query, params, response, callback) {
   pg.connect(databaseUrl, function (err, client, done) {
@@ -57,20 +123,48 @@ const isValidId = (uuid) => {
   return /[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}/.test(uuid);
 };
 
+passport.use(new GoogleStrategy({
+    clientID: '268375734447-em0sjiaauqv3cj4fjmjminciiusspocq.apps.googleusercontent.com',
+    clientSecret: '8SZCSKwpiWusUZvSzmrGdwRO',
+    callbackURL: 'http://localhost:3000/login/google/callback'
+  },
+  function (token, tokenSecret, profile, done) {
+    process.nextTick(function () {
+      profile.identifier = token;
+      return done(null, profile);
+    });
+  }
+));
+
+app.get('/login/google', (req, res, next)=> {
+  req.session.requestedUuid = req.query.uuid;
+  return next();
+}, passport.authenticate('google', {scope: ['profile', 'email']}));
+
+app.get('/login/google/callback',
+  passport.authenticate('google', {failureRedirect: '/login'}),
+  function (req, res) {
+    if (req.session.requestedUuid) {
+      res.redirect('/' + req.session.requestedUuid);
+    } else {
+      res.redirect('/');
+    }
+  });
+
 // Match UUIDs
-app.get('/[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}', (req, res) => {
+app.get('/[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}', ensureAuthenticated, (req, res) => {
   res.sendFile('index.html', {
     root: staticPath
   });
 });
 
-app.get('/[a-z-]+', (req, res) => {
+app.get('/[a-z-]+', (req, res, next)=> {
+  return next();
+}, (req, res) => {
   res.sendFile('index.html', {
     root: staticPath
   });
 });
-
-app.use('/', express.static('.'));
 
 function buildDocumentFromQueryResult(data) {
   data = data.rows[0];
@@ -79,39 +173,54 @@ function buildDocumentFromQueryResult(data) {
   return data;
 }
 
-// API
-api.get('/documents/:uuid', (req, res) => {
-  const uuid = req.params.uuid;
-
+function findByPath(req, res, path) {
   executeQueryWithCallback(
-    'SELECT id, uuid, content, metadata, path, version, last_modified FROM resume where uuid=($1)',
-    [uuid],
+    'SELECT id, content, metadata, path, version, last_modified FROM resume where path=($1) ORDER BY last_modified DESC',
+    [path],
     res,
     function (data) {
-      if (data.rows.length != 1) {
-        executeQueryWithCallback(
-          'SELECT id, content, metadata, path, version, last_modified FROM resume where path=($1) ORDER BY last_modified DESC',
-          [uuid],
-          res,
-          function (data) {
-            if (data.rows.length < 1) {
-              res.status(404);
-              return;
-            }
-            data.uuid = '';
-            res.status(200).json(buildDocumentFromQueryResult(data));
-          });
+      if (data.rows.length < 1) {
+        findByUuid(req, res, path);
       } else {
+        data.uuid = '';
         res.status(200).json(buildDocumentFromQueryResult(data));
       }
     });
+}
+
+function findByUuid(req, res, uuid) {
+  if (!isUserConnectedAndZenika(req)) {
+    res.status(401).json();
+  } else {
+    executeQueryWithCallback(
+      'SELECT id, uuid, content, metadata, path, version, last_modified FROM resume where uuid=($1)',
+      [uuid],
+      res,
+      function (data) {
+        if (data.rows.length != 1) {
+          res.status(404).json();
+        } else {
+          res.status(200).json(buildDocumentFromQueryResult(data));
+        }
+      });
+  }
+}
+
+// API
+api.get('/documents/:uuid', (req, res) => {
+  const uuid = req.params.uuid;
+  findByPath(req, res, uuid);
 });
 
-api.put('/documents/:uuid', (req, res) => {
+api.put('/documents/:uuid', bodyParser.json(), (req, res) => {
   const uuid = req.params.uuid;
 
+  if (!isUserConnectedAndZenika(req)) {
+    return res.redirect('/login/google?uuid' + uuid);
+  }
+
   // request validation
-  if (!isValidId(uuid) || !req.body.content) {
+  if (!req.body.content) {
     return res.status(400).json();
   }
 
@@ -125,7 +234,6 @@ api.put('/documents/:uuid', (req, res) => {
       document.content = req.body.content;
       document.metadata = JSON.stringify(req.body.metadata);
       document.last_modified = moment().format('YYYY-MM-DD HH:mm:ss');
-      console.log(data + " select from update");
       var sql = '';
       if (data.rows.length == 0) {
         sql = 'INSERT into resume (content, uuid, path, version, last_modified, metadata) VALUES($1, $2, $3, $4, $5, $6) RETURNING id';
@@ -147,7 +255,6 @@ api.put('/documents/:uuid', (req, res) => {
         ],
         res,
         function (result) {
-          console.log("update done");
           document.last_modified = moment(document.last_modified).toDate().getTime();
           res.status(200).json(document);
         }

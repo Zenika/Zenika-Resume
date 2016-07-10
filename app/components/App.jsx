@@ -100,6 +100,10 @@ export default class App extends Component {
       });
     });
 
+    this.props.controller.on(Events.AUTHENTICATION_REQUIRED, (state) => {
+      document.location.href = '/login/google?uuid=' + window.location.pathname.slice(1);
+    });
+
     this.props.controller.on(`${Events.SYNCHRONIZE}, ${Events.CHANGE}`, (state) => {
       this.loadAndRedirect(
         state.document,
