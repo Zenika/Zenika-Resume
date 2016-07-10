@@ -22,6 +22,7 @@ const staticPath = path.join(__dirname, '/build');
 var databaseUrl = process.env.DATABASE_URL || 'postgres://localhost/resume';
 var googleId = process.env.GOOGLE_ID || googleConf.id;
 var googleSecret = process.env.GOOGLE_SECRET || googleConf.secret;
+var googleCallback = process.env.GOOGLE_CALLBACK || googleConf.callback;
 
 var isDev = !process.env.DATABASE_URL;
 
@@ -130,7 +131,7 @@ const isValidId = (uuid) => {
 passport.use(new GoogleStrategy({
     clientID: googleId,
     clientSecret: googleSecret,
-    callbackURL: 'http://localhost:3000/login/google/callback'
+    callbackURL: googleCallback
   },
   function (token, tokenSecret, profile, done) {
     process.nextTick(function () {
