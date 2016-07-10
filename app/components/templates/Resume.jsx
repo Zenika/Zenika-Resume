@@ -83,11 +83,20 @@ export default class Resume extends BaseTemplate {
   buildDescription(data) {
     const description = [];
 
-    return (
-      <div className="description">
+    var center = undefined;
+
+    if(data.description != ''){
+      center = (
         <div className="center">
           {data.description}
         </div>
+      );
+    }
+
+    var table = undefined;
+
+    if(data.column1 != '' || data.column2 != ''  || data.column3 != ''){
+      table = (
         <div className="table">
           <div className="premiereColonne">
             {data.column1}
@@ -99,6 +108,13 @@ export default class Resume extends BaseTemplate {
             {data.column3}
           </div>
         </div>
+      );
+    }
+
+    return (
+      <div className="description">
+        {center}
+        {table}
       </div>
     );
   }
