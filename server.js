@@ -73,11 +73,9 @@ app.use((req, res, next)=> {
       return next();
     }
     if (isUserConnected(req)) {
-      res.redirect('/not-zenika.html');
-      return;
+      return res.redirect('/not-zenika.html');
     }
-    res.redirect('/login/google');
-    return;
+    return res.redirect('/login/google');
   }
   return next();
 }, express.static(staticPath));
@@ -94,7 +92,7 @@ function ensureAuthenticated(req, res, next) {
   if (isUserConnectedAndZenika(req)) {
     return next();
   }
-  res.redirect('/login/google?uuid=' + req.originalUrl.split('/')[1]);
+  return res.redirect('/login/google?uuid=' + req.originalUrl.split('/')[1]);
 }
 
 function executeQueryWithCallback(query, params, response, callback) {
@@ -149,9 +147,9 @@ app.get('/login/google/callback',
   passport.authenticate('google', {failureRedirect: '/login'}),
   function (req, res) {
     if (req.session.requestedUuid) {
-      res.redirect('/' + req.session.requestedUuid);
+      return res.redirect('/' + req.session.requestedUuid);
     } else {
-      res.redirect('/');
+      return res.redirect('/');
     }
   });
 
@@ -213,7 +211,7 @@ function findByUuid(req, res, uuid) {
 // API
 api.get('/documents/:uuid', (req, res) => {
   const uuid = req.params.uuid;
-  findByPath(req, res, uuid);
+  return findByPath(req, res, uuid);
 });
 
 api.put('/documents/:uuid', bodyParser.json(), (req, res) => {
