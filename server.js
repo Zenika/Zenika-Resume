@@ -11,15 +11,19 @@ const api = express.Router();
 const pg = require('pg');
 
 const buildPath = require('./build-path');
+const googleConf = require('./conf-google');
 
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 // config
 const staticPath = path.join(__dirname, '/build');
-const dataDir = process.env.MONOD_DATA_DIR || path.join(__dirname, '/data');
 
 var databaseUrl = process.env.DATABASE_URL || 'postgres://localhost/resume';
+var googleId = process.env.GOOGLE_ID || googleConf.id;
+var googleSecret = process.env.GOOGLE_SECRET || googleConf.secret;
+
+var isDev = !process.env.DATABASE_URL;
 
 app.set('port', process.env.PORT || 3000);
 app.set('etag', false);
@@ -124,8 +128,8 @@ const isValidId = (uuid) => {
 };
 
 passport.use(new GoogleStrategy({
-    clientID: '268375734447-em0sjiaauqv3cj4fjmjminciiusspocq.apps.googleusercontent.com',
-    clientSecret: '8SZCSKwpiWusUZvSzmrGdwRO',
+    clientID: googleId,
+    clientSecret: googleSecret,
     callbackURL: 'http://localhost:3000/login/google/callback'
   },
   function (token, tokenSecret, profile, done) {
