@@ -143,7 +143,10 @@ passport.use(new GoogleStrategy({
 app.get('/login/google', (req, res, next)=> {
   req.session.requestedUuid = req.query.uuid;
   return next();
-}, passport.authenticate('google', {scope: ['profile', 'email']}));
+}, passport.authenticate('google', {
+  scope: ['https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/userinfo.profile']
+}));
 
 app.get('/login/google/callback',
   passport.authenticate('google', {failureRedirect: '/login'}),
