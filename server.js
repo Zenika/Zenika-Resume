@@ -11,7 +11,6 @@ const api = express.Router();
 const pg = require('pg');
 
 const buildPath = require('./build-path');
-const googleConf = require('./conf-google');
 
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
@@ -20,9 +19,9 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const staticPath = path.join(__dirname, '/build');
 
 var databaseUrl = process.env.DATABASE_URL || 'postgres://localhost/resume';
-var googleId = process.env.GOOGLE_ID || googleConf.id;
-var googleSecret = process.env.GOOGLE_SECRET || googleConf.secret;
-var googleCallback = process.env.GOOGLE_CALLBACK || googleConf.callback;
+var googleId = process.env.GOOGLE_ID || require('./conf-google').id;
+var googleSecret = process.env.GOOGLE_SECRET || require('./conf-google').secret;
+var googleCallback = process.env.GOOGLE_CALLBACK || require('./conf-google').callback;
 
 var isDev = !process.env.DATABASE_URL;
 
