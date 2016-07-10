@@ -43,6 +43,7 @@ export default class Footer extends Component {
           l'aide</a>
         <Sync />
         <span className="viewLink">Lien en lecture : <a href={path}>{path}</a></span>
+        <span className="viewLink"><a href="/list.html" target="_blank">Liste de tous les CV</a>&nbsp;&nbsp;</span>
       </footer>
     );
   }

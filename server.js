@@ -38,7 +38,7 @@ app.use(passport.session());
 app.use(api);
 
 function isUserConnectedAndZenika(req) {
-  if(req.session.isZenika){
+  if (req.session.isZenika) {
     return true;
   }
   if (req.user &&
@@ -60,7 +60,7 @@ function isUserConnected(req) {
   return false;
 }
 
-app.get('/logout', function(req, res){
+app.get('/logout', function (req, res) {
   req.logOut();
   req.session.destroy(function (err) {
     res.redirect('/');
@@ -72,7 +72,7 @@ app.use((req, res, next)=> {
     if (isUserConnectedAndZenika(req)) {
       return next();
     }
-    if(isUserConnected(req)){
+    if (isUserConnected(req)) {
       res.redirect('/not-zenika.html');
       return;
     }
@@ -263,6 +263,24 @@ api.put('/documents/:uuid', bodyParser.json(), (req, res) => {
           res.status(200).json(document);
         }
       );
+    });
+});
+
+// API
+api.get('/resumes', (req, res) => {
+  if (!isUserConnectedAndZenika(req)) {
+    res.status(401).json();
+  }
+
+  executeQueryWithCallback(
+    'SELECT uuid, metadata, path, version, last_modified FROM resume ORDER BY path ASC, last_modified DESC',
+    [],
+    res,
+    function (data) {
+      res.status(200).json(data.rows.map((row)=>{
+        row.metadata = JSON.parse(row.metadata);
+        return row;
+      }));
     });
 });
 
