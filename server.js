@@ -267,7 +267,7 @@ api.put('/documents/:uuid', bodyParser.json(), (req, res) => {
 // API
 api.get('/resumes', (req, res) => {
   if (!isUserConnectedAndZenika(req)) {
-    res.status(401).json();
+    return res.status(401).json();
   }
 
   executeQueryWithCallback(
