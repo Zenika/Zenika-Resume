@@ -128,18 +128,6 @@ const common = {
       // by the template itself
       inject: false
     }),
-    new OfflinePlugin({
-      caches: 'all',
-      scope: '/',
-      version: VERSION.substring(0, 7),
-      ServiceWorker: {
-        cache_name: 'monod'
-      },
-      AppCache: {
-        FALLBACK: {'/': '/'},
-        NETWORK: ['/documents', '*']
-      }
-    }),
     new CopyWebpackPlugin([
       {from:'app/not-zenika.html'},
       {from:'app/list.html'}
