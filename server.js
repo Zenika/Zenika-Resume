@@ -37,16 +37,18 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(api);
 
+function hasValidEmail(req) {
+  var emails = req.user.emails
+    .map((email)=> email.value)
+    .join('');
+  return emails.indexOf('@zenika') != -1 || emails.indexOf('zenika.resume@gmail.com') != -1;
+}
+
 function isUserConnectedAndZenika(req) {
   if (req.session.isZenika) {
     return true;
   }
-  if (req.user &&
-    req.user.emails
-      .map((email)=> email.value)
-      .join('')
-      .indexOf('@zenika') != -1
-  ) {
+  if (req.user && hasValidEmail(req)) {
     req.session.isZenika = true;
     return true;
   }
