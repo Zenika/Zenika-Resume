@@ -200,7 +200,7 @@ export default class App extends Component {
         <div className="reveal" id="help-modal" data-reveal>
           <h1>Ouf je suis sauvé!</h1>
 
-          <iframe width="640" height="360" src="https://www.youtube.com/embed/wT_lFzsmuf0?rel=0&amp;showinfo=0"
+          <iframe width="640" height="360" src="https://www.youtube.com/embed/NFQaIcU54J4?rel=0&amp;showinfo=0"
                   frameborder="0" allowfullscreen></iframe>
 
           <p className="lead">Impression en pdf</p>
