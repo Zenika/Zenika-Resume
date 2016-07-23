@@ -1,6 +1,6 @@
 import Immutable from 'immutable';
-import React, {Component, PropTypes} from 'react';
-import {Events} from '../Store';
+import React, { Component, PropTypes } from 'react';
+import { Events } from '../Store';
 import Document from '../Document';
 import debounce from 'lodash.debounce';
 
@@ -199,6 +199,10 @@ export default class App extends Component {
       <div className={`layout ${viewMode}`} style={style}>
         <div className="reveal" id="help-modal" data-reveal>
           <h1>Ouf je suis sauvé!</h1>
+
+          <iframe width="640" height="360" src="https://www.youtube.com/embed/wT_lFzsmuf0?rel=0&amp;showinfo=0"
+                  frameborder="0" allowfullscreen></iframe>
+
           <p className="lead">Impression en pdf</p>
           <p>
             L'application a été testé avec Chrome. Il est possible de demander dans <br/>

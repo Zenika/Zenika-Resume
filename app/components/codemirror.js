@@ -514,7 +514,7 @@
     cm.display.scrollbars = new CodeMirror.scrollbarModel[cm.options.scrollbarStyle](function(node) {
       cm.display.wrapper.insertBefore(node, cm.display.scrollbarFiller);
       // Prevent clicks in the scrollbars from killing focus
-      on(node, "mousedown", function() {
+      on(node, "mousedown", function(e) {
         if (cm.state.focused) setTimeout(function() { cm.display.input.focus(); }, 0);
       });
       node.setAttribute("cm-not-content", "true");
