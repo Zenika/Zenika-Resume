@@ -326,43 +326,44 @@
   margin: 0;
 }
 
+$zoom:0.25;
+
 .expertise-icon {
-  zoom: 0.25;
   &.archive {
     background-image: url('img/icons/expertise-archive.png');
-    background-size: 75px 70px;
-    width: 75px;
-    height: 70px;
+    background-size: $zoom*75px $zoom*70px;
+    width: $zoom*75px;
+    height: $zoom*70px;
   }
   &.cloud {
     background-image: url('img/icons/expertise-cloud.png');
-    background-size: 90px 57px;
-    width: 90px;
-    height: 57px;
+    background-size: $zoom*90px $zoom*57px;
+    width: $zoom*90px;
+    height: $zoom*57px;
   }
   &.file {
     background-image: url('img/icons/expertise-file.png');
-    background-size: 60px 69px;
-    width: 60px;
-    height: 69px;
+    background-size: $zoom*60px $zoom*69px;
+    width: $zoom*60px;
+    height: $zoom*69px;
   }
   &.flag {
     background-image: url('img/icons/expertise-flag.png');
-    background-size: 71px 77px;
-    width: 71px;
-    height: 77px;
+    background-size: $zoom*71px $zoom*77px;
+    width: $zoom*71px;
+    height: $zoom*77px;
   }
   &.leaf {
     background-image: url('img/icons/expertise-leaf.png');
-    background-size: 69px 74px;
-    width: 69px;
-    height: 74px;
+    background-size: $zoom*69px $zoom*74px;
+    width: $zoom*69px;
+    height: $zoom*74px;
   }
   &.talk {
     background-image: url('img/icons/expertise-talk.png');
-    background-size: 81px 75px;
-    width: 81px;
-    height: 75px;
+    background-size: $zoom*81px $zoom*75px;
+    width: $zoom*81px;
+    height: $zoom*75px;
   }
 }
 

@@ -1258,6 +1258,9 @@
       });
 
       on(te, "paste", function(e) {
+        if(hasSomeParentTheClass(e.target,'CodeMirror-form')){
+          return;
+        }
         if (signalDOMEvent(cm, e) || handlePaste(e, cm)) return
 
         cm.state.pasteIncoming = true;
@@ -1303,6 +1306,9 @@
 
       // Prevent normal selection in the editor (we handle our own)
       on(display.lineSpace, "selectstart", function(e) {
+        if(hasSomeParentTheClass(e.target,'CodeMirror-form')){
+          return;
+        }
         if (!eventInWidget(display, e)) e_preventDefault(e);
       });
 

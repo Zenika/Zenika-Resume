@@ -21,7 +21,7 @@ rory.williaws@zenika.box.com`,
 
 --expertise-archive
 
-JAVA / JEE, EJB 3.2, Servlet"
+JAVA / JEE, EJB 3.2, Servlet
 
 --expertise-leaf
 
