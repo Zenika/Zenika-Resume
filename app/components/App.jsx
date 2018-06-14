@@ -1,9 +1,10 @@
 import Immutable from 'immutable';
 import React, { Component, PropTypes } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, intlShape, injectIntl, defineMessages } from 'react-intl';
 import { Events } from '../Store';
 import Document from '../Document';
 import debounce from 'lodash.debounce';
+import isEqual from 'lodash.isequal';
 
 import Editor from './Editor';
 import Footer from './Footer';
@@ -11,18 +12,19 @@ import MessageBoxes from './MessageBox';
 
 const {object, string} = PropTypes;
 
-export default class App extends Component {
+class App extends Component {
   constructor(props, context) {
     super(props, context);
-
+    console.log('context ', context);
     this.state = {
       document: new Document(),
       messages: new Immutable.List(),
       loaded: false
     };
-
+    this.updateUserPref = this.updateUserPref.bind(this);
     this.updateContent = debounce(this.updateContent, 150);
     this.updateMetadata = debounce(this.updateMetadata, 150);
+    this.updateUserPref = debounce(this.updateUserPref, 150);
   }
 
   getChildContext() {
@@ -118,6 +120,10 @@ export default class App extends Component {
     });
   }
 
+  componentDidUpdate() {
+    console.log('component updated', this.props.controller.store.state.document.userPref);
+  }
+
   loadAndRedirect(doc, uri, message) {
     if (message) {
       this.state.messages.push(message);
@@ -139,31 +145,39 @@ export default class App extends Component {
     }
   }
 
+  updateUserPref(newUserPref) {
+    const doc = this.state.document;
+    if (!isEqual(doc.userPref, newUserPref)) {
+      this.updateDocument(doc.metadata, doc.content, newUserPref);
+    }
+  }
+
   updateContent(newContent) {
     const doc = this.state.document;
     if (doc.content !== newContent) {
-      this.updateDocument(doc.metadata, newContent);
+      this.updateDocument(doc.metadata, newContent, doc.userPref);
     }
   }
 
   updateMetadata(newMetadata) {
     const doc = this.state.document;
     if (JSON.stringify(doc.metadata) !== JSON.stringify(newMetadata)) {
-      this.updateDocument(newMetadata, doc.content);
+      this.updateDocument(newMetadata, doc.content, doc.userPref);
     }
   }
 
-  updateDocument(metadata, content) {
+  updateDocument(metadata, content, userPref) {
     const doc = this.state.document;
-
-    this.props.controller.dispatch('action:update', new Document({
+    const newDoc = new Document({
       uuid: doc.get('uuid'),
       content: content,
       metadata: metadata,
+      userPref: userPref,
       path: doc.get('path'),
       last_modified: doc.get('last_modified'),
-      last_modified_locally: doc.get('last_modified_locally')
-    }));
+      last_modified_locally: doc.get('last_modified_locally'),
+    });
+    this.props.controller.dispatch('action:update', newDoc);
   }
 
   removeMessage(index) {
@@ -179,6 +193,15 @@ export default class App extends Component {
       history.back();
       modal.style.display = 'none';
     }
+  }
+
+  testButtonhandler(e) {
+    console.log('button clicked', e);
+    this.updateUserPref({
+      locale: 'fr',
+    });
+    console.log(this.props.controller.store.state.document);
+    // console.log(this.props.intl);
   }
 
   render() {
@@ -205,7 +228,7 @@ export default class App extends Component {
                   frameborder="0" allowfullscreen></iframe>
 
           <p className="dummyTest">
-            <FormattedMessage id="lorem" />
+            <FormattedMessage id="z" />
           </p>
           <p className="lead">Impression en pdf</p>
           <p>
@@ -294,6 +317,17 @@ export default class App extends Component {
           onContentUpdate={this.updateContent.bind(this)}
           onMetadataUpdate={this.updateMetadata.bind(this)}
         />
+        <div>
+          <button onClick={(e) => this.testButtonhandler(e)}>
+            Test Button
+          </button>
+          <a href="/?locale=en-US">
+              EN
+          </a>
+          <a href="/?locale=fr-FR">
+              FR
+          </a>
+        </div>
         <Footer version={this.props.version} metadata={this.state.document.get('metadata')}/>
       </div>
     );
@@ -302,9 +336,12 @@ export default class App extends Component {
 
 App.propTypes = {
   version: string.isRequired,
-  controller: object.isRequired
+  controller: object.isRequired,
+  intl: intlShape.isRequired,
 };
 
 App.childContextTypes = {
   controller: object
 };
+
+export default injectIntl(App);
