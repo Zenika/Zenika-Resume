@@ -1,5 +1,6 @@
 import Immutable from 'immutable';
 import React, { Component, PropTypes } from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Events } from '../Store';
 import Document from '../Document';
 import debounce from 'lodash.debounce';
@@ -203,6 +204,9 @@ export default class App extends Component {
           <iframe width="640" height="360" src="https://www.youtube.com/embed/NFQaIcU54J4?rel=0&amp;showinfo=0"
                   frameborder="0" allowfullscreen></iframe>
 
+          <p className="dummyTest">
+            <FormattedMessage id="lorem" />
+          </p>
           <p className="lead">Impression en pdf</p>
           <p>
             L'application a été testé avec Chrome. Il est possible de demander dans <br/>

@@ -1,6 +1,6 @@
 import React, {PropTypes, Component} from 'react';
+import { FormattedMessage } from 'react-intl';
 import Sync from './Sync';
-
 const buildPath = require('../../build-path');
 
 const {string} = PropTypes;
@@ -44,6 +44,9 @@ export default class Footer extends Component {
         <Sync />
         <span className="viewLink">Lien en lecture : <a href={path}>{path}</a></span>
         <span className="viewLink"><a href="/list.html" target="_blank">Liste de tous les CV</a>&nbsp;&nbsp;</span>
+        <span className="viewLink languageToggle">
+          <FormattedMessage id="ln" />
+        </span>
       </footer>
     );
   }
