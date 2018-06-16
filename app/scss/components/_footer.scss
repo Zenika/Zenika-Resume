@@ -9,6 +9,10 @@ footer.main {
   font-family: $footer-font-family;
   font-size: $footer-font-size;
 
+  .languageToggle {
+    padding: 0 15px;
+  }
+
   .credits {
     float: left;
   }
