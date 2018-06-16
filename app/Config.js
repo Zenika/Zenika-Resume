@@ -1,6 +1,9 @@
 /* eslint max-len: 0 */
 export const Config = {
   APP_NAME: 'Zenika Resume',
+  DEFAULT_USERPREF: {
+    locale: 'fr-FR'
+  },
   DEFAULT_METADATA: {
     name: 'Rory Williams',
     experience: '2 ans d\'expérience',
