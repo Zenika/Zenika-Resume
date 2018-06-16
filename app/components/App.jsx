@@ -28,6 +28,7 @@ class App extends Component {
       messages: new Immutable.List(),
       loaded: false,
     };
+    this.toggleLocale = this.toggleLocale.bind(this);
     this.updateUserPref = this.updateUserPref.bind(this);
     this.updateContent = debounce(this.updateContent, 150);
     this.updateMetadata = debounce(this.updateMetadata, 150);
@@ -198,16 +199,10 @@ class App extends Component {
     }
   }
 
-  testButtonhandler(e) {
-    if (this.props.controller.store.state.document.userPref.locale === 'fr-FR') {
-      this.updateUserPref({
-        locale: 'en-US',
-      });
-    } else {
-      this.updateUserPref({
-        locale: 'fr-FR',
-      });
-    }
+  toggleLocale(e) {
+    this.updateUserPref({
+      locale: e.target.value,
+    });
   }
 
   render() {
@@ -331,11 +326,12 @@ class App extends Component {
             onMetadataUpdate={this.updateMetadata.bind(this)}
           />
           <div>
-          <button onClick={(e) => this.testButtonhandler(e)}>
-          Test Button
-          </button>
         </div>
-        <Footer version={this.props.version} metadata={this.state.document.get('metadata')} />
+          <Footer 
+            version={this.props.version}
+            metadata={this.state.document.get('metadata')}
+            toggleLocale={this.toggleLocale}
+            currentLocale={this.props.controller.store.state.document.userPref.locale} />
         </div>
         </IntlProvider>
       );

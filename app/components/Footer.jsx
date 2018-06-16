@@ -1,11 +1,19 @@
-import React, {PropTypes, Component} from 'react';
-import { FormattedMessage } from 'react-intl';
+import React, { PropTypes, Component } from 'react';
 import Sync from './Sync';
 const buildPath = require('../../build-path');
 
-const {string} = PropTypes;
+const { string, func } = PropTypes;
 
 export default class Footer extends Component {
+  constructor(props) {
+    super(props);
+    this.isLocaleChecked = this.isLocaleChecked.bind(this);
+  }
+
+  isLocaleChecked(value) {
+    return value === this.props.currentLocale;
+  }
+
   showHelp() {
     let modal = document.getElementById('help-modal');
     if (!modal) {
@@ -45,7 +53,18 @@ export default class Footer extends Component {
         <span className="viewLink">Lien en lecture : <a href={path}>{path}</a></span>
         <span className="viewLink"><a href="/list.html" target="_blank">Liste de tous les CV</a>&nbsp;&nbsp;</span>
         <span className="viewLink languageToggle">
-          <FormattedMessage id="ln" />
+          <input
+            type="radio"
+            onClick={(item) => this.props.toggleLocale(item)} 
+            name="language"
+            value="en-US"
+            checked={this.isLocaleChecked('en-US')} /> EN
+          <input
+            type="radio"
+            onClick={(item) => this.props.toggleLocale(item)}
+            name="language"
+            value="fr-FR"
+            checked={this.isLocaleChecked('fr-FR')} /> FR
         </span>
       </footer>
     );
@@ -53,5 +72,7 @@ export default class Footer extends Component {
 }
 
 Footer.propTypes = {
-  version: string.isRequired
+  version: string.isRequired,
+  currentLocale: string.isRequired,
+  toggleLocale: func.isRequired,
 };
