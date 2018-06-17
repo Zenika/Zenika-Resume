@@ -327,7 +327,7 @@ class App extends Component {
           />
           <div>
         </div>
-          <Footer 
+          <Footer
             version={this.props.version}
             metadata={this.state.document.get('metadata')}
             toggleLocale={this.toggleLocale}
