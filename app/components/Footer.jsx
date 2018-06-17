@@ -55,16 +55,22 @@ export default class Footer extends Component {
         <span className="viewLink languageToggle">
           <input
             type="radio"
-            onClick={(item) => this.props.toggleLocale(item)} 
+            id="locale-enUS"
+            onClick={(item) => this.props.toggleLocale(item)}
             name="language"
             value="en-US"
-            checked={this.isLocaleChecked('en-US')} /> EN
+            checked={this.isLocaleChecked('en-US')}
+          />
+          <label htmlFor="locale-enUS">EN</label>
           <input
             type="radio"
+            id="locale-frFR"
             onClick={(item) => this.props.toggleLocale(item)}
             name="language"
             value="fr-FR"
-            checked={this.isLocaleChecked('fr-FR')} /> FR
+            checked={this.isLocaleChecked('fr-FR')}
+          />
+          <label htmlFor="locale-frFR">FR</label>
         </span>
       </footer>
     );

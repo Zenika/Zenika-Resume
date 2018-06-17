@@ -10,7 +10,23 @@ footer.main {
   font-size: $footer-font-size;
 
   .languageToggle {
-    padding: 0 15px;
+    input {
+      display: none;
+    }
+    input:checked+label {
+      color: #fff;
+      background-color: #27ae60;
+    }
+    label {
+      border-radius: 5px;
+      margin: 0 7px;
+      vertical-align: top;
+      font-size: $footer-font-size;
+      display: inline-block;
+      background-color: #ddd;
+      padding: 0 12px;
+      cursor: pointer;
+    }
   }
 
   .credits {
