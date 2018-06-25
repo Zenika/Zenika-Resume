@@ -1,5 +1,10 @@
 import React, { PropTypes, Component } from 'react';
 import Sync from './Sync';
+import {
+  addLocaleData,
+  IntlProvider,
+  FormattedMessage,
+} from 'react-intl';
 const buildPath = require('../../build-path');
 
 const { string, func } = PropTypes;
@@ -47,11 +52,10 @@ export default class Footer extends Component {
           Powered by&nbsp;
           <a href="https://github.com/TailorDev/monod">Monod</a>
         </div>
-        <a className="btn" onClick={this.showHelp}><i className="fa fa-question-circle-o" aria-hidden="true"></i> de
-          l'aide</a>
+        <a className="btn" onClick={this.showHelp}><i className="fa fa-question-circle-o" aria-hidden="true"></i><FormattedMessage id="help"/></a>
         <Sync />
-        <span className="viewLink">Lien en lecture : <a href={path}>{path}</a></span>
-        <span className="viewLink"><a href="/list.html" target="_blank">Liste de tous les CV</a>&nbsp;&nbsp;</span>
+        <span className="viewLink"><FormattedMessage id="read"/><a href={path}>{path}</a></span>
+        <span className="viewLink"><a href="/list.html" target="_blank"><FormattedMessage id="list"/></a>&nbsp;&nbsp;</span>
         <span className="viewLink languageToggle">
           <input
             type="radio"
