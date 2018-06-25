@@ -174,9 +174,9 @@ class App extends Component {
     const doc = this.state.document;
     const newDoc = new Document({
       uuid: doc.get('uuid'),
-      content: content,
-      metadata: metadata,
-      userPref: userPref,
+      content,
+      metadata,
+      userPref,
       path: doc.get('path'),
       last_modified: doc.get('last_modified'),
       last_modified_locally: doc.get('last_modified_locally'),
@@ -229,7 +229,7 @@ class App extends Component {
         >
         <div className={`layout ${viewMode}`} style={style}>
         <div className="reveal" id="help-modal" data-reveal>
-        <h1><FormattedMessage id="phew"/></h1>
+        <h1><FormattedMessage id="phew" /></h1>
 
         <iframe width="640" height="360" src="https://www.youtube.com/embed/NFQaIcU54J4?rel=0&amp;showinfo=0"
           frameBorder="0" allowFullScreen
@@ -237,57 +237,57 @@ class App extends Component {
 
         <p className="dummyTest">
         </p>
-        <p className="lead"><FormattedMessage id="print"/></p>
+        <p className="lead"><FormattedMessage id="print" /></p>
         <p>
-        <FormattedMessage id="the"/><br />
-        <FormattedMessage id="between"/><br />
+        <FormattedMessage id="the" /><br />
+        <FormattedMessage id="between" /><br />
         <br />
-        <FormattedMessage id="in"/><br />
-        <FormattedMessage id="the2"/><br />
-        <FormattedMessage id="then"/><br />
-        <FormattedMessage id="for"/>
+        <FormattedMessage id="in" /><br />
+        <FormattedMessage id="the2" /><br />
+        <FormattedMessage id="then" /><br />
+        <FormattedMessage id="for" />
         </p>
-        <p className="lead"><FormattedMessage id="describe"/></p>
+        <p className="lead"><FormattedMessage id="describe" /></p>
         <p>
-        <FormattedMessage id="experience"/><br />
-        <FormattedMessage id="styles"/><br />
+        <FormattedMessage id="experience" /><br />
+        <FormattedMessage id="styles" /><br />
         --section-start<br />
         --section-end<br />
         <br />
-        <FormattedMessage id="between2"/><br />
-        <FormattedMessage id="your"/><br />
+        <FormattedMessage id="between2" /><br />
+        <FormattedMessage id="your" /><br />
         <br />
-        <FormattedMessage id="the3"/><br />
-        <FormattedMessage id="the4"/><br />
+        <FormattedMessage id="the3" /><br />
+        <FormattedMessage id="the4" /><br />
         <br />
-        <FormattedMessage id="the5"/><br />
-        <FormattedMessage id="the6"/><br />
+        <FormattedMessage id="the5" /><br />
+        <FormattedMessage id="the6" /><br />
         <br />
-        <FormattedMessage id="to"/><br />
-        <FormattedMessage id="two"/><br />
-        <FormattedMessage id="the7"/><br />
-        &nbsp; &nbsp; <FormattedMessage id="a"/><br />
-        &nbsp; &nbsp; <FormattedMessage id="then2"/><br />
+        <FormattedMessage id="to" /><br />
+        <FormattedMessage id="two" /><br />
+        <FormattedMessage id="the7" /><br />
+        &nbsp; &nbsp; <FormattedMessage id="a" /><br />
+        &nbsp; &nbsp; <FormattedMessage id="then2" /><br />
         <br />
         </p>
 
-        <p className="lead"><FormattedMessage id="variable"/></p>
+        <p className="lead"><FormattedMessage id="variable" /></p>
         <p>
-        <FormattedMessage id="at"/><br />
-        <FormattedMessage id="section"/><br />
-        <FormattedMessage id="role"/><br />
-        <FormattedMessage id="the8"/><br />
-        <FormattedMessage id="for2"/><br />
-        <FormattedMessage id="you"/><br /><br />
+        <FormattedMessage id="at" /><br />
+        <FormattedMessage id="section" /><br />
+        <FormattedMessage id="role" /><br />
+        <FormattedMessage id="the8" /><br />
+        <FormattedMessage id="for2" /><br />
+        <FormattedMessage id="you" /><br /><br />
           </p>
 
-          <p className="lead"><FormattedMessage id="using"/></p>
+          <p className="lead"><FormattedMessage id="using" /></p>
           <p>
-          <FormattedMessage id="there"/><br />
-          <FormattedMessage id="it"/><br />
+          <FormattedMessage id="there" /><br />
+          <FormattedMessage id="it" /><br />
           --expertise-archive.<br />
           <br />
-          <FormattedMessage id="here"/><br />
+          <FormattedMessage id="here" /><br />
           --expertise-archive<br />
           --expertise-cloud<br />
           --expertise-file<br />
@@ -296,17 +296,17 @@ class App extends Component {
           --expertise-talk<br /><br />
           </p>
 
-          <p className="lead"><FormattedMessage id="jump"/></p>
+          <p className="lead"><FormattedMessage id="jump" /></p>
           <p>
-          <FormattedMessage id="this"/><br />
-          <FormattedMessage id="what"/><br />
+          <FormattedMessage id="this" /><br />
+          <FormattedMessage id="what" /><br />
           --break-page<br />
           </p>
 
-          <p className="lead"><FormattedMessage id="tip"/></p>
+          <p className="lead"><FormattedMessage id="tip" /></p>
           <p>
-          <FormattedMessage id="in2"/> <br />
-          <FormattedMessage id="example"/><br />
+          <FormattedMessage id="in2" /> <br />
+          <FormattedMessage id="example" /><br />
           </p>
 
           <button className="close-button" data-close aria-label="Close modal" type="button" onClick={this.hideHelp}>
@@ -330,7 +330,8 @@ class App extends Component {
             version={this.props.version}
             metadata={this.state.document.get('metadata')}
             toggleLocale={this.toggleLocale}
-            currentLocale={this.props.controller.store.state.document.userPref.locale} />
+            currentLocale={this.props.controller.store.state.document.userPref.locale}
+    />
         </div>
         </IntlProvider>
       );

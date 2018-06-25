@@ -1,8 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 import Sync from './Sync';
 import {
-  addLocaleData,
-  IntlProvider,
   FormattedMessage,
 } from 'react-intl';
 const buildPath = require('../../build-path');
