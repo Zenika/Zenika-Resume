@@ -9,7 +9,7 @@ import en from 'react-intl/locale-data/en';
 import fr from 'react-intl/locale-data/fr';
 import { Events } from '../Store';
 import Document from '../Document';
-import Translations from './Translations';
+import Translations from '../Translations';
 import debounce from 'lodash.debounce';
 import isEqual from 'lodash.isequal';
 
@@ -229,7 +229,7 @@ class App extends Component {
         >
         <div className={`layout ${viewMode}`} style={style}>
         <div className="reveal" id="help-modal" data-reveal>
-        <h1><FormattedMessage id="phew"/ppwd></h1>
+        <h1><FormattedMessage id="phew"/></h1>
 
         <iframe width="640" height="360" src="https://www.youtube.com/embed/NFQaIcU54J4?rel=0&amp;showinfo=0"
           frameBorder="0" allowFullScreen
@@ -254,7 +254,7 @@ class App extends Component {
         --section-start<br />
         --section-end<br />
         <br />
-        <FormattedMessage id="between"/><br />
+        <FormattedMessage id="between2"/><br />
         <FormattedMessage id="your"/><br />
         <br />
         <FormattedMessage id="the3"/><br />
