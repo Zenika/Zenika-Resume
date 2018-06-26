@@ -231,8 +231,13 @@ class App extends Component {
         <div className="reveal" id="help-modal" data-reveal>
         <h1><FormattedMessage id="phew" /></h1>
 
-        <iframe width="640" height="360" src="https://www.youtube.com/embed/NFQaIcU54J4?rel=0&amp;showinfo=0"
-          frameBorder="0" allowFullScreen
+        <iframe
+          width="640"
+          height="360"
+          src="https://www.youtube.com/embed/p_t7716ymoI"
+          frameBorder="0"
+          allow="autoplay; encrypted-media"
+          allowFullScreen
         ></iframe>
 
         <p className="dummyTest">
@@ -331,7 +336,7 @@ class App extends Component {
             metadata={this.state.document.get('metadata')}
             toggleLocale={this.toggleLocale}
             currentLocale={this.props.controller.store.state.document.userPref.locale}
-    />
+          />
         </div>
         </IntlProvider>
       );
