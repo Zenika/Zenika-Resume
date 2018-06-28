@@ -15,6 +15,8 @@ Build the provided Dockerfile, then run with the port 3000 mapped, and the follo
 - `GOOGLE_ID`: client ID for the Google authentication, find the value from the production environment (see below)
 - `GOOGLE_SECRET`: client secret for the Google authentication, find the value from the production environment (see below)
 - `DATABASE_URL`: a connection string to a PostgreSQL instance; this is optional, withtout the app falls back to memory store
+- `USER_AUTH_API_USERNAME`: basic auth username for web api
+- `USER_AUTH_API_PASSWORD`: basic auth password for web api
 
 ## Production environment
 
