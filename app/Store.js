@@ -3,10 +3,11 @@ import uuid from 'uuid';
 import sjcl from 'sjcl';
 import request from 'superagent';
 import Document from './Document';
-import {Config} from './Config';
+import { Config } from './Config';
 import Immutable from 'immutable';
+import DecryptUtils from './DecryptUtils';
 
-const {Promise} = global;
+const { Promise } = global;
 
 export const Events = {
   NO_DOCUMENT_ID: 'store:no-document-id',
@@ -305,20 +306,13 @@ export default class Store {
 
   // Pure / side-effect free method
   decrypt(content, secret) {
-    secret = '';
-    try {
-      return Promise.resolve(sjcl.decrypt(secret, content));
-    } catch (e) {
-      this.events.emit(Events.DECRYPTION_FAILED, this.state);
-
-      return Promise.reject(new Error('decryption failed'));
-    }
+    return DecryptUtils.decrypt(content, secret, this.events, this.state);
   }
 
   // Pure / side-effect free method
   encrypt(content, secret) {
     secret = '';
-    return Promise.resolve(sjcl.encrypt(secret, content, {ks: 256}));
+    return Promise.resolve(sjcl.encrypt(secret, content, { ks: 256 }));
   }
 
   // Impure / side-effect free method
@@ -383,7 +377,7 @@ export default class Store {
 
               return this._localPersist();
             });
-        }
+      }
       );
   }
 
@@ -394,7 +388,7 @@ export default class Store {
   }
 
   _handleRequestError(err) {
-    if(err.response && 401 === err.response.statusCode) {
+    if (err.response && 401 === err.response.statusCode) {
       this.events.emit(Events.AUTHENTICATION_REQUIRED, this.state);
 
       return Promise.reject(new Error('document not found'));

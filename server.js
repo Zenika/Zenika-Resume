@@ -1,3 +1,5 @@
+const DecryptUtils = require('./app/DecryptUtils');
+
 const express = require('express');
 const compression = require('compression');
 const bodyParser = require('body-parser');
@@ -25,21 +27,38 @@ var googleCallback = process.env.GOOGLE_CALLBACK || require('./conf-google').cal
 
 var isDev = !process.env.DATABASE_URL;
 
+const basicAuth = require('basic-auth');
+
+const authApi = function (req, res, next) {
+  const user = basicAuth(req);
+  if (!user || !user.name || !user.pass) {
+    res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
+    res.sendStatus(401);
+  }
+  if (user.name === process.env.USER_AUTH_API_USERNAME && user.pass === process.env.USER_AUTH_API_PASSWORD) {
+    next();
+  } else {
+    res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
+    res.sendStatus(401);
+  }
+};
+
+
 app.set('port', process.env.PORT || 3000);
 app.set('etag', false);
 
 // middlewares
 app.use(compression());
 app.use(require('cookie-parser')());
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(require('express-session')({secret: 'keyboard cat', resave: true, saveUninitialized: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(api);
 
 function hasValidEmail(req) {
   var emails = req.user.emails
-    .map((email)=> email.value)
+    .map((email) => email.value)
     .join('');
   return emails.indexOf('@zenika') != -1 || emails.indexOf('zenika.resume@gmail.com') != -1;
 }
@@ -69,7 +88,7 @@ app.get('/logout', function (req, res) {
   });
 });
 
-app.use((req, res, next)=> {
+app.use((req, res, next) => {
   if (req.originalUrl == '/') {
     if (isUserConnectedAndZenika(req)) {
       next();
@@ -109,7 +128,7 @@ function executeQueryWithCallback(query, params, response, callback) {
         done();
         if (err) {
           console.error(err);
-          response.send("Error " + err);
+          response.send('Error ' + err);
         }
         else {
           callback(result);
@@ -130,10 +149,10 @@ const isValidId = (uuid) => {
 };
 
 passport.use(new GoogleStrategy({
-    clientID: googleId,
-    clientSecret: googleSecret,
-    callbackURL: googleCallback
-  },
+  clientID: googleId,
+  clientSecret: googleSecret,
+  callbackURL: googleCallback
+},
   function (token, tokenSecret, profile, done) {
     process.nextTick(function () {
       profile.identifier = token;
@@ -142,7 +161,7 @@ passport.use(new GoogleStrategy({
   }
 ));
 
-app.get('/login/google', (req, res, next)=> {
+app.get('/login/google', (req, res, next) => {
   req.session.requestedUuid = req.query.uuid;
   return next();
 }, passport.authenticate('google', {
@@ -151,7 +170,7 @@ app.get('/login/google', (req, res, next)=> {
 }));
 
 app.get('/login/google/callback',
-  passport.authenticate('google', {failureRedirect: '/login'}),
+  passport.authenticate('google', { failureRedirect: '/login' }),
   function (req, res) {
     if (req.session.requestedUuid) {
       res.redirect('/' + req.session.requestedUuid);
@@ -167,7 +186,7 @@ app.get('/[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}', ensureAuthenticated, (req,
   });
 });
 
-app.get('/[a-z-]+', (req, res, next)=> {
+app.get('/[a-z-]+', (req, res, next) => {
   return next();
 }, (req, res) => {
   res.sendFile('index.html', {
@@ -285,12 +304,43 @@ api.get('/resumes', (req, res) => {
     [],
     res,
     function (data) {
-      res.status(200).json(data.rows.map((row)=> {
+      res.status(200).json(data.rows.map((row) => {
         row.metadata = JSON.parse(row.metadata);
         return row;
       }));
     });
 });
+
+api.get('/resumes/complete', authApi, (req, res) => {
+  executeQueryWithCallback(
+      'SELECT r1.uuid, r1.content, r1.metadata, r1.path, r1.version, r1.last_modified FROM resume r1\n' +
+      'INNER JOIN \n' +
+      '(\n' +
+      '   SELECT path, MAX(last_modified) AS MAXDATE\n' +
+      '   FROM resume\n' +
+      '   GROUP BY path\n' +
+      ') t2\n' +
+      'ON r1.path = t2.path\n' +
+      'AND r1.last_modified = t2.MAXDATE',
+      [],
+        res,
+        (data) => {
+          const promises = data.rows.map((row) => {
+            row.metadata = JSON.parse(row.metadata);
+            return DecryptUtils.decrypt(row.content, '')
+                    .then(ctDecrypted => {
+                      row.content = ctDecrypted;
+                      return row;
+                    });
+          });
+
+          Promise.all(promises).then((results) => {
+            console.log(results);
+            return res.status(200).json(results);
+          });
+        });
+});
+
 
 // Listen only when doing: `node app/server.js`
 if (require.main === module) {
