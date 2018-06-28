@@ -1,5 +1,29 @@
-Monod
-=====
+# Zenika Resume
+
+A Markdown resume editor based on Monod (see the original Monod readme below).
+
+## Running
+
+For running locally or to build the production artifacts, see Installation in the Monod readme.
+Keep it mind that running locally requires Node.js 5.7 (no more, no less).
+
+### Docker
+
+Build the provided Dockerfile, then run with the port 3000 mapped, and the following environment variables.
+
+- `GOOGLE_CALLBACK`: callback for the Google authentication, set `http://localhost:3000/login/google/callback`
+- `GOOGLE_ID`: client ID for the Google authentication, find the value from the production environment (see below)
+- `GOOGLE_SECRET`: client secret for the Google authentication, find the value from the production environment (see below)
+- `DATABASE_URL`: a connection string to a PostgreSQL instance; this is optional, withtout the app falls back to memory store
+
+## Production environment
+
+The app is hosted on Heroku. The authentication is provided by Google through the GCP
+project [`zenika-resume`](https://console.cloud.google.com/home/dashboard?project=zenika-resume).
+Contact dsi@zenika.com to get access to either of those.
+
+
+# Monod
 
 [![Circle CI](https://circleci.com/gh/TailorDev/monod.svg?style=svg)](https://circleci.com/gh/TailorDev/monod)
 
