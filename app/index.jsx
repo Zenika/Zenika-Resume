@@ -3,7 +3,6 @@ import './scss/main.scss';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './components/App.jsx';
-
 import { EventEmitter } from 'events';
 import localforage from 'localforage';
 import Store from './Store';
@@ -23,4 +22,7 @@ if((window.location.href + '').indexOf('?help') != -1){
   history.replaceState(null, 'zenika-resume', (window.location.href + '').split('?help')[0]);
 }
 
-ReactDOM.render(<App version={appVersion} controller={controller} />, appElement);
+ReactDOM.render(
+  <App version={appVersion} controller={controller} />,
+  appElement
+);

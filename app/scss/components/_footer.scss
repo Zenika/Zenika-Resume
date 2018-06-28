@@ -9,6 +9,26 @@ footer.main {
   font-family: $footer-font-family;
   font-size: $footer-font-size;
 
+  .languageToggle {
+    input {
+      display: none;
+    }
+    input:checked+label {
+      color: #fff;
+      background-color: #27ae60;
+    }
+    label {
+      border-radius: 5px;
+      margin: 0 7px;
+      vertical-align: top;
+      font-size: $footer-font-size;
+      display: inline-block;
+      background-color: #ddd;
+      padding: 0 12px;
+      cursor: pointer;
+    }
+  }
+
   .credits {
     float: left;
   }

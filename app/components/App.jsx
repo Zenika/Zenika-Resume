@@ -1,27 +1,38 @@
 import Immutable from 'immutable';
 import React, { Component, PropTypes } from 'react';
+import {
+  addLocaleData,
+  IntlProvider,
+  FormattedMessage,
+} from 'react-intl';
+import en from 'react-intl/locale-data/en';
+import fr from 'react-intl/locale-data/fr';
 import { Events } from '../Store';
 import Document from '../Document';
+import Translations from '../Translations';
 import debounce from 'lodash.debounce';
+import isEqual from 'lodash.isequal';
 
 import Editor from './Editor';
 import Footer from './Footer';
 import MessageBoxes from './MessageBox';
 
-const {object, string} = PropTypes;
+const { object, string } = PropTypes;
+addLocaleData([...en, ...fr]);
 
-export default class App extends Component {
+class App extends Component {
   constructor(props, context) {
     super(props, context);
-
     this.state = {
       document: new Document(),
       messages: new Immutable.List(),
-      loaded: false
+      loaded: false,
     };
-
+    this.toggleLocale = this.toggleLocale.bind(this);
+    this.updateUserPref = this.updateUserPref.bind(this);
     this.updateContent = debounce(this.updateContent, 150);
     this.updateMetadata = debounce(this.updateMetadata, 150);
+    this.updateUserPref = debounce(this.updateUserPref, 150);
   }
 
   getChildContext() {
@@ -68,11 +79,11 @@ export default class App extends Component {
       const message = {
         content: (
           <span>
-            <i>Snap!</i>&nbsp;
-            The document you were working on has been updated by a third,
-            and you are now working on a fork. You can still find the original
-            (and updated) document:&nbsp;
-            <a href={`/${state.document.uuid}`}>here</a>.
+          <i>Snap!</i>&nbsp;
+          The document you were working on has been updated by a third,
+          and you are now working on a fork. You can still find the original
+          (and updated) document:&nbsp;
+          <a href={`/${state.document.uuid}`}>here</a>.
           </span>
         ),
         type: 'warning'
@@ -130,39 +141,47 @@ export default class App extends Component {
 
     if (!window.history.state || !window.history.state.uuid ||
       (window.history.state && window.history.state.uuid &&
-      doc.get('uuid') !== window.history.state.uuid)
-    ) {
+        doc.get('uuid') !== window.history.state.uuid)
+      ) {
       if (uri.indexOf('undefined') == -1) {
-        window.history.pushState({uuid: doc.get('uuid')}, `Monod - ${doc.get('uuid')}`, uri);
+        window.history.pushState({ uuid: doc.get('uuid') }, `Monod - ${doc.get('uuid')}`, uri);
       }
+    }
+  }
+
+  updateUserPref(newUserPref) {
+    const doc = this.state.document;
+    if (!isEqual(doc.userPref, newUserPref)) {
+      this.updateDocument(doc.metadata, doc.content, newUserPref);
     }
   }
 
   updateContent(newContent) {
     const doc = this.state.document;
     if (doc.content !== newContent) {
-      this.updateDocument(doc.metadata, newContent);
+      this.updateDocument(doc.metadata, newContent, doc.userPref);
     }
   }
 
   updateMetadata(newMetadata) {
     const doc = this.state.document;
     if (JSON.stringify(doc.metadata) !== JSON.stringify(newMetadata)) {
-      this.updateDocument(newMetadata, doc.content);
+      this.updateDocument(newMetadata, doc.content, doc.userPref);
     }
   }
 
-  updateDocument(metadata, content) {
+  updateDocument(metadata, content, userPref) {
     const doc = this.state.document;
-
-    this.props.controller.dispatch('action:update', new Document({
+    const newDoc = new Document({
       uuid: doc.get('uuid'),
-      content: content,
-      metadata: metadata,
+      content,
+      metadata,
+      userPref,
       path: doc.get('path'),
       last_modified: doc.get('last_modified'),
-      last_modified_locally: doc.get('last_modified_locally')
-    }));
+      last_modified_locally: doc.get('last_modified_locally'),
+    });
+    this.props.controller.dispatch('action:update', newDoc);
   }
 
   removeMessage(index) {
@@ -180,8 +199,16 @@ export default class App extends Component {
     }
   }
 
+  toggleLocale(e) {
+    this.updateUserPref({
+      locale: e.target.value,
+    });
+  }
+
   render() {
     let viewMode = '';
+    const locale = this.props.controller.store.state.document.userPref.locale;
+    const messages = Translations[locale];
 
     if (!this.state.document.uuid) {
       viewMode = 'viewMode';
@@ -189,118 +216,141 @@ export default class App extends Component {
 
     let style = {
       display: 'none'
-    }
+    };
 
     if (this.state.loaded) {
       style = {};
     }
 
     return (
-      <div className={`layout ${viewMode}`} style={style}>
+        <IntlProvider
+          locale={locale}
+          messages={messages}
+        >
+        <div className={`layout ${viewMode}`} style={style}>
         <div className="reveal" id="help-modal" data-reveal>
-          <h1>Ouf je suis sauvé!</h1>
+        <h1><FormattedMessage id="phew" /></h1>
 
-          <iframe width="640" height="360" src="https://www.youtube.com/embed/NFQaIcU54J4?rel=0&amp;showinfo=0"
-                  frameborder="0" allowfullscreen></iframe>
+        <iframe
+          width="640"
+          height="360"
+          src="https://www.youtube.com/embed/p_t7716ymoI"
+          frameBorder="0"
+          allow="autoplay; encrypted-media"
+          allowFullScreen
+        ></iframe>
 
-          <p className="lead">Impression en pdf</p>
-          <p>
-            L'application a été testé avec Chrome. Il est possible de demander dans <br/>
-            le navigateur l'impression de la page de maniere classique ou dans un PDF.<br/>
-            <br/>
-            Pour que s'affiche correctement, il faut s'assurer de certains paramètres dans<br/>
-            le panneau d'impression. Déplier les options en cliquant sur 'Plus de paramètres'<br/>
-            puis dans la section Options, Graphiques d'arrière-plan doit être coché.<br/>
-            Pour un meilleur effet, jouez avec les marges (Aucun, par exemple).
-          </p>
-          <p className="lead">Décrire une expérience</p>
-          <p>
-            Les experiences doivent être délimitées par des marquers pour définir<br/>
-            les styles qui doivent être appliqués :<br/>
-            --section-start<br/>
-            --section-end<br/>
-            <br/>
-            Entre ces deux marquers, le premier élément doit être un titre :<br/>
-            # Votre role pour la mission<br/>
-            <br/>
-            Le deuxiement élément doit être un titre de second niveau :<br/>
-            ## Le nom du client<br/>
-            <br/>
-            Le troisième élément doit être une date: <br/>
-            ## Les dates de la mission <br/>
-            <br/>
-            Pour créer une section avec un descriptif puis des points, il faut avoir<br/>
-            deux niveaux de liste<br/>
-            * La description de votre paragraphe<br/>
-            &nbsp; &nbsp; * Un détail<br/>
-            &nbsp; &nbsp; * puis un autre<br/>
-            <br/>
-          </p>
+        <p className="dummyTest">
+        </p>
+        <p className="lead"><FormattedMessage id="print" /></p>
+        <p>
+        <FormattedMessage id="the" /><br />
+        <FormattedMessage id="between" /><br />
+        <br />
+        <FormattedMessage id="in" /><br />
+        <FormattedMessage id="the2" /><br />
+        <FormattedMessage id="then" /><br />
+        <FormattedMessage id="for" />
+        </p>
+        <p className="lead"><FormattedMessage id="describe" /></p>
+        <p>
+        <FormattedMessage id="experience" /><br />
+        <FormattedMessage id="styles" /><br />
+        --section-start<br />
+        --section-end<br />
+        <br />
+        <FormattedMessage id="between2" /><br />
+        <FormattedMessage id="your" /><br />
+        <br />
+        <FormattedMessage id="the3" /><br />
+        <FormattedMessage id="the4" /><br />
+        <br />
+        <FormattedMessage id="the5" /><br />
+        <FormattedMessage id="the6" /><br />
+        <br />
+        <FormattedMessage id="to" /><br />
+        <FormattedMessage id="two" /><br />
+        <FormattedMessage id="the7" /><br />
+        &nbsp; &nbsp; <FormattedMessage id="a" /><br />
+        &nbsp; &nbsp; <FormattedMessage id="then2" /><br />
+        <br />
+        </p>
 
-          <p className="lead">Déclaration des variables</p>
-          <p>
-            Au début du document, se situe une section entre '---'. Dans cette<br/>
-            section il doit être définit un certain nombre de variables (nom prénom,<br/>
-            role, expérience, ...). Les variables manquantes seront alors affiché dans<br/>
-            le template avec [nomdevariable].<br/>
-            Pour les listes il est possible d'ajouter autant d'élément que souhaité, il<br/>
-            suffit d'incrémenter le nombre.<br/><br/>
-          </p>
-
-          <p className="lead">Utilisation des images pour les expertises</p>
-          <p>
-            Il existe un nombre limité d'icon pour illustrer les expertises. Pour les<br/>
-            utiliser, il faut dans la liste d'expertise utiliser un marquer de la forme :<br/>
-            --expertise-archive.<br/>
-            <br/>
-            Voici l'ensemble des marquers disponibles:<br/>
-            --expertise-archive<br/>
-            --expertise-cloud<br/>
-            --expertise-file<br/>
-            --expertise-flag<br/>
-            --expertise-leaf<br/>
-            --expertise-talk<br/><br/>
+        <p className="lead"><FormattedMessage id="variable" /></p>
+        <p>
+        <FormattedMessage id="at" /><br />
+        <FormattedMessage id="section" /><br />
+        <FormattedMessage id="role" /><br />
+        <FormattedMessage id="the8" /><br />
+        <FormattedMessage id="for2" /><br />
+        <FormattedMessage id="you" /><br /><br />
           </p>
 
-          <p className="lead">Sauter à la page suivante</p>
+          <p className="lead"><FormattedMessage id="using" /></p>
           <p>
-            Le marquer permet de sauter une page, c'est surtout utile pour définir<br/>
-            ce qui doit être affiché sur la premiere page :<br/>
-            --break-page<br/>
+          <FormattedMessage id="there" /><br />
+          <FormattedMessage id="it" /><br />
+          --expertise-archive.<br />
+          <br />
+          <FormattedMessage id="here" /><br />
+          --expertise-archive<br />
+          --expertise-cloud<br />
+          --expertise-file<br />
+          --expertise-flag<br />
+          --expertise-leaf<br />
+          --expertise-talk<br /><br />
           </p>
 
-          <p className="lead">Astuce pour les expertises</p>
+          <p className="lead"><FormattedMessage id="jump" /></p>
           <p>
-            Afin de rajouter les expertises, il faut les mettre entre " ". <br/>
-            Exemple: "Spring (Core, Batch), Java" <br/>
+          <FormattedMessage id="this" /><br />
+          <FormattedMessage id="what" /><br />
+          --break-page<br />
+          </p>
+
+          <p className="lead"><FormattedMessage id="tip" /></p>
+          <p>
+          <FormattedMessage id="in2" /> <br />
+          <FormattedMessage id="example" /><br />
           </p>
 
           <button className="close-button" data-close aria-label="Close modal" type="button" onClick={this.hideHelp}>
-            <span aria-hidden="true">&times;</span>
+          <span aria-hidden="true">&times;</span>
           </button>
+          </div>
+          <MessageBoxes
+            messages={this.state.messages}
+            closeMessageBox={this.removeMessage.bind(this)}
+          />
+          <Editor
+            loaded={this.state.loaded}
+            content={this.state.document.get('content')}
+            metadata={this.state.document.get('metadata')}
+            onContentUpdate={this.updateContent.bind(this)}
+            onMetadataUpdate={this.updateMetadata.bind(this)}
+          />
+          <div>
         </div>
-        <MessageBoxes
-          messages={this.state.messages}
-          closeMessageBox={this.removeMessage.bind(this)}
-        />
-        <Editor
-          loaded={this.state.loaded}
-          content={this.state.document.get('content')}
-          metadata={this.state.document.get('metadata')}
-          onContentUpdate={this.updateContent.bind(this)}
-          onMetadataUpdate={this.updateMetadata.bind(this)}
-        />
-        <Footer version={this.props.version} metadata={this.state.document.get('metadata')}/>
-      </div>
-    );
+          <Footer
+            version={this.props.version}
+            metadata={this.state.document.get('metadata')}
+            toggleLocale={this.toggleLocale}
+            currentLocale={this.props.controller.store.state.document.userPref.locale}
+          />
+        </div>
+        </IntlProvider>
+      );
   }
-}
+  }
 
 App.propTypes = {
   version: string.isRequired,
-  controller: object.isRequired
+  controller: object.isRequired,
 };
 
 App.childContextTypes = {
   controller: object
 };
+
+export default App;
+
