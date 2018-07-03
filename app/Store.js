@@ -185,7 +185,6 @@ export default class Store {
           metadata: res.body.metadata,
           path: res.body.path,
           last_modified: res.body.last_modified,
-          userPref: res.body.userPref
         });
 
         console.log(serverDoc.get('last_modified'), localDoc.get('last_modified'), localDoc.get('last_modified_locally'));
@@ -215,7 +214,6 @@ export default class Store {
                   path: serverDoc.get('path'),
                   metadata: serverDoc.get('metadata'),
                   last_modified: serverDoc.get('last_modified'),
-                  userPref: serverDoc.get('userPref')
                 });
 
                 this._setState(
@@ -331,7 +329,6 @@ export default class Store {
             content: encryptedContent,
             metadata: doc.get('metadata'),
             path: doc.get('path'),
-            userPref: doc.get('userPref'),
             last_modified: doc.get('last_modified'),
             last_modified_locally: doc.get('last_modified_locally')
           }).toJS()
@@ -369,7 +366,6 @@ export default class Store {
                     content: doc.get('content'),
                     metadata: doc.get('metadata'),
                     path: doc.get('path'),
-                    userPref: doc.get('userPref'),
                     last_modified: res.body.last_modified,
                     last_modified_locally: null
                   }),
