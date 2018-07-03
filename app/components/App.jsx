@@ -25,6 +25,9 @@ class App extends Component {
     this.state = {
       document: new Document(),
       messages: new Immutable.List(),
+      userPref: {
+        locale: navigator.language === 'fr-FR' ? navigator.language : 'en-US'
+      },
       loaded: false,
     };
     this.toggleLocale = this.toggleLocale.bind(this);
@@ -189,14 +192,14 @@ class App extends Component {
   }
 
   toggleLocale(e) {
-    this.updateUserPref({
-      locale: e.target.value,
+    this.setState({
+      userPref: Object.assign({}, this.state.userPref, { locale: e.target.value })
     });
   }
 
   render() {
     let viewMode = '';
-    const locale = this.props.controller.store.state.document.userPref.locale;
+    const locale = this.state.userPref.locale;
     const messages = Translations[locale];
 
     if (!this.state.document.uuid) {
@@ -324,7 +327,7 @@ class App extends Component {
             version={this.props.version}
             metadata={this.state.document.get('metadata')}
             toggleLocale={this.toggleLocale}
-            currentLocale={this.props.controller.store.state.document.userPref.locale}
+            currentLocale={locale}
           />
         </div>
         </IntlProvider>
