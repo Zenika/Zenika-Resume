@@ -140,7 +140,6 @@ export default class Store {
         content: document.get('content'),
         metadata: document.get('metadata'),
         path: document.get('path'),
-        userPref: document.get('userPref'),
         last_modified: document.get('last_modified'),
         last_modified_locally: Date.now()
       }),
