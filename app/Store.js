@@ -140,7 +140,6 @@ export default class Store {
         content: document.get('content'),
         metadata: document.get('metadata'),
         path: document.get('path'),
-        userPref: document.get('userPref'),
         last_modified: document.get('last_modified'),
         last_modified_locally: Date.now()
       }),
@@ -185,7 +184,7 @@ export default class Store {
           content: res.body.content,
           metadata: res.body.metadata,
           path: res.body.path,
-          last_modified: res.body.last_modified
+          last_modified: res.body.last_modified,
         });
 
         console.log(serverDoc.get('last_modified'), localDoc.get('last_modified'), localDoc.get('last_modified_locally'));
@@ -214,7 +213,7 @@ export default class Store {
                   content: decryptedContent,
                   path: serverDoc.get('path'),
                   metadata: serverDoc.get('metadata'),
-                  last_modified: serverDoc.get('last_modified')
+                  last_modified: serverDoc.get('last_modified'),
                 });
 
                 this._setState(

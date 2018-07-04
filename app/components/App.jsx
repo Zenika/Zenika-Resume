@@ -11,7 +11,6 @@ import { Events } from '../Store';
 import Document from '../Document';
 import Translations from '../Translations';
 import debounce from 'lodash.debounce';
-import isEqual from 'lodash.isequal';
 
 import Editor from './Editor';
 import Footer from './Footer';
@@ -26,13 +25,14 @@ class App extends Component {
     this.state = {
       document: new Document(),
       messages: new Immutable.List(),
+      userPref: {
+        locale: navigator.language === 'fr-FR' ? navigator.language : 'en-US'
+      },
       loaded: false,
     };
     this.toggleLocale = this.toggleLocale.bind(this);
-    this.updateUserPref = this.updateUserPref.bind(this);
     this.updateContent = debounce(this.updateContent, 150);
     this.updateMetadata = debounce(this.updateMetadata, 150);
-    this.updateUserPref = debounce(this.updateUserPref, 150);
   }
 
   getChildContext() {
@@ -149,34 +149,26 @@ class App extends Component {
     }
   }
 
-  updateUserPref(newUserPref) {
-    const doc = this.state.document;
-    if (!isEqual(doc.userPref, newUserPref)) {
-      this.updateDocument(doc.metadata, doc.content, newUserPref);
-    }
-  }
-
   updateContent(newContent) {
     const doc = this.state.document;
     if (doc.content !== newContent) {
-      this.updateDocument(doc.metadata, newContent, doc.userPref);
+      this.updateDocument(doc.metadata, newContent);
     }
   }
 
   updateMetadata(newMetadata) {
     const doc = this.state.document;
     if (JSON.stringify(doc.metadata) !== JSON.stringify(newMetadata)) {
-      this.updateDocument(newMetadata, doc.content, doc.userPref);
+      this.updateDocument(newMetadata, doc.content);
     }
   }
 
-  updateDocument(metadata, content, userPref) {
+  updateDocument(metadata, content) {
     const doc = this.state.document;
     const newDoc = new Document({
       uuid: doc.get('uuid'),
       content,
       metadata,
-      userPref,
       path: doc.get('path'),
       last_modified: doc.get('last_modified'),
       last_modified_locally: doc.get('last_modified_locally'),
@@ -200,14 +192,14 @@ class App extends Component {
   }
 
   toggleLocale(e) {
-    this.updateUserPref({
-      locale: e.target.value,
+    this.setState({
+      userPref: Object.assign({}, this.state.userPref, { locale: e.target.value })
     });
   }
 
   render() {
     let viewMode = '';
-    const locale = this.props.controller.store.state.document.userPref.locale;
+    const locale = this.state.userPref.locale;
     const messages = Translations[locale];
 
     if (!this.state.document.uuid) {
@@ -335,7 +327,7 @@ class App extends Component {
             version={this.props.version}
             metadata={this.state.document.get('metadata')}
             toggleLocale={this.toggleLocale}
-            currentLocale={this.props.controller.store.state.document.userPref.locale}
+            currentLocale={locale}
           />
         </div>
         </IntlProvider>
