@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Letter from './templates/Letter';
 import Invoice from './templates/Invoice';
 import Report from './templates/Report';

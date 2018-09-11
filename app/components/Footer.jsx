@@ -1,15 +1,23 @@
-import React, { PropTypes, Component } from 'react';
+import React, { Component } from 'react';
 import Sync from './Sync';
+import { Config } from './../Config';
+import PropTypes from 'prop-types';
 import {
   FormattedMessage,
 } from 'react-intl';
 const buildPath = require('../../build-path');
+
 
 const { string, func } = PropTypes;
 
 export default class Footer extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      isThemesBarOpen: false,
+    };
+    this.themes = Config.THEMES;
+    this.toggleIsThemesBarOpen = this.toggleIsThemesBarOpen.bind(this);
     this.isLocaleChecked = this.isLocaleChecked.bind(this);
   }
 
@@ -35,13 +43,29 @@ export default class Footer extends Component {
     }
   }
 
-  render() {
+  toggleIsThemesBarOpen() {
+    console.log()
+    this.setState({
+      isThemesBarOpen: !this.state.isThemesBarOpen,
+    });
+  }
+
+  getPath() {
     let path = '';
-
-    if (this.props.metadata) {
-      path = buildPath(this.props.metadata.name);
+    if (this.props.path) {
+      path = this.props.path;
     }
+    else if (this.props.metadata) {
+      if(this.props.metadata.firstname){
+        path = buildPath(`${this.props.metadata.name} ${this.props.metadata.firstname}`);
+      }else {
+        path = buildPath(this.props.metadata.name);
+      }
+    }
+    return path;
+  }
 
+  render() {
     return (
       <footer className="main">
         <div className="credits">
@@ -50,15 +74,16 @@ export default class Footer extends Component {
           Powered by&nbsp;
           <a href="https://github.com/TailorDev/monod">Monod</a>
         </div>
-        <a className="btn" onClick={this.showHelp}><i className="fa fa-question-circle-o" aria-hidden="true"></i><FormattedMessage id="help"/></a>
+        <a className="btn" onClick={this.showHelp}><i className="fa fa-question-circle-o" aria-hidden="true"></i><FormattedMessage id="help" /></a>
         <Sync />
-        <span className="viewLink"><FormattedMessage id="read"/><a href={path}>{path}</a></span>
-        <span className="viewLink"><a href="/list.html" target="_blank"><FormattedMessage id="list"/></a>&nbsp;&nbsp;</span>
+        <span className="viewLink"><FormattedMessage id="read" /><a href={this.getPath()}>{this.getPath()}</a></span>
+        <span className="viewLink"><a href="/list.html" target="_blank"><FormattedMessage id="list" /></a>&nbsp;&nbsp;</span>
         <span className="viewLink languageToggle">
+          <span> Langues :</span>
           <input
             type="radio"
             id="locale-enUS"
-            onClick={(item) => this.props.toggleLocale(item)}
+            onChange={(item) => this.props.toggleLocale(item)}
             name="language"
             value="en-US"
             checked={this.isLocaleChecked('en-US')}
@@ -67,13 +92,37 @@ export default class Footer extends Component {
           <input
             type="radio"
             id="locale-frFR"
-            onClick={(item) => this.props.toggleLocale(item)}
+            onChange={(item) => this.props.toggleLocale(item)}
             name="language"
             value="fr-FR"
             checked={this.isLocaleChecked('fr-FR')}
           />
           <label htmlFor="locale-frFR">FR</label>
         </span>
+        <span className="viewLink">
+          <button
+            className="showThemesBtn"
+            onClick={this.toggleIsThemesBarOpen}
+          >Themes</button>
+        </span>
+        <div className={`themes ${this.state.isThemesBarOpen ? 'open' : ''}`} >
+          <h3>Themes</h3>
+          <ul>
+            {this.themes.map((theme) => {
+              return (
+                <li key={theme.name} className="theme-item">
+                  <button onClick={() => this.props.changeTheme(theme)}>
+                    <img src={require(`../static/img/theme-${theme.name}.png`)} alt="default" />
+                    <span>{theme.name} <i className="fa fa-info"></i></span>
+                  </button>
+                </li>
+              )
+            })}
+          </ul>
+          <button className="close" title="Close themes list" onClick={this.toggleIsThemesBarOpen}>
+            <i className="fa fa-times"></i>
+          </button>
+        </div>
       </footer>
     );
   }

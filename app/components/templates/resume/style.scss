@@ -1,376 +1,339 @@
-.preview {
-  margin: 0;
-  padding: 0;
-}
-
-.preview .rendered {
-  padding: 0;
-  position: relative;
-}
-
-.preview * {
-  font-family: 'Open Sans', sans-serif;
-  font-size: 12px;
-  line-height: 20px;
-  color: #333 !important;
-}
-
-.logo {
-  background-image: url('img/logo-zenika.png');
-  background-size: 169px 38px;
-  width: 169px;
-  height: 38px;
-  margin: 20px 20px -10px;
-}
-
-.header1, .header2, .header3 {
-  width: 100%;
-}
-
-.header1 {
-  background-image: url('img/header1.png');
-  background-size: 100% 26px;
-  height: 26px;
-}
-
-.header2 {
-  background-image: url('img/header2.png');
-  background-size: 100% 45px;
-  height: 45px;
-}
-
-.header3 {
-  background-image: url('img/header3.png');
-  background-size: 100% 21px;
-  height: 21px;
-}
-
-.presentation {
-  color: white;
-  background-image: url('img/red-pixel.png');
-  position: relative;
-  min-height: 60px;
-  line-height: normal;
-}
-
-.presentation .name {
-  position: absolute;
-  top: 10px;
-  left: 20px;
-  font-size: 42px !important;
-  font-weight: bold;
-}
-
-.presentation .role {
-  position: absolute;
-  font-weight: bold;
-  text-align: left;
-  right: 20px;
-  font-size: 20px !important;
-  top: -8px;
-}
-
-.presentation .experience {
-  position: absolute;
-  text-align: left;
-  right: 20px;
-  font-size: 20px !important;
-  top: 16px;
-}
-
-.description {
-  color: white;
-  background-image: url('img/grey-pixel.png');
-  min-height: 78px;
-  overflow: hidden;
-  padding: 0 20px;
-  position: relative;
-  line-height: normal;
-
-  & * {
-    box-sizing: border-box;
-    font-size: 16px !important;
-  }
-
-  .chunk {
-    padding: 0;
+.preview.theme-default {
     margin: 0;
-
-    h1, ul {
-      font-size: 20px !important;
-      text-transform: initial !important;
-    }
-
-    h1, p {
-      padding: 0;
-      margin: 0;
-    }
-  }
-
-  .premiereColonne {
-    width: 49%;
-  }
-
-  .colonne {
-    width: 24%;
-  }
-
-  .premiereColonne, .colonne {
-    vertical-align: top !important;
-    display: inline-block;
-
-    h1, h2, h3 {
-      padding: 0;
-      margin: 0;
-      text-transform: initial !important;
-    }
-  }
-
-  .center {
-    margin: 20px 0;
-    p, h1, h2, h3 {
-      text-align: center !important;
-      width: 100%;
-      font-weight: bold;
-      text-transform: initial !important;
-    }
-  }
-
-  .table {
-    margin: 20px 0;
     padding: 0;
-    list-style-type: none;
-  }
 }
 
-.expertise {
-  float: left;
-  width: 35%;
-  padding: 20px 60px 20px 20px;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-
-  .chunk {
-    h1{
-      font-size: 12px !important;
-    }
-  }
+.preview.theme-default .rendered {
+    padding: 0;
+    position: relative;
 }
 
-.expertise .title, .mission-title .title, .chunk h1 {
-  font-size: 16px !important;
-  text-transform: uppercase;
-  margin-bottom: 0px;
-  font-weight: bold;
-  display: inline-block;
-}
-
-.chunk h1 {
-  margin: 20px 0 0 0;
-}
-
-.expertise ul {
-  margin: 0;
-  padding: 0;
-  list-style-type: none;
-  color: #959694 !important;
-}
-
-.expertise .expertise-icon {
-  margin-top: 17px;
-  display: inline-block;
-}
-
-.mission-title {
-  position: absolute;
-  left: 33%;
-  padding: 20px 20px 0px 0px;
-}
-
-.chunk {
-  padding: 0;
-  margin: 0 0 14px;
-  position: relative;
-}
-
-.experience .chunk h1, .experience .chunk h2, .experience .chunk h3 {
-  font-size: 14px !important;
-  font-weight: bold;
-  padding: 0;
-}
-
-.experience .chunk h1 {
-  padding: 0px 0 14px 0;
-  text-transform: none;
-  margin: 0;
-}
-
-.experience .chunk h3 {
-  padding: 0;
-  margin-top: -24px;
-}
-
-.experience .chunk h2 {
-  margin: 0 0 14px 0;
-  position: absolute;
-  top: -49px;
-  right: 0px;
-}
-
-.chunk ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
-
-.chunk ul li p {
-  padding: 0;
-  margin: 0;
-}
-
-.chunk ul li > ul li::before {
-  content: '\25CF';
-  width: 12px;
-  display: inline-block;
-  font-size: 8px !important;
-  vertical-align: 3px;
-}
-
-.chunk ul li > ul, .chunk ul > li {
-  margin-bottom: 14px;
-}
-
-.chunk ul > li > ul > li {
-  margin-bottom: 0;
-}
-
-.description {
-  .chunk ul li > ul, .chunk ul > li {
-    margin-bottom: 0;
-  }
-}
-
-/*first*/
-.experience {
-  padding: 30px 0 0;
-  margin: 0 0 40px;
-  background-size: 100% 20px;
-  background-repeat: no-repeat;
-
-}
-
-.experience.first-page {
-  padding: 0 0 0;
-  margin: 0 0 40px 34%;
-}
-
-.experience.background1 {
-  background-image: url('img/section-header1.png');
-}
-
-.experience.background2 {
-  background-image: url('img/section-header2.png');
-}
-
-.experience.background3 {
-  background-image: url('img/section-header3.png');
-}
-
-.experience.background4 {
-  background-image: url('img/section-header4.png');
+.preview.theme-default * {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12px;
+    line-height: 20px;
+    color: #333 !important;
 }
 
 @media print {
+    .preview.theme-default .rendered {
+        overflow: hidden;
+    }
+    .preview.theme-default .presentation *,
+    .preview.theme-default .description * {
+        color: white !important;
+        line-height: normal !important;
+    }
+    .layout .editor .preview {
+        overflow: auto !important;
+        height: auto !important;
+    }
+    .experience {
+        page-break-inside: avoid !important;
+    }
+    .chunk-page-break {
+        page-break-before: always !important;
+    }
+}
 
-  .preview .rendered {
-    overflow: hidden;
-  }
-
-  .preview .presentation *, .preview .description * {
+.preview.theme-default .presentation *,
+.preview.theme-default .description * {
     color: white !important;
     line-height: normal !important;
-  }
-
-  .layout .editor .preview {
-    overflow: auto !important;
-    height: auto !important;
-  }
-
-  .experience {
-    page-break-inside: avoid !important;
-  }
-
-  .chunk-page-break {
-    page-break-before: always !important;
-  }
 }
 
-.preview .presentation *, .preview .description * {
-  color: white !important;
-  line-height: normal !important;
-}
-
-.experience {
-  page-break-inside: avoid !important;
-}
-
-.chunk-page-break {
-  page-break-before: always !important;
-  height: 0px;
-}
-
-.presentation .experience {
-  padding: 0;
-
-  margin: 0;
-}
-
-$zoom:0.25;
-
-.expertise-icon {
-  &.archive {
-    background-image: url('img/icons/expertise-archive.png');
-    background-size: $zoom*75px $zoom*70px;
-    width: $zoom*75px;
-    height: $zoom*70px;
-  }
-  &.cloud {
-    background-image: url('img/icons/expertise-cloud.png');
-    background-size: $zoom*90px $zoom*57px;
-    width: $zoom*90px;
-    height: $zoom*57px;
-  }
-  &.file {
-    background-image: url('img/icons/expertise-file.png');
-    background-size: $zoom*60px $zoom*69px;
-    width: $zoom*60px;
-    height: $zoom*69px;
-  }
-  &.flag {
-    background-image: url('img/icons/expertise-flag.png');
-    background-size: $zoom*71px $zoom*77px;
-    width: $zoom*71px;
-    height: $zoom*77px;
-  }
-  &.leaf {
-    background-image: url('img/icons/expertise-leaf.png');
-    background-size: $zoom*69px $zoom*74px;
-    width: $zoom*69px;
-    height: $zoom*74px;
-  }
-  &.talk {
-    background-image: url('img/icons/expertise-talk.png');
-    background-size: $zoom*81px $zoom*75px;
-    width: $zoom*81px;
-    height: $zoom*75px;
-  }
-}
-
-.content {
-  padding: 0 20px;
-}
-
-.close-button {
-  position: fixed;
+.theme-default {
+    .logo {
+        background-image: url('img/logo-zenika.png');
+        background-size: 169px 38px;
+        width: 169px;
+        height: 38px;
+        margin: 20px 20px -10px;
+    }
+    .header1,
+    .header2,
+    .header3 {
+        width: 100%;
+    }
+    .header1 {
+        background-image: url('img/header1.png');
+        background-size: 100% 26px;
+        height: 26px;
+    }
+    .header2 {
+        background-image: url('img/header2.png');
+        background-size: 100% 45px;
+        height: 45px;
+    }
+    .header3 {
+        background-image: url('img/header3.png');
+        background-size: 100% 21px;
+        height: 21px;
+    }
+    .presentation {
+        color: white;
+        background-image: url('img/red-pixel.png');
+        position: relative;
+        min-height: 60px;
+        line-height: normal;
+    }
+    .presentation .name {
+        position: absolute;
+        top: 10px;
+        left: 20px;
+        font-size: 42px !important;
+        font-weight: bold;
+    }
+    .presentation .role {
+        position: absolute;
+        font-weight: bold;
+        text-align: left;
+        right: 20px;
+        font-size: 20px !important;
+        top: -8px;
+    }
+    .presentation .experience {
+        position: absolute;
+        text-align: left;
+        right: 20px;
+        font-size: 20px !important;
+        top: 16px;
+    }
+    .description {
+        color: white;
+        background-image: url('img/grey-pixel.png');
+        min-height: 78px;
+        overflow: hidden;
+        padding: 0 20px;
+        position: relative;
+        line-height: normal;
+        & * {
+            box-sizing: border-box;
+            font-size: 16px !important;
+        }
+        .chunk {
+            padding: 0;
+            margin: 0;
+            h1,
+            ul {
+                font-size: 20px !important;
+                text-transform: initial !important;
+            }
+            h1,
+            p {
+                padding: 0;
+                margin: 0;
+            }
+        }
+        .premiereColonne {
+            width: 49%;
+        }
+        .colonne {
+            width: 24%;
+        }
+        .premiereColonne,
+        .colonne {
+            vertical-align: top !important;
+            display: inline-block;
+            h1,
+            h2,
+            h3 {
+                padding: 0;
+                margin: 0;
+                text-transform: initial !important;
+            }
+        }
+        .center {
+            margin: 20px 0;
+            p,
+            h1,
+            h2,
+            h3 {
+                text-align: center !important;
+                width: 100%;
+                font-weight: bold;
+                text-transform: initial !important;
+            }
+        }
+        .table {
+            margin: 20px 0;
+            padding: 0;
+            list-style-type: none;
+        }
+    }
+    .expertise {
+        float: left;
+        width: 35%;
+        padding: 20px 60px 20px 20px;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        .chunk {
+            h1 {
+                font-size: 12px !important;
+            }
+        }
+    }
+    .expertise .title,
+    .mission-title .title,
+    .chunk h1 {
+        font-size: 16px !important;
+        text-transform: uppercase;
+        margin-bottom: 0px;
+        font-weight: bold;
+        display: inline-block;
+    }
+    .chunk h1 {
+        margin: 20px 0 0 0;
+    }
+    .expertise ul {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+        color: #959694 !important;
+    }
+    .expertise .expertise-icon {
+        margin-top: 17px;
+        display: inline-block;
+    }
+    .mission-title {
+        position: absolute;
+        left: 33%;
+        padding: 20px 20px 0px 0px;
+    }
+    .chunk {
+        padding: 0;
+        margin: 0 0 14px;
+        position: relative;
+    }
+    .experience .chunk h1,
+    .experience .chunk h2,
+    .experience .chunk h3 {
+        font-size: 14px !important;
+        font-weight: bold;
+        padding: 0;
+    }
+    .experience .chunk h1 {
+        padding: 0px 0 14px 0;
+        text-transform: none;
+        margin: 0;
+    }
+    .experience .chunk h3 {
+        padding: 0;
+        margin-top: -24px;
+    }
+    .experience .chunk h2 {
+        margin: 0 0 14px 0;
+        position: absolute;
+        top: -49px;
+        right: 0px;
+    }
+    .chunk ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+    .chunk ul li p {
+        padding: 0;
+        margin: 0;
+    }
+    .chunk ul li>ul li::before {
+        content: '\25CF';
+        width: 12px;
+        display: inline-block;
+        font-size: 8px !important;
+        vertical-align: 3px;
+    }
+    .chunk ul li>ul,
+    .chunk ul>li {
+        margin-bottom: 14px;
+    }
+    .chunk ul>li>ul>li {
+        margin-bottom: 0;
+    }
+    .description {
+        .chunk ul li>ul,
+        .chunk ul>li {
+            margin-bottom: 0;
+        }
+    }
+    /*first*/
+    .experience {
+        padding: 30px 0 0;
+        margin: 0 0 40px;
+        background-size: 100% 20px;
+        background-repeat: no-repeat;
+    }
+    .experience.first-page {
+        padding: 0 0 0;
+        margin: 0 0 40px 34%;
+    }
+    .experience.background1 {
+        background-image: url('img/section-header1.png');
+    }
+    .experience.background2 {
+        background-image: url('img/section-header2.png');
+    }
+    .experience.background3 {
+        background-image: url('img/section-header3.png');
+    }
+    .experience.background4 {
+        background-image: url('img/section-header4.png');
+    }
+    .experience {
+        page-break-inside: avoid !important;
+    }
+    .chunk-page-break {
+        page-break-before: always !important;
+        height: 0px;
+    }
+    .presentation .experience {
+        padding: 0;
+        margin: 0;
+    }
+    $zoom:0.25;
+    .expertise-icon {
+        &.archive {
+            background-image: url('img/icons/expertise-archive.png');
+            background-size: $zoom*75px $zoom*70px;
+            width: $zoom*75px;
+            height: $zoom*70px;
+        }
+        &.cloud {
+            background-image: url('img/icons/expertise-cloud.png');
+            background-size: $zoom*90px $zoom*57px;
+            width: $zoom*90px;
+            height: $zoom*57px;
+        }
+        &.file {
+            background-image: url('img/icons/expertise-file.png');
+            background-size: $zoom*60px $zoom*69px;
+            width: $zoom*60px;
+            height: $zoom*69px;
+        }
+        &.flag {
+            background-image: url('img/icons/expertise-flag.png');
+            background-size: $zoom*71px $zoom*77px;
+            width: $zoom*71px;
+            height: $zoom*77px;
+        }
+        &.leaf {
+            background-image: url('img/icons/expertise-leaf.png');
+            background-size: $zoom*69px $zoom*74px;
+            width: $zoom*69px;
+            height: $zoom*74px;
+        }
+        &.talk {
+            background-image: url('img/icons/expertise-talk.png');
+            background-size: $zoom*81px $zoom*75px;
+            width: $zoom*81px;
+            height: $zoom*75px;
+        }
+    }
+    .content {
+        padding: 0 20px;
+    }
+    .close-button {
+        position: fixed;
+    }
 }

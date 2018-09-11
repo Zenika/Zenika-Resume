@@ -1,0 +1,217 @@
+@import url('https://fonts.googleapis.com/css?family=Oswald:500');
+
+.preview {
+    margin: 0;
+    padding: 0;
+}
+
+.preview .rendered {
+    padding: 0;
+    position: relative;
+}
+
+@media print {
+    .preview.theme-light .rendered {
+        overflow: hidden;
+    }
+    .layout .editor .preview {
+        overflow: auto !important;
+        height: auto !important;
+    }
+    .experience {
+        page-break-inside: avoid !important;
+    }
+    .chunk-page-break {
+        page-break-before: always !important;
+    }
+
+    .lastname {
+        font-size: 2.5em;
+        color: #B31835!important;
+    }
+}
+
+.theme-light {
+    color: #272727;
+    font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+    .topbar {
+        background-color: #B31835;
+        height: 20px;
+        width: 100%;
+    }
+    .header {
+        font-family: 'Oswald', sans-serif;
+        display: flex;
+        .logo {
+            background-image: url('img/logo.png');
+            background-size: 165px 165px;
+            width: 165px;
+            min-width: 165px;
+            height: 165px;
+            margin: 20px 20px -10px;
+        }
+        .presentation {
+            margin-top: 20px;
+            height: 165px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-transform: uppercase;
+            .firstname {
+                font-size: 2.5em;
+                line-height: 1;
+            }
+            .lastname {
+                font-size: 2.5em;
+                color: #B31835;
+                line-height: 1;
+            }
+            .description {
+                margin-top: 10px;
+                line-height: 1;
+            }
+        }
+        .experience {
+            margin-top: 50px;
+            text-align: right;
+            margin-left: auto;
+            margin-right: 20px;
+        }
+    }
+    .email {
+        width: 100%;
+        text-align: center;
+        font-weight: bold;
+    }
+    .bande {
+        margin-top: 20px;
+        background-color: #F3F4F5;
+        padding: 20px;
+        h1 {
+            font-size: 1.2rem
+        }
+        .table {
+            display: flex;
+            justify-content: space-between;
+        }
+        .table>*:first-child {
+            width: 35%;
+        }
+        .colonne:nth-child(2) {
+            width: 23%;
+        }
+        .colonne {
+            width: 33%;
+        }
+        ul,
+        li {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 14px;
+        }
+        p {
+            font-size: 14px;
+        }
+    }
+
+    .experience {
+        page-break-inside: avoid !important;
+    }
+    .chunk-page-break {
+        page-break-before: always !important;
+        height: 20px;
+        background: #B31835;
+        margin-bottom: 20px;
+    }   
+
+    .content {
+        margin-top: 30px;
+        &>.chunk {
+            position: relative;
+            overflow: hidden;
+            &>span {
+                &>h1 {
+                    display: flex;
+                    text-align: right;
+                    font-size: 1.5em;
+                    text-transform: uppercase;
+                    width: 200px;
+                    justify-content: flex-end;
+                    align-items: center;
+                    background: white;
+                }
+                &>h1::after {
+                    content: "-";
+                    display: block;
+                    color: #ffffff;
+                    background-color: #B31835;
+                    position: absolute;
+                    width: 100%;
+                    margin-left: calc(100% + 25px);
+                    z-index: -1;
+                    height: 5px;
+                }
+            }
+        }
+        .experience .chunk {
+            display: inline;
+        }
+        .experience .chunk h1 {
+            display: inline-grid;
+            color: #B31835;
+            width: 200px;
+            font-size: 1em;
+            text-align: right;
+            margin-right: 20px;
+            text-transform: uppercase;
+        }
+        .experience .chunk h2 {
+            display: inline-block;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        .experience .chunk h3 {
+            display: inline-block;
+            font-size: 0.6em;
+            font-weight: bold;
+            &::before {
+                content: "( "
+            }
+            &::after {
+                content: " )"
+            }
+        }
+        .chunk>span>ul,
+        .chunk p {
+            display: block;
+            margin-left: 225px;
+            margin-right: 50px;
+            font-size: 14px;
+        }
+        .chunk ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .chunk ul li p {
+            padding: 0;
+            margin: 0;
+        }
+        .chunk ul li>ul li::before {
+            content: '\25CF';
+            width: 12px;
+            display: inline-block;
+            font-size: 8px !important;
+            vertical-align: 3px;
+        }
+        .chunk ul li>ul,
+        .chunk ul>li {
+            margin-bottom: 14px;
+        }
+        .chunk ul>li>ul>li {
+            margin-bottom: 0;
+        }
+    }
+
+}

@@ -1,5 +1,7 @@
 import Immutable from 'immutable';
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
 import {
   addLocaleData,
   IntlProvider,
@@ -31,6 +33,7 @@ class App extends Component {
       loaded: false,
     };
     this.toggleLocale = this.toggleLocale.bind(this);
+    this.changeTheme = this.changeTheme.bind(this);
     this.updateContent = debounce(this.updateContent, 150);
     this.updateMetadata = debounce(this.updateMetadata, 150);
   }
@@ -79,10 +82,10 @@ class App extends Component {
       const message = {
         content: (
           <span>
-          <i>Snap!</i>&nbsp;
-          The document you were working on has been updated by a third,
-          and you are now working on a fork. You can still find the original
-          (and updated) document:&nbsp;
+            <i>Snap!</i>&nbsp;
+            The document you were working on has been updated by a third,
+            and you are now working on a fork. You can still find the original
+            (and updated) document:&nbsp;
           <a href={`/${state.document.uuid}`}>here</a>.
           </span>
         ),
@@ -142,7 +145,7 @@ class App extends Component {
     if (!window.history.state || !window.history.state.uuid ||
       (window.history.state && window.history.state.uuid &&
         doc.get('uuid') !== window.history.state.uuid)
-      ) {
+    ) {
       if (uri.indexOf('undefined') == -1) {
         window.history.pushState({ uuid: doc.get('uuid') }, `Monod - ${doc.get('uuid')}`, uri);
       }
@@ -197,6 +200,10 @@ class App extends Component {
     });
   }
 
+  changeTheme(theme) {
+    this.updateMetadata(Object.assign({}, this.state.document.metadata, { theme: theme.name }))
+  }
+
   render() {
     let viewMode = '';
     const locale = this.state.userPref.locale;
@@ -215,100 +222,100 @@ class App extends Component {
     }
 
     return (
-        <IntlProvider
-          locale={locale}
-          messages={messages}
-        >
+      <IntlProvider
+        locale={locale}
+        messages={messages}
+      >
         <div className={`layout ${viewMode}`} style={style}>
-        <div className="reveal" id="help-modal" data-reveal>
-        <h1><FormattedMessage id="phew" /></h1>
+          <div className="reveal" id="help-modal" data-reveal>
+            <h1><FormattedMessage id="phew" /></h1>
 
-        <iframe
-          width="640"
-          height="360"
-          src="https://www.youtube.com/embed/p_t7716ymoI"
-          frameBorder="0"
-          allow="autoplay; encrypted-media"
-          allowFullScreen
-        ></iframe>
+            <iframe
+              width="640"
+              height="360"
+              src="https://www.youtube.com/embed/p_t7716ymoI"
+              frameBorder="0"
+              allow="autoplay; encrypted-media"
+              allowFullScreen
+            ></iframe>
 
-        <p className="dummyTest">
-        </p>
-        <p className="lead"><FormattedMessage id="print" /></p>
-        <p>
-        <FormattedMessage id="the" /><br />
-        <FormattedMessage id="between" /><br />
-        <br />
-        <FormattedMessage id="in" /><br />
-        <FormattedMessage id="the2" /><br />
-        <FormattedMessage id="then" /><br />
-        <FormattedMessage id="for" />
-        </p>
-        <p className="lead"><FormattedMessage id="describe" /></p>
-        <p>
-        <FormattedMessage id="experience" /><br />
-        <FormattedMessage id="styles" /><br />
-        --section-start<br />
-        --section-end<br />
-        <br />
-        <FormattedMessage id="between2" /><br />
-        <FormattedMessage id="your" /><br />
-        <br />
-        <FormattedMessage id="the3" /><br />
-        <FormattedMessage id="the4" /><br />
-        <br />
-        <FormattedMessage id="the5" /><br />
-        <FormattedMessage id="the6" /><br />
-        <br />
-        <FormattedMessage id="to" /><br />
-        <FormattedMessage id="two" /><br />
-        <FormattedMessage id="the7" /><br />
-        &nbsp; &nbsp; <FormattedMessage id="a" /><br />
-        &nbsp; &nbsp; <FormattedMessage id="then2" /><br />
-        <br />
-        </p>
+            <p className="dummyTest">
+            </p>
+            <p className="lead"><FormattedMessage id="print" /></p>
+            <p>
+              <FormattedMessage id="the" /><br />
+              <FormattedMessage id="between" /><br />
+              <br />
+              <FormattedMessage id="in" /><br />
+              <FormattedMessage id="the2" /><br />
+              <FormattedMessage id="then" /><br />
+              <FormattedMessage id="for" />
+            </p>
+            <p className="lead"><FormattedMessage id="describe" /></p>
+            <p>
+              <FormattedMessage id="experience" /><br />
+              <FormattedMessage id="styles" /><br />
+              --section-start<br />
+              --section-end<br />
+              <br />
+              <FormattedMessage id="between2" /><br />
+              <FormattedMessage id="your" /><br />
+              <br />
+              <FormattedMessage id="the3" /><br />
+              <FormattedMessage id="the4" /><br />
+              <br />
+              <FormattedMessage id="the5" /><br />
+              <FormattedMessage id="the6" /><br />
+              <br />
+              <FormattedMessage id="to" /><br />
+              <FormattedMessage id="two" /><br />
+              <FormattedMessage id="the7" /><br />
+              &nbsp; &nbsp; <FormattedMessage id="a" /><br />
+              &nbsp; &nbsp; <FormattedMessage id="then2" /><br />
+              <br />
+            </p>
 
-        <p className="lead"><FormattedMessage id="variable" /></p>
-        <p>
-        <FormattedMessage id="at" /><br />
-        <FormattedMessage id="section" /><br />
-        <FormattedMessage id="role" /><br />
-        <FormattedMessage id="the8" /><br />
-        <FormattedMessage id="for2" /><br />
-        <FormattedMessage id="you" /><br /><br />
-          </p>
+            <p className="lead"><FormattedMessage id="variable" /></p>
+            <p>
+              <FormattedMessage id="at" /><br />
+              <FormattedMessage id="section" /><br />
+              <FormattedMessage id="role" /><br />
+              <FormattedMessage id="the8" /><br />
+              <FormattedMessage id="for2" /><br />
+              <FormattedMessage id="you" /><br /><br />
+            </p>
 
-          <p className="lead"><FormattedMessage id="using" /></p>
-          <p>
-          <FormattedMessage id="there" /><br />
-          <FormattedMessage id="it" /><br />
-          --expertise-archive.<br />
-          <br />
-          <FormattedMessage id="here" /><br />
-          --expertise-archive<br />
-          --expertise-cloud<br />
-          --expertise-file<br />
-          --expertise-flag<br />
-          --expertise-leaf<br />
-          --expertise-talk<br /><br />
-          </p>
+            <p className="lead"><FormattedMessage id="using" /></p>
+            <p>
+              <FormattedMessage id="there" /><br />
+              <FormattedMessage id="it" /><br />
+              --expertise-archive.<br />
+              <br />
+              <FormattedMessage id="here" /><br />
+              --expertise-archive<br />
+              --expertise-cloud<br />
+              --expertise-file<br />
+              --expertise-flag<br />
+              --expertise-leaf<br />
+              --expertise-talk<br /><br />
+            </p>
 
-          <p className="lead"><FormattedMessage id="jump" /></p>
-          <p>
-          <FormattedMessage id="this" /><br />
-          <FormattedMessage id="what" /><br />
-          --break-page<br />
-          </p>
+            <p className="lead"><FormattedMessage id="jump" /></p>
+            <p>
+              <FormattedMessage id="this" /><br />
+              <FormattedMessage id="what" /><br />
+              --break-page<br />
+            </p>
 
-          <p className="lead"><FormattedMessage id="tip" /></p>
-          <p>
-          <FormattedMessage id="in2" /> <br />
-          <FormattedMessage id="example" /><br />
-          </p>
+            <p className="lead"><FormattedMessage id="tip" /></p>
+            <p>
+              <FormattedMessage id="in2" /> <br />
+              <FormattedMessage id="example" /><br />
+            </p>
 
-          <button className="close-button" data-close aria-label="Close modal" type="button" onClick={this.hideHelp}>
-          <span aria-hidden="true">&times;</span>
-          </button>
+            <button className="close-button" data-close aria-label="Close modal" type="button" onClick={this.hideHelp}>
+              <span aria-hidden="true">&times;</span>
+            </button>
           </div>
           <MessageBoxes
             messages={this.state.messages}
@@ -322,18 +329,20 @@ class App extends Component {
             onMetadataUpdate={this.updateMetadata.bind(this)}
           />
           <div>
-        </div>
+          </div>
           <Footer
             version={this.props.version}
             metadata={this.state.document.get('metadata')}
+            path={this.state.document.get('path')}
             toggleLocale={this.toggleLocale}
+            changeTheme={this.changeTheme}
             currentLocale={locale}
           />
         </div>
-        </IntlProvider>
-      );
+      </IntlProvider>
+    );
   }
-  }
+}
 
 App.propTypes = {
   version: string.isRequired,

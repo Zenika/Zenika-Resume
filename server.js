@@ -20,12 +20,12 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 // config
 const staticPath = path.join(__dirname, '/build');
 
-var databaseUrl = process.env.DATABASE_URL || 'postgres://localhost/resume';
-var googleId = process.env.GOOGLE_ID || require('./conf-google').id;
-var googleSecret = process.env.GOOGLE_SECRET || require('./conf-google').secret;
-var googleCallback = process.env.GOOGLE_CALLBACK || require('./conf-google').callback;
+const databaseUrl = process.env.DATABASE_URL || 'postgres://localhost/resume';
+const googleId = process.env.GOOGLE_ID || require('./conf-google').id;
+const googleSecret = process.env.GOOGLE_SECRET || require('./conf-google').secret;
+const googleCallback = process.env.GOOGLE_CALLBACK || require('./conf-google').callback;
 
-var isDev = !process.env.DATABASE_URL;
+const isDev = !process.env.DATABASE_URL;
 
 const basicAuth = require('basic-auth');
 
@@ -57,7 +57,7 @@ app.use(passport.session());
 app.use(api);
 
 function hasValidEmail(req) {
-  var emails = req.user.emails
+  const emails = req.user.emails
     .map((email) => email.value)
     .join('');
   return emails.indexOf('@zenika') != -1 || emails.indexOf('zenika.resume@gmail.com') != -1;
@@ -259,19 +259,20 @@ api.put('/documents/:uuid', bodyParser.json(), (req, res) => {
     [uuid],
     res,
     function (data) {
-      var document = {};
+      let document = {};
       document.uuid = uuid;
       document.content = req.body.content;
       document.metadata = JSON.stringify(req.body.metadata);
       document.last_modified = moment().format('YYYY-MM-DD HH:mm:ss');
-      var sql = '';
+      
+      let sql = '';
       if (data.rows.length == 0) {
         sql = 'INSERT into resume (content, uuid, path, version, last_modified, metadata) VALUES($1, $2, $3, $4, $5, $6) RETURNING id';
       } else {
         sql = 'UPDATE resume SET content = $1, path = $3, version = $4, last_modified = $5, metadata = $6 where uuid = $2';
       }
 
-      var path = buildPath(req.body.metadata.name + '');
+      const path = req.body.metadata.firstname ? buildPath(`${req.body.metadata.name} ${req.body.metadata.firstname}`) : buildPath(req.body.metadata.name  + '')
 
       executeQueryWithCallback(
         sql,

@@ -1,8 +1,22 @@
 /* eslint max-len: 0 */
 export const Config = {
   APP_NAME: 'Zenika Resume',
+  THEMES: [
+    {
+      name: 'default',
+      author: 'Rory Willians',
+      email: '',
+    },
+    {
+      name: 'light',
+      author: 'Aurelien Loyer',
+      email: 'aurelien.loyer@zenika.com',
+    },
+  ],
   DEFAULT_METADATA: {
     name: 'Rory Williams',
+    firstname: 'Rory',
+    email: 'rory.williaws@zenika.box.com',
     experience: '2 ans d\'expérience',
     description: `# Architecte – ScrumMaster - Développeur Front Senior
 rory.williaws@zenika.box.com`,
@@ -17,7 +31,7 @@ rory.williaws@zenika.box.com`,
   * Mix IT`
   },
   DEFAULT_CONTENT: [
-`--expertise-start
+    `--expertise-start
 
 --expertise-archive
 
