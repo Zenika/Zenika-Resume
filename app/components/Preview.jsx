@@ -1,5 +1,6 @@
 /* eslint no-param-reassign: 1, array-callback-return: 1 */
-import React, {PropTypes, Component} from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import PreviewLoader from './loaders/Preview';
 import {Templates} from './TemplateForm';
@@ -120,6 +121,18 @@ export default class Preview extends Component {
     return chunks;
   }
 
+  getThemeCssClass() {
+    let cssClass = "preview";
+    if(this.props.metadata.theme) {
+      cssClass = `${cssClass} theme-${this.props.metadata.theme}` 
+    }
+    else {
+      cssClass = `${cssClass} theme-default` 
+    }
+
+    return cssClass;
+  }
+
   render() {
     let contentExp = [(
       <div className="preview-loader" key="preview-loader">
@@ -174,8 +187,10 @@ export default class Preview extends Component {
     }
 
     return (
-      <div className="preview">
-        <div ref="rendered" className="rendered">
+      <div className={this.getThemeCssClass()}>
+        <div 
+          ref={ref => this.rendered = ref}
+          className="rendered">
           {page}
         </div>
       </div>

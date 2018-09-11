@@ -130,7 +130,8 @@ const common = {
     }),
     new CopyWebpackPlugin([
       {from:'app/not-zenika.html'},
-      {from:'app/list.html'}
+      {from:'app/list.html'},
+      {from:'app/static', to:'static'},
     ])
   ]
 };

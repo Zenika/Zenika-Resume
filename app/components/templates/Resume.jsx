@@ -3,6 +3,7 @@ import React from 'react';
 import BaseTemplate from './Base';
 
 import './resume/style.scss';
+import './resume/theme-light.scss';
 
 /**
  * Invoice template
@@ -85,7 +86,7 @@ export default class Resume extends BaseTemplate {
 
     var center = undefined;
 
-    if(data.description != ''){
+    if (data.description != '') {
       center = (
         <div className="center">
           {data.description}
@@ -93,9 +94,18 @@ export default class Resume extends BaseTemplate {
       );
     }
 
+    return (
+      <div className="description">
+        {center}
+        {this.buildTable(data)}
+      </div>
+    );
+  }
+
+  buildTable(data) {
     var table = undefined;
 
-    if(data.column1 != '' || data.column2 != ''  || data.column3 != ''){
+    if (data.column1 != '' || data.column2 != '' || data.column3 != '') {
       table = (
         <div className="table">
           <div className="premiereColonne">
@@ -111,12 +121,7 @@ export default class Resume extends BaseTemplate {
       );
     }
 
-    return (
-      <div className="description">
-        {center}
-        {table}
-      </div>
-    );
+    return table;
   }
 
   render() {
@@ -124,12 +129,41 @@ export default class Resume extends BaseTemplate {
 
     const expertises = this.createList(data, 'expertises');
 
+    if (this.props.data.theme == "light") {
+      return (
+        <div>
+
+          <div className="topbar"></div>
+
+          <div className="header">
+            <div className="logo"></div>
+            <div className="presentation">
+              <div className="firstname">{data.firstname}</div>
+              <div className="lastname">{data.name}</div>
+              <div className="description">{data.description}</div>
+            </div>
+            <div className="experience">{data.experience}</div>
+          </div>
+
+          <div className="email">{data.email}</div>
+
+          <div className="bande">
+            {this.buildTable(this.props.htmlData)}
+          </div>
+
+          <div className="content">
+            {this.props.contentExperience}
+          </div>
+        </div>
+      )
+    }
+
     return (
       <div>
         <div className="logo"></div>
         <div className="header1"></div>
         <div className="presentation">
-          <span className="name">{data.name}</span>
+          <span className="name">{data.name} {data.firstname} </span>
           <span className="experience">{data.experience}</span>
         </div>
         <div className="header2"></div>

@@ -1,5 +1,6 @@
 /* eslint no-throw-literal: 0 */
-import { PropTypes, Component } from 'react';
+import {Component } from 'react';
+import PropTypes from 'prop-types';
 import merge from 'deepmerge';
 
 const { array, object } = PropTypes;

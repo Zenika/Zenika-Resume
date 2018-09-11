@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import MarkdownLoader from './loaders/Markdown';
 import CodeMirror from './codemirror';
@@ -12,9 +13,10 @@ const {func, string, object} = PropTypes;
 export default class Markdown extends Component {
 
   componentWillMount() {
+    
     MarkdownLoader().then(() => {
       const defaultValue = this.props.raw || '';
-      const textareaNode = this.refs.markdownTextarea;
+      const textareaNode = this.markdownTextarea;
       const options = {
         autofocus: true,
         lineNumbers: true,
@@ -42,13 +44,14 @@ export default class Markdown extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    //console.log('componentWillReceiveProps', nextProps.metadata);
     if (JSON.stringify(nextProps.metadata) !== JSON.stringify(this.props.metadata)) {
       this.form.setState({metadata: nextProps.metadata});
     }
   }
 
   componentDidMount() {
+
+
     this.context.controller.on(Events.UPDATE_WITHOUT_CONFLICT, (state) => {
       // force content update
       this.getCodeMirror().setValue(state.document.content);
@@ -88,7 +91,7 @@ export default class Markdown extends Component {
     return (
       <div className="markdown">
         <textarea
-          ref="markdownTextarea"
+          ref={ref => this.markdownTextarea = ref}
           placeholder="Type your *markdown* content here"
           onChange={this.props.onChangeContent}
           value={this.props.raw}

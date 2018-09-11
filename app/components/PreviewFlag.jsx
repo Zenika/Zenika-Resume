@@ -1,4 +1,5 @@
-import React, {PropTypes, Component} from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import isEqual from 'lodash.isequal';
 
 const {array, func, number, object, string} = PropTypes;
@@ -15,7 +16,7 @@ class PreviewChunk extends Component {
       }
     });
 
-    return !isEqual(this.props.chunk, nextProps.chunk) || this.props.key !== nextProps.key;
+    return !isEqual(this.props.chunk, nextProps.chunk) || this.props.id !== nextProps.id;
   }
 
   getHTML() {
@@ -175,7 +176,7 @@ export default class PreviewFlag {
 
   buildPreview(i, chunk) {
     return <PreviewChunk
-      key={`ck-${i.toString()}`}
+      id={`ck-${i.toString()}`}
       markdownIt={this.markdownIt}
       emojione={this.emojione}
       chunk={chunk}
