@@ -259,13 +259,13 @@ api.put('/documents/:uuid', bodyParser.json(), (req, res) => {
     [uuid],
     res,
     function (data) {
-      let document = {};
+      var document = {};
       document.uuid = uuid;
       document.content = req.body.content;
       document.metadata = JSON.stringify(req.body.metadata);
       document.last_modified = moment().format('YYYY-MM-DD HH:mm:ss');
       
-      let sql = '';
+      var sql = '';
       if (data.rows.length == 0) {
         sql = 'INSERT into resume (content, uuid, path, version, last_modified, metadata) VALUES($1, $2, $3, $4, $5, $6) RETURNING id';
       } else {
