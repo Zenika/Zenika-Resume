@@ -22,18 +22,24 @@ export default class ResumeForm extends Component {
     return (
       <div className="form">
         <div className="name-experience">
-          <input type="text" placeholder="Nom"
-            onChange={this.updateField('name')}
-            value={this.state.metadata.name} />
           <input type="text" placeholder="Prénom"
             onChange={this.updateField('firstname')}
             value={this.state.metadata.firstname} />
+          <input type="text" placeholder="Nom"
+            onChange={this.updateField('name')}
+            value={this.state.metadata.name} />
           <input type="text" placeholder="Email"
             onChange={this.updateField('email')}
             value={this.state.metadata.email} />
           <input type="text" placeholder="Expérience"
             onChange={this.updateField('experience')}
             value={this.state.metadata.experience} />
+          <input type="text" placeholder="Agence"
+            onChange={this.updateField('agency')}
+            value={this.state.metadata.agency} />
+          <input type="text" placeholder="Langue du cv (fr, en, ...)"
+            onChange={this.updateField('lang')}
+            value={this.state.metadata.lang} />
         </div>
         <div className="description-area">
           <textarea placeholder="Description"

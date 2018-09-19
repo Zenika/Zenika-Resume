@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types';
+
 import Sync from './Sync';
 import { Config } from './../Config';
-import PropTypes from 'prop-types';
 import {
   FormattedMessage,
 } from 'react-intl';
@@ -44,7 +46,6 @@ export default class Footer extends Component {
   }
 
   toggleIsThemesBarOpen() {
-    console.log()
     this.setState({
       isThemesBarOpen: !this.state.isThemesBarOpen,
     });
@@ -56,9 +57,9 @@ export default class Footer extends Component {
       path = this.props.path;
     }
     else if (this.props.metadata) {
-      if(this.props.metadata.firstname){
-        path = buildPath(`${this.props.metadata.name} ${this.props.metadata.firstname}`);
-      }else {
+      if (this.props.metadata.firstname) {
+        path = buildPath(`${this.props.metadata.firstname} ${this.props.metadata.name} ${this.props.metadata.agency} ${this.props.metadata.lang}`);
+      } else {
         path = buildPath(this.props.metadata.name);
       }
     }
@@ -76,8 +77,23 @@ export default class Footer extends Component {
         </div>
         <a className="btn" onClick={this.showHelp}><i className="fa fa-question-circle-o" aria-hidden="true"></i><FormattedMessage id="help" /></a>
         <Sync />
-        <span className="viewLink"><FormattedMessage id="read" /><a href={this.getPath()}>{this.getPath()}</a></span>
-        <span className="viewLink"><a href="/list.html" target="_blank"><FormattedMessage id="list" /></a>&nbsp;&nbsp;</span>
+        <span className="viewLink"><FormattedMessage id="read" />
+          <Link to={`/app/${this.getPath()}`}>
+            {this.getPath()}
+          </Link>
+        </span>
+        <span className="viewLink">
+          <Link to={'/list'}>
+            <FormattedMessage id="list" />
+          </Link>
+          &nbsp;&nbsp;
+        </span>
+        <span className="viewLink">
+          <Link to={'/'}>
+            <FormattedMessage id="home" />
+          </Link>
+          &nbsp;&nbsp;
+        </span>
         <span className="viewLink languageToggle">
           <span> Langues :</span>
           <input

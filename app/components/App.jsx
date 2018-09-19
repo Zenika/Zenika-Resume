@@ -94,7 +94,7 @@ class App extends Component {
 
       this.loadAndRedirect(
         state.fork.document,
-        `/${state.fork.document.uuid}`,
+        `/#/app/${state.fork.document.uuid}`,
         message
       );
     });
@@ -121,13 +121,13 @@ class App extends Component {
     this.props.controller.on(`${Events.SYNCHRONIZE}, ${Events.CHANGE}`, (state) => {
       this.loadAndRedirect(
         state.document,
-        `/${state.document.uuid}`
+        `/#/app/${state.document.uuid}`
       );
     });
 
     this.props.controller.dispatch('action:init', {
-      id: window.location.pathname.slice(1),
-      secret: window.location.hash.slice(1)
+      id: window.location.hash.slice(6),
+      secret: ''
     });
   }
 
@@ -147,7 +147,7 @@ class App extends Component {
         doc.get('uuid') !== window.history.state.uuid)
     ) {
       if (uri.indexOf('undefined') == -1) {
-        window.history.pushState({ uuid: doc.get('uuid') }, `Monod - ${doc.get('uuid')}`, uri);
+        window.history.pushState({ uuid: doc.get('uuid') }, `Zenika Resume - ${doc.get('uuid')}`, uri);
       }
     }
   }

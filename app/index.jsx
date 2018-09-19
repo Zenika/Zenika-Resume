@@ -2,11 +2,21 @@ import './scss/main.scss';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './components/App.jsx';
+import { BrowserRouter as Router, Route, Redirect, HashRouter } from 'react-router-dom';
 import { EventEmitter } from 'events';
 import localforage from 'localforage';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+
 import Store from './Store';
 import Controller from './Controller';
+
+import Header from './components/Header';
+import App from './components/App.jsx';
+import Home from './components/Home.jsx';
+import List from './components/List.jsx';
+import Bye from './components/Bye.jsx';
+import Help from './components/Help.jsx';
+import Page404 from './components/404.jsx';
 
 const appElement = document.getElementById('app');
 const appVersion = appElement.getAttribute('data-app-version');
@@ -18,11 +28,28 @@ const controller = new Controller({ store }, events);
 
 require('offline-plugin/runtime').install();
 
-if((window.location.href + '').indexOf('?help') != -1){
+if ((window.location.href + '').indexOf('?help') != -1) {
   history.replaceState(null, 'zenika-resume', (window.location.href + '').split('?help')[0]);
 }
 
+const theme = createMuiTheme({
+  palette: {
+    primary: { main: '#383D43' },
+    secondary: { main: '#B31835' },
+  },
+});
+
 ReactDOM.render(
-  <App version={appVersion} controller={controller} />,
+  <HashRouter>
+    <MuiThemeProvider theme={theme}>
+      <Header></Header>
+      <Route path='/app' component={() => <App key={Date.now()} version={appVersion} controller={controller} />} />
+      <Route path='/list' component={List} />
+      <Route path='/help' component={Help} />
+      <Route exact path='/' component={Home} />
+      <Route exact path='/404' component={Page404} />
+      <Route exact path='/bye' component={Bye} />
+    </MuiThemeProvider>
+  </HashRouter>,
   appElement
 );
