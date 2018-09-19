@@ -162,6 +162,18 @@ if (TARGET === 'dev' || !TARGET) {
       proxy: {
         '/documents/*': {
           target: 'http://127.0.0.1:3000',
+        },
+        '/login/*': {
+          target: 'http://127.0.0.1:3000',
+        },
+        '/logout': {
+          target: 'http://127.0.0.1:3000',
+        },
+        '/me': {
+          target: 'http://127.0.0.1:3000',
+        },
+        '/resumes*': {
+          target: 'http://127.0.0.1:3000',
         }
       }
     },
