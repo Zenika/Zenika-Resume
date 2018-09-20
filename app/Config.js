@@ -14,9 +14,11 @@ export const Config = {
     },
   ],
   DEFAULT_METADATA: {
-    name: 'Rory Williams',
+    name: 'Williams',
     firstname: 'Rory',
     email: 'rory.williaws@zenika.box.com',
+    agency: 'Montreal',
+    lang: 'fr',
     experience: '2 ans d\'expérience',
     description: `# Architecte – ScrumMaster - Développeur Front Senior
 rory.williaws@zenika.box.com`,

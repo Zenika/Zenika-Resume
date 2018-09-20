@@ -163,7 +163,7 @@ export default class Resume extends BaseTemplate {
         <div className="logo"></div>
         <div className="header1"></div>
         <div className="presentation">
-          <span className="name">{data.name} {data.firstname} </span>
+          <span className="name">{data.firstname} {data.name}</span>
           <span className="experience">{data.experience}</span>
         </div>
         <div className="header2"></div>

@@ -24,6 +24,44 @@ The app is hosted on Heroku. The authentication is provided by Google through th
 project [`zenika-resume`](https://console.cloud.google.com/home/dashboard?project=zenika-resume).
 Contact dsi@zenika.com to get access to either of those.
 
+## Development 🛠
+
+### 🐳 Docker Compose
+
+Start PostgreSQL instance using docker-compose.yml
+
+```
+docker-compose up
+```
+
+### 🚜 Start server 
+
+Create conf-google.js file for development
+```
+module.exports = {
+    id: '1234567890.apps.googleusercontent.com',
+    secret: 'soupersecretcode',
+    callback: 'http://localhost:3000/login/google/callback',
+}
+```
+And start your server with all environment variables
+```
+PGUSER=postgres \
+  PGHOST=localhost \
+  PGPASSWORD=zenikadev \
+  DATABASE_URL=postgres \
+  PGDATABASE=postgres \
+  PGPORT=5432 \
+  node server.js
+```
+
+### 🦄 Start front
+
+```
+npm run dev
+```
+
+### 💻 Start code !
 
 # Monod
 

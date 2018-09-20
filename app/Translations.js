@@ -41,6 +41,7 @@ export default {
     in2: 'In order to add the expertise, it is necessary to put them between "". ',
     example: 'Example: "Spring (Core, Batch), Java" ',
     list: 'List of all resumes',
+    home: 'Home page',
     help: 'Help',
     read: 'Current link ',
 
@@ -87,6 +88,7 @@ export default {
     in2: 'Afin de rajouter les expertises, il faut les mettre entre " ". ',
     example: 'Exemple: "Spring (Core, Batch), Java" ',
     list: 'Liste de tous les CV',
+    home: 'Page d\'accueil',
     help: 'de l\'aide',
     read: 'Lien en lecture ',
 
