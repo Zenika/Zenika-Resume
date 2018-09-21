@@ -15,6 +15,7 @@ import Translations from '../Translations';
 import debounce from 'lodash.debounce';
 
 import Editor from './Editor';
+import ExportResume from './ExportResume';
 import Footer from './Footer';
 import MessageBoxes from './MessageBox';
 
@@ -185,15 +186,6 @@ class App extends Component {
     });
   }
 
-  hideHelp() {
-    let modal = document.getElementById('help-modal');
-
-    if (modal.style.display == 'block') {
-      history.back();
-      modal.style.display = 'none';
-    }
-  }
-
   toggleLocale(e) {
     this.setState({
       userPref: Object.assign({}, this.state.userPref, { locale: e.target.value })
@@ -227,96 +219,6 @@ class App extends Component {
         messages={messages}
       >
         <div className={`layout ${viewMode}`} style={style}>
-          <div className="reveal" id="help-modal" data-reveal>
-            <h1><FormattedMessage id="phew" /></h1>
-
-            <iframe
-              width="640"
-              height="360"
-              src="https://www.youtube.com/embed/p_t7716ymoI"
-              frameBorder="0"
-              allow="autoplay; encrypted-media"
-              allowFullScreen
-            ></iframe>
-
-            <p className="dummyTest">
-            </p>
-            <p className="lead"><FormattedMessage id="print" /></p>
-            <p>
-              <FormattedMessage id="the" /><br />
-              <FormattedMessage id="between" /><br />
-              <br />
-              <FormattedMessage id="in" /><br />
-              <FormattedMessage id="the2" /><br />
-              <FormattedMessage id="then" /><br />
-              <FormattedMessage id="for" />
-            </p>
-            <p className="lead"><FormattedMessage id="describe" /></p>
-            <p>
-              <FormattedMessage id="experience" /><br />
-              <FormattedMessage id="styles" /><br />
-              --section-start<br />
-              --section-end<br />
-              <br />
-              <FormattedMessage id="between2" /><br />
-              <FormattedMessage id="your" /><br />
-              <br />
-              <FormattedMessage id="the3" /><br />
-              <FormattedMessage id="the4" /><br />
-              <br />
-              <FormattedMessage id="the5" /><br />
-              <FormattedMessage id="the6" /><br />
-              <br />
-              <FormattedMessage id="to" /><br />
-              <FormattedMessage id="two" /><br />
-              <FormattedMessage id="the7" /><br />
-              &nbsp; &nbsp; <FormattedMessage id="a" /><br />
-              &nbsp; &nbsp; <FormattedMessage id="then2" /><br />
-              <br />
-            </p>
-
-            <p className="lead"><FormattedMessage id="variable" /></p>
-            <p>
-              <FormattedMessage id="at" /><br />
-              <FormattedMessage id="section" /><br />
-              <FormattedMessage id="role" /><br />
-              <FormattedMessage id="the8" /><br />
-              <FormattedMessage id="for2" /><br />
-              <FormattedMessage id="you" /><br /><br />
-            </p>
-
-            <p className="lead"><FormattedMessage id="using" /></p>
-            <p>
-              <FormattedMessage id="there" /><br />
-              <FormattedMessage id="it" /><br />
-              --expertise-archive.<br />
-              <br />
-              <FormattedMessage id="here" /><br />
-              --expertise-archive<br />
-              --expertise-cloud<br />
-              --expertise-file<br />
-              --expertise-flag<br />
-              --expertise-leaf<br />
-              --expertise-talk<br /><br />
-            </p>
-
-            <p className="lead"><FormattedMessage id="jump" /></p>
-            <p>
-              <FormattedMessage id="this" /><br />
-              <FormattedMessage id="what" /><br />
-              --break-page<br />
-            </p>
-
-            <p className="lead"><FormattedMessage id="tip" /></p>
-            <p>
-              <FormattedMessage id="in2" /> <br />
-              <FormattedMessage id="example" /><br />
-            </p>
-
-            <button className="close-button" data-close aria-label="Close modal" type="button" onClick={this.hideHelp}>
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
           <MessageBoxes
             messages={this.state.messages}
             closeMessageBox={this.removeMessage.bind(this)}
@@ -330,6 +232,7 @@ class App extends Component {
           />
           <div>
           </div>
+          <ExportResume />
           <Footer
             version={this.props.version}
             metadata={this.state.document.get('metadata')}

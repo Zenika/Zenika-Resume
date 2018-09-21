@@ -1,0 +1,90 @@
+.exportResume {
+    @media print {
+        display: none;
+    }
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    justify-content: space-between;
+    width: 200px;
+    animation: 1s ease 0s 1 appear;
+    .hexagon {
+        position: relative;
+        width: 60px;
+        height: 34.64px;
+        background-color: #6b97cc;
+        margin: 17.32px 0;
+        display: block;
+        &.print {
+            background-color: #B31835;
+            &:before {
+                border-bottom-color: #B31835;
+            }
+            &:after {
+                border-top-color: #B31835;
+            }
+        }
+        &.link {
+            background-color: #272727;
+            &:before {
+                border-bottom-color: #272727;
+            }
+            &:after {
+                border-top-color: #272727;
+            }
+        }
+        &.word {
+            background-color: #03A9F4;
+            &:before {
+                border-bottom-color: #03A9F4;
+            }
+            &:after {
+                border-top-color: #03A9F4;
+            }
+        }
+        svg {
+            position: absolute;
+            font-size: 40px;
+            margin: auto;
+            margin-left: 10px;
+            color: white;
+        }
+    }
+    .hexagon:before,
+    .hexagon:after {
+        content: "";
+        position: absolute;
+        width: 0;
+        border-left: 30px solid transparent;
+        border-right: 30px solid transparent;
+    }
+    .hexagon:before {
+        bottom: 100%;
+        border-bottom-style: solid;
+        border-bottom-color: #6b97cc;
+        border-bottom-width: 20.21px;
+    }
+    .hexagon:after {
+        top: 100%;
+        width: 0;
+        border-top-style: solid;
+        border-top-color: #6b97cc;
+        border-top-width: 20.21px;
+    }
+}
+
+@keyframes appear {
+    0% {
+        transform: translateY(200%);
+    }
+    80% {
+        transform: translateY(0);
+    }
+    90% {
+        transform: translateY(10px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}

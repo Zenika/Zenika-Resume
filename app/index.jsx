@@ -16,6 +16,7 @@ import Home from './components/Home.jsx';
 import List from './components/List.jsx';
 import Bye from './components/Bye.jsx';
 import Help from './components/Help.jsx';
+import Konami from './components/konami.jsx';
 import Page404 from './components/404.jsx';
 
 const appElement = document.getElementById('app');
@@ -43,6 +44,7 @@ ReactDOM.render(
   <HashRouter>
     <MuiThemeProvider theme={theme}>
       <Header></Header>
+      <Konami></Konami>
       <Route path='/app' component={() => <App key={Date.now()} version={appVersion} controller={controller} />} />
       <Route path='/list' component={List} />
       <Route path='/help' component={Help} />

@@ -1,0 +1,47 @@
+.konami {
+    position: fixed;
+    bottom: -20px;
+    left: 10px;
+    z-index: 10000;
+    width: 350px;
+    animation: 11s ease-in-out 0s 1 konamination;
+    @media print {
+        display: none;
+    }
+}
+
+@keyframes konamination {
+    0% {
+        transform: translate(20px, 200%);
+    }
+    10% {
+        transform: translate(0, 0);
+    }
+    20% {
+        transform: translate(0, 10px);
+    }
+    30% {
+        transform: translate(0, 0);
+    }
+    40% {
+        transform: translate(100%, 20px);
+    }
+    50% {
+        transform: translate(200%, 10px);
+    }
+    60% {
+        transform: translate(400%, 0);
+    }
+    70% {
+        transform: translate(500%, 10px);
+    }
+    80% {
+        transform: translate(300%, 0);
+    }
+    90% {
+        transform: translate(500%, 200%);
+    }
+    100% {
+        transform: translateY(300%, 200%);
+    }
+}
