@@ -68,7 +68,12 @@ function hasValidEmail(req) {
   const emails = req.user.emails
     .map((email) => email.value)
     .join('');
-  return emails.indexOf('@zenika') != -1 || emails.indexOf('zenika.resume@gmail.com') != -1;
+  if (emails.indexOf('-ext@') !== -1) {
+    return false;
+  }
+  else {
+    return emails.indexOf('@zenika.com') !== -1 || emails.indexOf('zenika.resume@gmail.com') !== -1;
+  }
 }
 
 function isUserConnectedAndZenika(req) {
@@ -288,7 +293,7 @@ api.put('/documents/:uuid', bodyParser.json(), (req, res) => {
         sql = 'UPDATE resume SET content = $1, path = $3, version = $4, last_modified = $5, metadata = $6 where uuid = $2';
       }
 
-      const path = req.body.metadata.firstname ? buildPath(`${req.body.metadata.firstname} ${req.body.metadata.name} ${req.body.metadata.agency} ${req.body.metadata.lang}`) : buildPath(req.body.metadata.name + '')
+      const path = req.body.metadata.firstname ? buildPath(`${req.body.metadata.firstname} ${req.body.metadata.name} ${req.body.metadata.agency} ${req.body.metadata.lang}`) : buildPath(req.body.metadata.name + '');
 
       executeQueryWithCallback(
         sql,
