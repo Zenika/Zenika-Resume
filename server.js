@@ -67,12 +67,15 @@ app.use(api);
 function hasValidEmail(req) {
   const emails = req.user.emails
     .map((email) => email.value);
-  const validEmails = emails.filter(email => (email.indexOf('@zenika.com') !== -1 || email.indexOf('zenika.resume@gmail.com') !== -1));
-  if (validEmails.length >= 1) {
-    if (validEmails.length === 1 && validEmails[0].indexOf('-ext@') !== -1) {
-      return false;
+  const validEmails = emails.some(email => (email.indexOf('@zenika.com') !== -1
+  || email.indexOf('zenika.resume@gmail.com') !== -1));
+  if (validEmails) {
+    if (emails.length >= 1) {
+      if (emails.length === 1 && emails[0].indexOf('-ext@') !== -1) {
+        return false;
+      }
+      return true;
     }
-    return true;
   }
   return false;
 }
