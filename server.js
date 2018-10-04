@@ -66,14 +66,15 @@ app.use(api);
 
 function hasValidEmail(req) {
   const emails = req.user.emails
-    .map((email) => email.value)
-    .join('');
-  if (emails.indexOf('-ext@') !== -1) {
-    return false;
+    .map((email) => email.value);
+  const validEmails = emails.filter(email => (email.indexOf('@zenika.com') !== -1 || email.indexOf('zenika.resume@gmail.com') !== -1));
+  if (validEmails.length >= 1) {
+    if (validEmails.length === 1 && validEmails[0].indexOf('-ext@') !== -1) {
+      return false;
+    }
+    return true;
   }
-  else {
-    return emails.indexOf('@zenika.com') !== -1 || emails.indexOf('zenika.resume@gmail.com') !== -1;
-  }
+  return false;
 }
 
 function isUserConnectedAndZenika(req) {
@@ -391,3 +392,4 @@ if (require.main === module) {
 }
 
 module.exports = app;
+module.exports.hasValidEmail = hasValidEmail;
