@@ -1,6 +1,0 @@
---compilers jsx?:babel-register
---require lib/jsdom-setup.js
---require lib/css-null-compiler.js
---require babel-polyfill
-app/**/*-test.js
-app/**/**/*-test.js
