@@ -14,7 +14,7 @@
     "dev": "webpack-dev-server",
     "lint": "eslint app/ --ext .js --ext .jsx",
     "lint:fix": "npm run lint -- --fix",
-    "test-server":"mocha test",
+    "test:server": "mocha test",
     "test": "MONOD_DATA_DIR=app/__tests__/fixtures/ mocha --compilers jsx?:babel-register --require lib/jsdom-setup.js --require lib/css-null-compiler.js --require babel-polyfill app/**/*-test.js app/**/**/*-test.js",
     "test:watch": "npm run test -- --watch --reporter min",
     "test:ci": "npm run test -- --reporter mocha-circleci-reporter",
