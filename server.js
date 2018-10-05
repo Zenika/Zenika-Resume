@@ -34,14 +34,16 @@ const authApi = function (req, res, next) {
   if (!user || !user.name || !user.pass) {
     res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
     res.sendStatus(401);
-  } else if (user.name === process.env.USER_AUTH_API_USERNAME && user.pass === process.env.USER_AUTH_API_PASSWORD) {
+  } else if (
+    user.name === process.env.USER_AUTH_API_USERNAME &&
+    user.pass === process.env.USER_AUTH_API_PASSWORD
+  ) {
     next();
   } else {
     res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
     res.sendStatus(401);
   }
 };
-
 
 app.set('port', process.env.PORT || 3000);
 app.set('etag', false);
@@ -50,7 +52,9 @@ app.set('etag', false);
 app.use(compression());
 app.use(require('cookie-parser')());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
+app.use(
+  require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true })
+);
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -64,20 +68,18 @@ app.use(function (req, res, next) {
 
 app.use(api);
 
-function hasValidEmail(req) {
-  const emails = req.user.emails
-    .map((email) => email.value);
-  const validEmails = emails.some(email => (email.indexOf('@zenika.com') !== -1
-  || email.indexOf('zenika.resume@gmail.com') !== -1));
-  if (validEmails) {
-    if (emails.length >= 1) {
-      if (emails.length === 1 && emails[0].indexOf('-ext@') !== -1) {
-        return false;
-      }
+function validEmail(email) {
+  if (email.indexOf('@zenika.com') !== -1 || email.indexOf('zenika.resume@gmail.com') !== -1) {
+    if (email.indexOf('-ext@') === -1) {
       return true;
     }
   }
   return false;
+}
+
+function hasValidEmail(req) {
+  const emails = req.user.emails.map(email => email.value);
+  return emails.some(validEmail);
 }
 
 function isUserConnectedAndZenika(req) {
@@ -136,47 +138,52 @@ function ensureAuthenticated(req, res, next) {
 }
 
 function executeQueryWithCallback(query, params, response, callback) {
-  pg.connect(databaseUrl, function (err, client, done) {
-    try {
-      if (!client) {
-        return;
-      }
-      client.query(query, params, function (err, result) {
-        done();
-        if (err) {
-          console.error(err);
-          response.send('Error ' + err);
-        }
-        else {
-          callback(result);
-        }
-      });
-    } catch (error) {
+  pg.connect(
+    databaseUrl,
+    function (err, client, done) {
       try {
-        done();
+        if (!client) {
+          return;
+        }
+        client.query(query, params, function (err, result) {
+          done();
+          if (err) {
+            console.error(err);
+            response.send('Error ' + err);
+          } else {
+            callback(result);
+          }
+        });
       } catch (error) {
-        // nothing to do just keep the program running
+        try {
+          done();
+        } catch (error) {
+          // nothing to do just keep the program running
+        }
       }
     }
-  });
+  );
 }
 
-const isValidId = (uuid) => {
+const isValidId = uuid => {
   return /[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}/.test(uuid);
 };
 
-passport.use(new GoogleStrategy({
-  clientID: googleId,
-  clientSecret: googleSecret,
-  callbackURL: googleCallback
-},
-  function (token, tokenSecret, profile, done) {
-    process.nextTick(function () {
-      profile.identifier = token;
-      return done(null, profile);
-    });
-  }
-));
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: googleId,
+      clientSecret: googleSecret,
+      callbackURL: googleCallback
+    },
+    function (token, tokenSecret, profile, done) {
+      process.nextTick(function () {
+        profile.identifier = token;
+        return done(null, profile);
+      });
+    }
+  )
+);
 
 app.get('/me', function (req, res) {
   if (!isUserConnectedAndZenika(req)) {
@@ -186,15 +193,22 @@ app.get('/me', function (req, res) {
   res.status(200).json(req.user);
 });
 
-app.get('/login/google', (req, res, next) => {
-  req.session.requestedUuid = req.query.uuid;
-  return next();
-}, passport.authenticate('google', {
-  scope: ['https://www.googleapis.com/auth/userinfo.email',
-    'https://www.googleapis.com/auth/userinfo.profile']
-}));
+app.get(
+  '/login/google',
+  (req, res, next) => {
+    req.session.requestedUuid = req.query.uuid;
+    return next();
+  },
+  passport.authenticate('google', {
+    scope: [
+      'https://www.googleapis.com/auth/userinfo.email',
+      'https://www.googleapis.com/auth/userinfo.profile'
+    ]
+  })
+);
 
-app.get('/login/google/callback',
+app.get(
+  '/login/google/callback',
   passport.authenticate('google', { failureRedirect: '/login' }),
   function (req, res) {
     if (req.session.requestedUuid) {
@@ -202,7 +216,8 @@ app.get('/login/google/callback',
     } else {
       res.redirect('/');
     }
-  });
+  }
+);
 
 // Match UUIDs
 app.get('/[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}', ensureAuthenticated, (req, res) => {
@@ -211,18 +226,24 @@ app.get('/[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}', ensureAuthenticated, (req,
   });
 });
 
-app.get('/[a-z-]+', (req, res, next) => {
-  return next();
-}, (req, res) => {
-  res.sendFile('index.html', {
-    root: staticPath
-  });
-});
+app.get(
+  '/[a-z-]+',
+  (req, res, next) => {
+    return next();
+  },
+  (req, res) => {
+    res.sendFile('index.html', {
+      root: staticPath
+    });
+  }
+);
 
 function buildDocumentFromQueryResult(data) {
   data = data.rows[0];
   data.metadata = JSON.parse(data.metadata);
-  data.last_modified = moment(data.last_modified).toDate().getTime();
+  data.last_modified = moment(data.last_modified)
+    .toDate()
+    .getTime();
   return data;
 }
 
@@ -238,7 +259,8 @@ function findByPath(req, res, path) {
         data.uuid = '';
         res.status(200).json(buildDocumentFromQueryResult(data));
       }
-    });
+    }
+  );
 }
 
 function findByUuid(req, res, uuid) {
@@ -255,7 +277,8 @@ function findByUuid(req, res, uuid) {
         } else {
           res.status(200).json(buildDocumentFromQueryResult(data));
         }
-      });
+      }
+    );
   }
 }
 
@@ -292,30 +315,34 @@ api.put('/documents/:uuid', bodyParser.json(), (req, res) => {
 
       var sql = '';
       if (data.rows.length == 0) {
-        sql = 'INSERT into resume (content, uuid, path, version, last_modified, metadata) VALUES($1, $2, $3, $4, $5, $6) RETURNING id';
+        sql =
+          'INSERT into resume (content, uuid, path, version, last_modified, metadata) VALUES($1, $2, $3, $4, $5, $6) RETURNING id';
       } else {
-        sql = 'UPDATE resume SET content = $1, path = $3, version = $4, last_modified = $5, metadata = $6 where uuid = $2';
+        sql =
+          'UPDATE resume SET content = $1, path = $3, version = $4, last_modified = $5, metadata = $6 where uuid = $2';
       }
 
-      const path = req.body.metadata.firstname ? buildPath(`${req.body.metadata.firstname} ${req.body.metadata.name} ${req.body.metadata.agency} ${req.body.metadata.lang}`) : buildPath(req.body.metadata.name + '');
+      const path = req.body.metadata.firstname
+        ? buildPath(
+            `${req.body.metadata.firstname} ${req.body.metadata.name} ${req.body.metadata.agency} ${
+              req.body.metadata.lang
+            }`
+          )
+        : buildPath(req.body.metadata.name + '');
 
       executeQueryWithCallback(
         sql,
-        [
-          document.content,
-          document.uuid,
-          path,
-          1,
-          document.last_modified,
-          document.metadata,
-        ],
+        [document.content, document.uuid, path, 1, document.last_modified, document.metadata],
         res,
         function (result) {
-          document.last_modified = moment(document.last_modified).toDate().getTime();
+          document.last_modified = moment(document.last_modified)
+            .toDate()
+            .getTime();
           res.status(200).json(document);
         }
       );
-    });
+    }
+  );
 });
 
 // API
@@ -330,15 +357,17 @@ api.get('/resumes', (req, res) => {
     [],
     res,
     function (data) {
-      res.status(200).json(data.rows.map((row) => {
-        row.metadata = JSON.parse(row.metadata);
-        return row;
-      }));
-    });
+      res.status(200).json(
+        data.rows.map(row => {
+          row.metadata = JSON.parse(row.metadata);
+          return row;
+        })
+      );
+    }
+  );
 });
 
 api.get('/resumes/mine', (req, res) => {
-
   if (!isUserConnectedAndZenika(req) || !req.user.emails[0].value) {
     res.status(401).json();
     return;
@@ -349,43 +378,44 @@ api.get('/resumes/mine', (req, res) => {
     [`%${req.user.emails[0].value}%`],
     res,
     function (data) {
-      res.status(200).json(data.rows.map((row) => {
-        row.metadata = JSON.parse(row.metadata);
-        return row;
-      }));
-    });
+      res.status(200).json(
+        data.rows.map(row => {
+          row.metadata = JSON.parse(row.metadata);
+          return row;
+        })
+      );
+    }
+  );
 });
-
 
 api.get('/resumes/complete', authApi, (req, res) => {
   executeQueryWithCallback(
     'SELECT r1.uuid, r1.content, r1.metadata, r1.path, r1.version, r1.last_modified FROM resume r1\n' +
-    'INNER JOIN \n' +
-    '(\n' +
-    '   SELECT path, MAX(last_modified) AS MAXDATE\n' +
-    '   FROM resume\n' +
-    '   GROUP BY path\n' +
-    ') t2\n' +
-    'ON r1.path = t2.path\n' +
-    'AND r1.last_modified = t2.MAXDATE',
+      'INNER JOIN \n' +
+      '(\n' +
+      '   SELECT path, MAX(last_modified) AS MAXDATE\n' +
+      '   FROM resume\n' +
+      '   GROUP BY path\n' +
+      ') t2\n' +
+      'ON r1.path = t2.path\n' +
+      'AND r1.last_modified = t2.MAXDATE',
     [],
     res,
-    (data) => {
-      const promises = data.rows.map((row) => {
+    data => {
+      const promises = data.rows.map(row => {
         row.metadata = JSON.parse(row.metadata);
-        return DecryptUtils.decrypt(row.content, '')
-          .then(ctDecrypted => {
-            row.content = ctDecrypted;
-            return row;
-          });
+        return DecryptUtils.decrypt(row.content, '').then(ctDecrypted => {
+          row.content = ctDecrypted;
+          return row;
+        });
       });
 
-      Promise.all(promises).then((results) => {
+      Promise.all(promises).then(results => {
         return res.status(200).json(results);
       });
-    });
+    }
+  );
 });
-
 
 // Listen only when doing: `node app/server.js`
 if (require.main === module) {
