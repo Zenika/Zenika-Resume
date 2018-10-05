@@ -69,10 +69,12 @@ app.use(function (req, res, next) {
 app.use(api);
 
 function validEmail(email) {
-  if (email.indexOf('@zenika.com') !== -1 || email.indexOf('zenika.resume@gmail.com') !== -1) {
-    if (email.indexOf('-ext@') === -1) {
-      return true;
-    }
+  if (email.indexOf('-ext@') >= 0) {
+    return false;
+  } else if (email.indexOf('@zenika.com') >= 0) {
+    return true;
+  } else if (email.indexOf('zenika.resume@gmail.com') >= 0) {
+    return true;
   }
   return false;
 }
