@@ -65,7 +65,10 @@ class Header extends Component {
       this.setState({ isDisconnected: true })
       return
     }
-    fetch(`/me`)
+    fetch(`/me`, {
+      method: 'GET',
+      credentials: 'include'
+    })
       .then(res => res.json())
       .then(data => {
         this.setState({ me: data });

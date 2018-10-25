@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import NoteAdd from '@material-ui/icons/NoteAdd';
 
 import ResumeCard from '../ResumeCard';
+import { get } from 'https';
 
 const styles = theme => ({
   footer: {
@@ -38,7 +39,10 @@ class MyResumes extends Component {
   }
 
   componentDidMount() {
-    fetch(`/resumes/mine`)
+    fetch(`/resumes/mine`, {
+      method: 'GET',
+      credentials: 'include' 
+    })
       .then(res => {
         if (res.status === 401) document.location.href = `/login/google`;
         return res;

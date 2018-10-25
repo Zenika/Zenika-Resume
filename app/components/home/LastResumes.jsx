@@ -25,7 +25,10 @@ class LastResumes extends Component {
   }
 
   componentDidMount() {
-    fetch(`/resumes`)
+    fetch(`/resumes`, {
+      method: 'GET',
+      credentials: 'include'
+    })
       .then(res => res.json())
       .then(data => {
         this.setState({ resumes: data.slice(0, 8) });
