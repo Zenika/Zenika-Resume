@@ -7,6 +7,11 @@ A Markdown resume editor based on Monod (see the original Monod readme below).
 For running locally or to build the production artifacts, see Installation in the Monod readme.
 Keep it mind that running locally requires Node.js 5.7 (no more, no less).
 
+### Docker Compose
+
+`GOOGLE_ID=... GOOGLE_SECRET=... docker-compose up --build` should give you a running app on port 3000.
+See below for how to set `GOOGLE_ID` and `GOOGLE_SECRET`.
+
 ### Docker
 
 Build the provided Dockerfile, then run with the port 3000 mapped, and the following environment variables.

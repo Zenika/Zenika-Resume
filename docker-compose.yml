@@ -1,6 +1,20 @@
 version: '2'
 
 services:
+  zenika-resume:
+    build: .
+    environment:
+      HOST: 0.0.0.0
+      PORT: 3000
+      DATABASE_URL: postgres://postgres:zenikadev@postgres:5432/postgres
+      GOOGLE_CALLBACK: http://localhost:3000/login/google/callback
+      GOOGLE_ID: ${GOOGLE_ID}
+      GOOGLE_SECRET: ${GOOGLE_SECRET}
+    ports: 
+      - "3000:3000"
+    links:
+      - postgres
+
   postgres:
     image: postgres
     environment:
@@ -11,22 +25,3 @@ services:
        - ./database.sql:/docker-entrypoint-initdb.d/01-init.sql
     ports:
       - "5432:5432"
-    networks:
-      - postgres
-    restart: unless-stopped
-  
-  pgadmin:
-    links:
-      - postgres:postgres
-    image: fenglc/pgadmin4
-    volumes:
-       - /tmp/data/pgadmin:/root/.pgadmin
-    ports:
-      - "5050:5050"
-    networks:
-      - postgres
-    restart: unless-stopped
-
-networks:
-  postgres:
-    driver: bridge
