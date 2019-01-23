@@ -49,7 +49,7 @@ class App extends Component {
     this.props.controller.on(Events.NO_DOCUMENT_ID, (state) => {
       this.setState({
         loaded: true,
-        document: state.document
+        document: new Document()
       });
     });
 
