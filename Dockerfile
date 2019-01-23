@@ -1,10 +1,10 @@
 FROM node:5.7
 
-COPY . /root
-WORKDIR /root
-RUN npm install --global yarn@^1.0.0
-# this also builds the app through the post-install script
-RUN yarn
+WORKDIR /app
+COPY package.json .
+COPY package-lock.json .
+RUN npm install
 
+COPY . .
 EXPOSE 3000
-CMD ["yarn", "start"]
+CMD ["npm", "start"]
