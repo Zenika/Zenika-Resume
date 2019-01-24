@@ -102,6 +102,9 @@ class Header extends Component {
                 <img height="50" src="static/img/logo.png" alt="" className={this.classes.logo} /> Zenika Resumes 📑
             </Typography>
             </Link>
+            <Typography variant="title" color="inherit">
+              This app is a prototype, please ensure you save your own copy of your resume
+            </Typography>
             {(this.state.isDisconnected) ? (
               <a href="/login/google">
                 <Button variant="contained" color="default" className={this.classes.button}>
