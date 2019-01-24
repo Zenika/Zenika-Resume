@@ -103,7 +103,7 @@ class Header extends Component {
             </Typography>
             </Link>
             <Typography variant="title" color="inherit">
-              This app is a prototype, please ensure you save your own copy
+              This app is a prototype, please ensure you save your own copy of your resume
             </Typography>
             {(this.state.isDisconnected) ? (
               <a href="/login/google">
