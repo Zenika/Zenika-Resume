@@ -9,17 +9,17 @@
   "main": "index.js",
   "proxy": "http://localhost:3000",
   "scripts": {
-    "build": "NODE_ENV=production webpack",
+    "build": "cross-env NODE_ENV=production webpack",
     "stats": "npm run build -- --profile --json > stats.json",
     "dev": "webpack-dev-server",
     "lint": "eslint app/ --ext .js --ext .jsx",
     "lint:fix": "npm run lint -- --fix",
     "test:server": "mocha test",
-    "test": "MONOD_DATA_DIR=app/__tests__/fixtures/ mocha --compilers jsx?:babel-register --require lib/jsdom-setup.js --require lib/css-null-compiler.js --require babel-polyfill app/**/*-test.js app/**/**/*-test.js",
+    "test": "cross-env MONOD_DATA_DIR=app/__tests__/fixtures/ mocha --compilers jsx?:babel-register --require lib/jsdom-setup.js --require lib/css-null-compiler.js --require babel-polyfill app/**/*-test.js app/**/**/*-test.js",
     "test:watch": "npm run test -- --watch --reporter min",
     "test:ci": "npm run test -- --reporter mocha-circleci-reporter",
     "postinstall": "npm run build",
-    "start": "NODE_ENV=production node server.js",
+    "start": "cross-env NODE_ENV=production node server.js",
     "cov": "nyc --extension .jsx npm run test"
   },
   "devDependencies": {
@@ -36,6 +36,7 @@
     "chai-as-promised": "5.3.0",
     "clean-webpack-plugin": "0.1.8",
     "codemirror": "5.12.0",
+    "cross-env": "^5.2.0",
     "css-loader": "0.23.1",
     "deepmerge": "0.2.10",
     "emojione": "2.1.2",
