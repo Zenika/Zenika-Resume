@@ -12,6 +12,21 @@ const pg = require('pg');
 
 const buildPath = require('./build-path');
 
+const jwt = require('express-jwt');
+const jwks = require('jwks-rsa');
+
+const jwtCheck = jwt({
+  secret: jwks.expressJwtSecret({
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 5,
+    jwksUri: 'https://zenika.eu.auth0.com/.well-known/jwks.json'
+  }),
+  audience: 'https://resume.zenika.com',
+  issuer: 'https://zenika.eu.auth0.com/',
+  algorithms: ['RS256']
+});
+
 // config
 const staticPath = path.join(__dirname, '/build');
 
@@ -88,7 +103,7 @@ function executeQueryWithCallback(query, params, response, callback) {
   );
 }
 
-app.get('/me', function (req, res) {
+app.get('/me', jwtCheck, function (req, res) {
   res.status(200).json({ photos: [{ value: 'https://images.pexels.com/photos/20787/pexels-photo.jpg' }] });
 });
 
@@ -152,12 +167,12 @@ function findByUuid(req, res, uuid) {
 }
 
 // API
-api.get('/documents/:uuid', (req, res) => {
+api.get('/documents/:uuid', jwtCheck, (req, res) => {
   const uuid = req.params.uuid;
   findByPath(req, res, uuid);
 });
 
-api.put('/documents/:uuid', bodyParser.json(), (req, res) => {
+api.put('/documents/:uuid', jwtCheck, bodyParser.json(), (req, res) => {
   const uuid = req.params.uuid;
 
   // request validation
@@ -210,7 +225,7 @@ api.put('/documents/:uuid', bodyParser.json(), (req, res) => {
 });
 
 // API
-api.get('/resumes', (req, res) => {
+api.get('/resumes', jwtCheck, (req, res) => {
   executeQueryWithCallback(
     'SELECT uuid, metadata, path, version, last_modified FROM resume ORDER BY last_modified DESC',
     [],
@@ -226,7 +241,7 @@ api.get('/resumes', (req, res) => {
   );
 });
 
-api.get('/resumes/mine', (req, res) => {
+api.get('/resumes/mine', jwtCheck, (req, res) => {
   executeQueryWithCallback(
     'SELECT uuid, metadata, path, version, last_modified FROM resume WHERE metadata LIKE $1 ORDER BY last_modified DESC',
     [`%hugo.wood@zenika.com%`],
