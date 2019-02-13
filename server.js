@@ -229,7 +229,7 @@ api.get('/resumes', (req, res) => {
 api.get('/resumes/mine', (req, res) => {
   executeQueryWithCallback(
     'SELECT uuid, metadata, path, version, last_modified FROM resume WHERE metadata LIKE $1 ORDER BY last_modified DESC',
-    [`%${req.user.emails[0].value}%`],
+    [`%hugo.wood@zenika.com%`],
     res,
     function (data) {
       res.status(200).json(
