@@ -89,7 +89,7 @@ function executeQueryWithCallback(query, params, response, callback) {
 }
 
 app.get('/me', function (req, res) {
-  res.status(200).json({});
+  res.status(200).json({ photos: [{ value: 'https://images.pexels.com/photos/20787/pexels-photo.jpg' }] });
 });
 
 // Match UUIDs
