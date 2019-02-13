@@ -4,7 +4,6 @@ const express = require('express');
 const compression = require('compression');
 const bodyParser = require('body-parser');
 const path = require('path');
-const fs = require('fs');
 const moment = require('moment');
 
 const app = express();
@@ -14,18 +13,10 @@ const pg = require('pg');
 
 const buildPath = require('./build-path');
 
-const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
-
 // config
 const staticPath = path.join(__dirname, '/build');
 
 const databaseUrl = process.env.DATABASE_URL || 'postgres://localhost/resume';
-const googleId = process.env.GOOGLE_ID || require('./conf-google').id;
-const googleSecret = process.env.GOOGLE_SECRET || require('./conf-google').secret;
-const googleCallback = process.env.GOOGLE_CALLBACK || require('./conf-google').callback;
-
-const isDev = !process.env.DATABASE_URL;
 
 const basicAuth = require('basic-auth');
 
@@ -55,9 +46,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
   require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true })
 );
-
-app.use(passport.initialize());
-app.use(passport.session());
 
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
@@ -123,22 +111,6 @@ app.use((req, res, next) => {
   }
 }, express.static(staticPath));
 
-passport.serializeUser(function (user, done) {
-  done(null, user);
-});
-
-passport.deserializeUser(function (obj, done) {
-  done(null, obj);
-});
-
-function ensureAuthenticated(req, res, next) {
-  if (isUserConnectedAndZenika(req)) {
-    next();
-  } else {
-    res.redirect('/login/google?uuid=' + req.originalUrl.split('/')[1]);
-  }
-}
-
 function executeQueryWithCallback(query, params, response, callback) {
   pg.connect(
     databaseUrl,
@@ -167,26 +139,6 @@ function executeQueryWithCallback(query, params, response, callback) {
   );
 }
 
-const isValidId = uuid => {
-  return /[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}/.test(uuid);
-};
-
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: googleId,
-      clientSecret: googleSecret,
-      callbackURL: googleCallback
-    },
-    function (token, tokenSecret, profile, done) {
-      process.nextTick(function () {
-        profile.identifier = token;
-        return done(null, profile);
-      });
-    }
-  )
-);
-
 app.get('/me', function (req, res) {
   if (!isUserConnectedAndZenika(req)) {
     res.redirect('/login/google');
@@ -195,34 +147,8 @@ app.get('/me', function (req, res) {
   res.status(200).json(req.user);
 });
 
-app.get(
-  '/login/google',
-  (req, res, next) => {
-    req.session.requestedUuid = req.query.uuid;
-    return next();
-  },
-  passport.authenticate('google', {
-    scope: [
-      'https://www.googleapis.com/auth/userinfo.email',
-      'https://www.googleapis.com/auth/userinfo.profile'
-    ]
-  })
-);
-
-app.get(
-  '/login/google/callback',
-  passport.authenticate('google', { failureRedirect: '/login' }),
-  function (req, res) {
-    if (req.session.requestedUuid) {
-      res.redirect('/' + req.session.requestedUuid);
-    } else {
-      res.redirect('/');
-    }
-  }
-);
-
 // Match UUIDs
-app.get('/[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}', ensureAuthenticated, (req, res) => {
+app.get('/[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}', (req, res) => {
   res.sendFile('index.html', {
     root: staticPath
   });
