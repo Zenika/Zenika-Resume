@@ -1,7 +1,6 @@
 const DecryptUtils = require('./app/DecryptUtils');
 
 const express = require('express');
-const compression = require('compression');
 const bodyParser = require('body-parser');
 const path = require('path');
 const moment = require('moment');
@@ -40,12 +39,7 @@ app.set('port', process.env.PORT || 3000);
 app.set('etag', false);
 
 // middlewares
-app.use(compression());
-app.use(require('cookie-parser')());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(
-  require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true })
-);
 
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
@@ -56,60 +50,7 @@ app.use(function (req, res, next) {
 
 app.use(api);
 
-function validEmail(email) {
-  if (email.indexOf('-ext@') >= 0) {
-    return false;
-  } else if (email.indexOf('@zenika.com') >= 0) {
-    return true;
-  } else if (email.indexOf('zenika.resume@gmail.com') >= 0) {
-    return true;
-  }
-  return false;
-}
-
-function hasValidEmail(req) {
-  const emails = req.user.emails.map(email => email.value);
-  return emails.some(validEmail);
-}
-
-function isUserConnectedAndZenika(req) {
-  if (req.session.isZenika) {
-    return true;
-  }
-  if (req.user && hasValidEmail(req)) {
-    req.session.isZenika = true;
-    return true;
-  }
-  return false;
-}
-
-function isUserConnected(req) {
-  if (req.user) {
-    return true;
-  }
-  return false;
-}
-
-app.get('/logout', function (req, res) {
-  req.logOut();
-  req.session.destroy(function (err) {
-    res.redirect('/#/bye');
-  });
-});
-
-app.use((req, res, next) => {
-  if (req.originalUrl == '/') {
-    if (isUserConnectedAndZenika(req)) {
-      next();
-    } else if (isUserConnected(req)) {
-      res.redirect('/not-zenika.html');
-    } else {
-      next();
-    }
-  } else {
-    next();
-  }
-}, express.static(staticPath));
+app.use(express.static(staticPath));
 
 function executeQueryWithCallback(query, params, response, callback) {
   pg.connect(
@@ -140,11 +81,7 @@ function executeQueryWithCallback(query, params, response, callback) {
 }
 
 app.get('/me', function (req, res) {
-  if (!isUserConnectedAndZenika(req)) {
-    res.redirect('/login/google');
-    return;
-  }
-  res.status(200).json(req.user);
+  res.status(200).json({});
 });
 
 // Match UUIDs
@@ -192,22 +129,18 @@ function findByPath(req, res, path) {
 }
 
 function findByUuid(req, res, uuid) {
-  if (!isUserConnectedAndZenika(req)) {
-    res.status(401).json();
-  } else {
-    executeQueryWithCallback(
-      'SELECT id, uuid, content, metadata, path, version, last_modified FROM resume where uuid=($1)',
-      [uuid],
-      res,
-      function (data) {
-        if (data.rows.length != 1) {
-          res.status(404).json();
-        } else {
-          res.status(200).json(buildDocumentFromQueryResult(data));
-        }
+  executeQueryWithCallback(
+    'SELECT id, uuid, content, metadata, path, version, last_modified FROM resume where uuid=($1)',
+    [uuid],
+    res,
+    function (data) {
+      if (data.rows.length != 1) {
+        res.status(404).json();
+      } else {
+        res.status(200).json(buildDocumentFromQueryResult(data));
       }
-    );
-  }
+    }
+  );
 }
 
 // API
@@ -218,11 +151,6 @@ api.get('/documents/:uuid', (req, res) => {
 
 api.put('/documents/:uuid', bodyParser.json(), (req, res) => {
   const uuid = req.params.uuid;
-
-  if (!isUserConnectedAndZenika(req)) {
-    res.redirect('/login/google?uuid=' + uuid);
-    return;
-  }
 
   // request validation
   if (!req.body.content) {
@@ -275,11 +203,6 @@ api.put('/documents/:uuid', bodyParser.json(), (req, res) => {
 
 // API
 api.get('/resumes', (req, res) => {
-  if (!isUserConnectedAndZenika(req)) {
-    res.status(401).json();
-    return;
-  }
-
   executeQueryWithCallback(
     'SELECT uuid, metadata, path, version, last_modified FROM resume ORDER BY last_modified DESC',
     [],
@@ -296,11 +219,6 @@ api.get('/resumes', (req, res) => {
 });
 
 api.get('/resumes/mine', (req, res) => {
-  if (!isUserConnectedAndZenika(req) || !req.user.emails[0].value) {
-    res.status(401).json();
-    return;
-  }
-
   executeQueryWithCallback(
     'SELECT uuid, metadata, path, version, last_modified FROM resume WHERE metadata LIKE $1 ORDER BY last_modified DESC',
     [`%${req.user.emails[0].value}%`],
@@ -353,4 +271,3 @@ if (require.main === module) {
 }
 
 module.exports = app;
-module.exports.hasValidEmail = hasValidEmail;
