@@ -176,6 +176,7 @@ export default class Store {
       .get(uri)
       .set('Accept', 'application/json')
       .set('Content-Type', 'application/json')
+      .set('Authorization', `Bearer ${auth.accessToken}`)
       .then(this._handleRequestSuccess.bind(this))
       .catch(this._handleRequestError.bind(this))
       .then((res) => {
@@ -352,6 +353,7 @@ export default class Store {
             .put(`${this.endpoint}/documents/${doc.get('uuid')}`)
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json')
+            .set('Authorization', `Bearer ${auth.accessToken}`)
             .send({
               content: encryptedContent,
               metadata: doc.get('metadata'),
