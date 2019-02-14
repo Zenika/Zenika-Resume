@@ -17,6 +17,17 @@ class Auth {
 
   handleAuthentication() {
     return new Promise((resolve, reject) => {
+      // first, try recovering from localstorage
+      try {
+        const savedAuthResult = JSON.parse(localStorage.getItem('auth0'));
+        this.setSession(savedAuthResult);
+        resolve(savedAuthResult);
+        return;
+      } catch (err) {
+        // just in case it contains garbage
+        localStorage.removeItem('auth0');
+      }
+      // localstorage failed, let's try the hash
       this.auth0.parseHash((err, authResult) => {
         if (err) {
           reject(err);
@@ -33,6 +44,7 @@ class Auth {
   setSession(authResult) {
     // Set isLoggedIn flag in localStorage
     localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('auth0', JSON.stringify(authResult));
     
     // Set the time that the access token will expire at
     let expiresAt = (authResult.expiresIn * 1000) + new Date().getTime();
@@ -47,6 +59,7 @@ class Auth {
     this.idToken = null;
     this.expiresAt = 0;
     localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('auth0');
     this.login();
   }
 
