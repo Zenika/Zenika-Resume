@@ -17,6 +17,8 @@ import InputIcon from '@material-ui/icons/Input';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 
+import { redirectToLogin } from '../auth';
+
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -66,6 +68,13 @@ class Header extends Component {
       return
     }
     fetch(`/me`)
+      .then(res => {
+        if (401 === res.status) {
+          redirectToLogin();
+          throw new Error('not logged in');
+        }
+        return res;
+      })
       .then(res => res.json())
       .then(data => {
         this.setState({ me: data });
