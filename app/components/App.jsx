@@ -18,7 +18,7 @@ import Editor from './Editor';
 import Footer from './Footer';
 import MessageBoxes from './MessageBox';
 
-import { redirectToLogin } from '../auth';
+import auth, { redirectToLogin } from '../auth';
 
 const { object, string } = PropTypes;
 addLocaleData([...en, ...fr]);
@@ -117,7 +117,7 @@ class App extends Component {
     });
 
     this.props.controller.on(Events.AUTHENTICATION_REQUIRED, () => {
-      redirectToLogin();
+      auth.login();
     });
 
     this.props.controller.on(`${Events.SYNCHRONIZE}, ${Events.CHANGE}`, (state) => {

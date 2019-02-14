@@ -17,7 +17,7 @@ import InputIcon from '@material-ui/icons/Input';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 
-import { authorizedFetch } from '../auth';
+import auth from '../auth';
 
 const styles = theme => ({
   root: {
@@ -62,21 +62,18 @@ class Header extends Component {
   }
 
   componentDidMount() {
-
     if (window.location.hash === '#/bye') {
       this.setState({ isDisconnected: true })
       return
     }
-    authorizedFetch(`/me`)
-      .then(res => res.json())
-      .then(data => {
-        this.setState({ me: data });
-      });
+    if (!auth.isAuthenticated()) {
+      auth.login();
+    }
   }
 
   handleChange(event) {
     this.setState({ auth: event.target.checked });
-  };
+  }
 
   handleMenu(event) {
     this.setState({ anchorEl: event.currentTarget });
@@ -87,13 +84,11 @@ class Header extends Component {
   };
 
   render() {
-
     if(window.location.hash.includes('#/app')) return (<div/>);
 
     const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
-
-    const avatar = (this.state.me && this.state.me.photos[0] && this.state.me.photos[0].value) ? this.state.me.photos[0].value : '';
+    const me = auth.userProfile;
 
     return (
       <div className={this.classes.root}>
@@ -132,8 +127,8 @@ class Header extends Component {
                       onClick={this.handleMenu}
                       color="inherit"
                     >
-                      {avatar ? (
-                        <Avatar alt="Remy Sharp" src={avatar} className={this.classes.avatar} />
+                      {me.picture ? (
+                        <Avatar alt={me.name} src={me.picture} className={this.classes.avatar} />
                       ) : (
                           <AccountCircle />
                         )
@@ -158,18 +153,17 @@ class Header extends Component {
                           <AccountCircle />
                         </ListItemIcon>
                         {(
-                          this.state.me &&
-                          <ListItemText classes={{ primary: this.classes.primary }} inset primary={this.state.me.displayName} />
+                          <ListItemText classes={{ primary: this.classes.primary }} inset primary={me.name} />
                         )}
                       </MenuItem>
-                      <a href="/logout">
+                      <button onClick={() => auth.logout()}>
                         <MenuItem className={this.classes.menuItem}>
                           <ListItemIcon className={this.classes.icon}>
                             <ExitToApp />
                           </ListItemIcon>
                           <ListItemText classes={{ primary: this.classes.primary }} inset primary="Logout" />
                         </MenuItem>
-                      </a>
+                      </button>
                     </Menu>
                   </div>
                 </Toolbar>

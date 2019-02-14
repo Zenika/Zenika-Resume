@@ -65,6 +65,11 @@ auth.handleAuthentication().then(authResult => {
   // eslint-disable-next-line no-console
   console.error(err);
   // eslint-disable-next-line no-alert
-  alert('Authentication error! Check your console for more details.');
+  alert([
+    'An authentication error occured. Click OK to retry.',
+    'If this keeps happening, contact dreamlab@zenika.com.',
+    'Give them the following message:',
+    err
+  ].join(' '));
   auth.login();
 });

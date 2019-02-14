@@ -103,10 +103,6 @@ function executeQueryWithCallback(query, params, response, callback) {
   );
 }
 
-app.get('/me', jwtCheck, function (req, res) {
-  res.status(200).json({ photos: [{ value: 'https://images.pexels.com/photos/20787/pexels-photo.jpg' }] });
-});
-
 // Match UUIDs
 app.get('/[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}', (req, res) => {
   res.sendFile('index.html', {
