@@ -6,7 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import NoteAdd from '@material-ui/icons/NoteAdd';
 
-import { redirectToLogin } from '../../auth';
+import { authorizedFetch } from '../../auth';
 
 import ResumeCard from '../ResumeCard';
 
@@ -40,14 +40,7 @@ class MyResumes extends Component {
   }
 
   componentDidMount() {
-    fetch(`/resumes/mine`)
-      .then(res => {
-        if (res.status === 401) {
-          redirectToLogin();
-          throw new Error('not logged in');
-        }
-        return res;
-      })
+    authorizedFetch(`/resumes/mine`)
       .then(res => res.json())
       .then(data => {
         this.setState({ resumes: data });

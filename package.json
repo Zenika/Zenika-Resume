@@ -167,7 +167,10 @@
     "uuid": "2.0.1",
     "webpack": "1.12.14",
     "webpack-dev-server": "1.14.1",
-    "webpack-merge": "0.8.3"
+    "webpack-merge": "0.8.3",
+    "express-jwt": "5.3.1",
+    "jwks-rsa": "1.4.0",
+    "auth0-js": "9.10.0"
   },
   "engines": {
     "node": "5.7",

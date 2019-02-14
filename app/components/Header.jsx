@@ -17,7 +17,7 @@ import InputIcon from '@material-ui/icons/Input';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 
-import { redirectToLogin } from '../auth';
+import { authorizedFetch } from '../auth';
 
 const styles = theme => ({
   root: {
@@ -67,14 +67,7 @@ class Header extends Component {
       this.setState({ isDisconnected: true })
       return
     }
-    fetch(`/me`)
-      .then(res => {
-        if (401 === res.status) {
-          redirectToLogin();
-          throw new Error('not logged in');
-        }
-        return res;
-      })
+    authorizedFetch(`/me`)
       .then(res => res.json())
       .then(data => {
         this.setState({ me: data });

@@ -6,6 +6,7 @@ import Document from './Document';
 import { Config } from './Config';
 import Immutable from 'immutable';
 import DecryptUtils from './DecryptUtils';
+import auth from './auth';
 
 const { Promise } = global;
 
@@ -84,6 +85,7 @@ export default class Store {
           .get(`${this.endpoint}/documents/${id}`)
           .set('Accept', 'application/json')
           .set('Content-Type', 'application/json')
+          .set('Authorization', auth.getAccessToken())
           .then(this._handleRequestSuccess.bind(this))
           .catch(this._handleRequestError.bind(this))
           .then((res) => {
