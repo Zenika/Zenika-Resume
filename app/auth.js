@@ -6,7 +6,7 @@ class Auth {
       clientID: '60hXTJPUSI2lD7gMilLEvOa7DH1zC0WO',
       redirectUri: window.location.origin,
       responseType: 'token id_token',
-      scope: 'openid profile list:all-resumes list:own-resumes write:resume read:resume',
+      scope: 'openid email profile list:all-resumes list:own-resumes write:resume read:resume',
       audience: 'https://resume.zenika.com'
     });
   }

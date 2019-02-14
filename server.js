@@ -1,9 +1,12 @@
+'use strict';
+
 const DecryptUtils = require('./app/DecryptUtils');
 
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const moment = require('moment');
+const superagent = require('superagent');
 
 const app = express();
 const api = express.Router();
@@ -238,19 +241,29 @@ api.get('/resumes', jwtCheck, (req, res) => {
 });
 
 api.get('/resumes/mine', jwtCheck, (req, res) => {
-  executeQueryWithCallback(
-    'SELECT uuid, metadata, path, version, last_modified FROM resume WHERE metadata LIKE $1 ORDER BY last_modified DESC',
-    [`%hugo.wood@zenika.com%`],
-    res,
-    function (data) {
-      res.status(200).json(
-        data.rows.map(row => {
-          row.metadata = JSON.parse(row.metadata);
-          return row;
-        })
+  superagent
+    .get('https://zenika.eu.auth0.com/userinfo')
+    .set('Authorization', req.get('Authorization'))
+    .set('Accept', 'application/json')
+    .then(userInfoRes => {
+      executeQueryWithCallback(
+        'SELECT uuid, metadata, path, version, last_modified FROM resume WHERE metadata LIKE $1 ORDER BY last_modified DESC',
+        [`%${userInfoRes.body.email}%`],
+        res,
+        function (data) {
+          res.status(200).json(
+            data.rows.map(row => {
+              row.metadata = JSON.parse(row.metadata);
+              return row;
+            })
+          );
+        }
       );
-    }
-  );
+    })
+    .catch(err => {
+      console.error(err);
+      res.sendStatus(500);
+    });
 });
 
 api.get('/resumes/complete', authApi, (req, res) => {
