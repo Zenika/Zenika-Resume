@@ -85,7 +85,7 @@ export default class Store {
           .get(`${this.endpoint}/documents/${id}`)
           .set('Accept', 'application/json')
           .set('Content-Type', 'application/json')
-          .set('Authorization', auth.accessToken)
+          .set('Authorization', `Bearer ${auth.accessToken}`)
           .then(this._handleRequestSuccess.bind(this))
           .catch(this._handleRequestError.bind(this))
           .then((res) => {
