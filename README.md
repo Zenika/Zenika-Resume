@@ -25,8 +25,7 @@ Build the provided Dockerfile, then run with the port 3000 mapped, and the follo
 
 ## Production environment
 
-The app is hosted on Heroku. The authentication is provided by Google through the GCP
-project [`zenika-resume`](https://console.cloud.google.com/home/dashboard?project=zenika-resume).
+The app is hosted on Heroku. The authentication is provided by Auth0.
 Contact dsi@zenika.com to get access to either of those.
 
 ## Development 🛠
