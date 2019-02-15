@@ -106,25 +106,6 @@ function executeQueryWithCallback(query, params, response, callback) {
   );
 }
 
-// Match UUIDs
-app.get('/[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}', (req, res) => {
-  res.sendFile('index.html', {
-    root: staticPath
-  });
-});
-
-app.get(
-  '/[a-z-]+',
-  (req, res, next) => {
-    return next();
-  },
-  (req, res) => {
-    res.sendFile('index.html', {
-      root: staticPath
-    });
-  }
-);
-
 function buildDocumentFromQueryResult(data) {
   data = data.rows[0];
   data.metadata = JSON.parse(data.metadata);
