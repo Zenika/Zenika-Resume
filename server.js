@@ -144,7 +144,13 @@ function executeQueryWithCallback(query, params, response, callback) {
     databaseUrl,
     function (err, client, done) {
       try {
+        if (err) {
+          console.error(err);
+          response.sendStatus(500);
+        }
         if (!client) {
+          console.error("no pg client available");
+          response.sendStatus(500);
           return;
         }
         client.query(query, params, function (err, result) {
@@ -162,6 +168,8 @@ function executeQueryWithCallback(query, params, response, callback) {
         } catch (error) {
           // nothing to do just keep the program running
         }
+        console.error(error);
+        response.sendStatus(500);
       }
     }
   );
