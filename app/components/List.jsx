@@ -15,6 +15,7 @@ import Paper from '@material-ui/core/Paper';
 import Avatar from '@material-ui/core/Avatar';
 import SearchIcon from '@material-ui/icons/Search';
 import Input from '@material-ui/core/Input';
+import { authorizedFetch } from '../auth';
 
 const theme = createMuiTheme();
 
@@ -97,7 +98,7 @@ class ListAll extends Component {
   }
 
   componentDidMount() {
-    fetch(`/resumes`)
+    authorizedFetch(`/resumes`)
       .then(res => res.json())
       .then(data => {
         this.setState({ resumes: data, filteredResumes: data });

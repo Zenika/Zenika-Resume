@@ -6,6 +6,7 @@ import Document from './Document';
 import { Config } from './Config';
 import Immutable from 'immutable';
 import DecryptUtils from './DecryptUtils';
+import auth from './auth';
 
 const { Promise } = global;
 
@@ -84,6 +85,7 @@ export default class Store {
           .get(`${this.endpoint}/documents/${id}`)
           .set('Accept', 'application/json')
           .set('Content-Type', 'application/json')
+          .set('Authorization', `Bearer ${auth.accessToken}`)
           .then(this._handleRequestSuccess.bind(this))
           .catch(this._handleRequestError.bind(this))
           .then((res) => {
@@ -174,6 +176,7 @@ export default class Store {
       .get(uri)
       .set('Accept', 'application/json')
       .set('Content-Type', 'application/json')
+      .set('Authorization', `Bearer ${auth.accessToken}`)
       .then(this._handleRequestSuccess.bind(this))
       .catch(this._handleRequestError.bind(this))
       .then((res) => {
@@ -350,6 +353,7 @@ export default class Store {
             .put(`${this.endpoint}/documents/${doc.get('uuid')}`)
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json')
+            .set('Authorization', `Bearer ${auth.accessToken}`)
             .send({
               content: encryptedContent,
               metadata: doc.get('metadata'),

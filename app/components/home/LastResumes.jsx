@@ -6,6 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 
 import ResumeCard from '../ResumeCard';
+import { authorizedFetch } from '../../auth';
 
 const styles = theme => ({
   footer: {
@@ -25,7 +26,7 @@ class LastResumes extends Component {
   }
 
   componentDidMount() {
-    fetch(`/resumes`)
+    authorizedFetch(`/resumes`)
       .then(res => res.json())
       .then(data => {
         this.setState({ resumes: data.slice(0, 8) });

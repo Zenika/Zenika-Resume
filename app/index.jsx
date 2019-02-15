@@ -17,6 +17,7 @@ import List from './components/List.jsx';
 import Bye from './components/Bye.jsx';
 import Help from './components/Help.jsx';
 import Page404 from './components/404.jsx';
+import auth from './auth';
 
 const appElement = document.getElementById('app');
 const appVersion = appElement.getAttribute('data-app-version');
@@ -39,17 +40,36 @@ const theme = createMuiTheme({
   },
 });
 
-ReactDOM.render(
-  <HashRouter>
-    <MuiThemeProvider theme={theme}>
-      <Header></Header>
-      <Route path='/app' component={() => <App key={Date.now()} version={appVersion} controller={controller} />} />
-      <Route path='/list' component={List} />
-      <Route path='/help' component={Help} />
-      <Route exact path='/' component={Home} />
-      <Route exact path='/404' component={Page404} />
-      <Route exact path='/bye' component={Bye} />
-    </MuiThemeProvider>
-  </HashRouter>,
-  appElement
-);
+auth.handleAuthentication().then(authResult => {
+  if (authResult) {
+    window.location.hash = '';
+    ReactDOM.render(
+      <HashRouter>
+        <MuiThemeProvider theme={theme}>
+          <Header />
+          <Route path='/app' component={() => <App key={Date.now()} version={appVersion} controller={controller} />} />
+          <Route path='/list' component={List} />
+          <Route path='/help' component={Help} />
+          <Route exact path='/' component={Home} />
+          <Route exact path='/404' component={Page404} />
+          <Route exact path='/bye' component={Bye} />
+          />
+        </MuiThemeProvider>
+      </HashRouter>,
+      appElement
+    );
+  } else {
+    auth.login();
+  }
+}).catch(err => {
+  // eslint-disable-next-line no-console
+  console.error(err);
+  // eslint-disable-next-line no-alert
+  alert([
+    'An authentication error occured. Click OK to retry.',
+    'If this keeps happening, contact dreamlab@zenika.com.',
+    'Give them the following message:',
+    err
+  ].join(' '));
+  auth.login();
+});

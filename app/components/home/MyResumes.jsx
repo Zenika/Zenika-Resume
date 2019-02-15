@@ -6,6 +6,8 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import NoteAdd from '@material-ui/icons/NoteAdd';
 
+import { authorizedFetch } from '../../auth';
+
 import ResumeCard from '../ResumeCard';
 
 const styles = theme => ({
@@ -38,11 +40,7 @@ class MyResumes extends Component {
   }
 
   componentDidMount() {
-    fetch(`/resumes/mine`)
-      .then(res => {
-        if (res.status === 401) document.location.href = `/login/google`;
-        return res;
-      })
+    authorizedFetch(`/resumes/mine`)
       .then(res => res.json())
       .then(data => {
         this.setState({ resumes: data });
