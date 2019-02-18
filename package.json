@@ -8,6 +8,7 @@
   "description": "TailorDev Cool, Secure, and Offline-First Markdown Editor.",
   "main": "index.js",
   "proxy": "http://localhost:3000",
+  "heroku-run-build-script": true,
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack",
     "stats": "npm run build -- --profile --json > stats.json",
@@ -18,7 +19,6 @@
     "test": "cross-env MONOD_DATA_DIR=app/__tests__/fixtures/ mocha --compilers jsx?:babel-register --require lib/jsdom-setup.js --require lib/css-null-compiler.js --require babel-polyfill app/**/*-test.js app/**/**/*-test.js",
     "test:watch": "npm run test -- --watch --reporter min",
     "test:ci": "npm run test -- --reporter mocha-circleci-reporter",
-    "postinstall": "npm run build",
     "start": "node server.js",
     "cov": "nyc --extension .jsx npm run test"
   },
