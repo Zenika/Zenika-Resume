@@ -7,9 +7,6 @@ services:
       HOST: 0.0.0.0
       PORT: 3000
       DATABASE_URL: postgres://postgres:zenikadev@postgres:5432/postgres
-      GOOGLE_CALLBACK: http://localhost:3000/login/google/callback
-      GOOGLE_ID: ${GOOGLE_ID}
-      GOOGLE_SECRET: ${GOOGLE_SECRET}
     ports: 
       - "3000:3000"
     links:
