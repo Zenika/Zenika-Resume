@@ -21,8 +21,11 @@ class Auth {
       try {
         const savedAuthResult = JSON.parse(localStorage.getItem('auth0'));
         this.setSession(savedAuthResult);
-        resolve(savedAuthResult);
-        return;
+        // now need to check if token in local storage is still valid
+        if (this.isAuthenticated()) {
+          resolve(savedAuthResult);
+          return;
+        }
       } catch (err) {
         // just in case it contains garbage
         localStorage.removeItem('auth0');
@@ -45,9 +48,9 @@ class Auth {
     // Set isLoggedIn flag in localStorage
     localStorage.setItem('isLoggedIn', 'true');
     localStorage.setItem('auth0', JSON.stringify(authResult));
-    
+
     // Set the time that the access token will expire at
-    let expiresAt = (authResult.expiresIn * 1000) + new Date().getTime();
+    const expiresAt = (authResult.expiresIn * 1000) + new Date().getTime();
     this.accessToken = authResult.accessToken;
     this.idToken = authResult.idToken;
     this.expiresAt = expiresAt;
@@ -66,7 +69,7 @@ class Auth {
   isAuthenticated() {
     // Check whether the current time is past the
     // access token's expiry time
-    let expiresAt = this.expiresAt;
+    const expiresAt = this.expiresAt;
     return new Date().getTime() < expiresAt;
   }
 
@@ -80,7 +83,7 @@ export const authorizedFetch = (url, init) => {
   init.headers.Authorization = `Bearer ${auth.accessToken}`;
   return fetch(url, init).then(response => {
     if (401 === response.status) {
-      auth.login();
+      auth.logout();
       throw new Error('not logged in');
     }
     return response;
