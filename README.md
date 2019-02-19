@@ -9,16 +9,12 @@ Keep it mind that running locally requires Node.js 5.7 (no more, no less).
 
 ### Docker Compose
 
-`GOOGLE_ID=... GOOGLE_SECRET=... docker-compose up --build` should give you a running app on port 3000.
-See below for how to set `GOOGLE_ID` and `GOOGLE_SECRET`.
+`docker-compose up --build` should give you a running app on port 3000.
 
 ### Docker
 
 Build the provided Dockerfile, then run with the port 3000 mapped, and the following environment variables.
 
-- `GOOGLE_CALLBACK`: callback for the Google authentication, set `http://localhost:3000/login/google/callback`
-- `GOOGLE_ID`: client ID for the Google authentication, find the value from the production environment (see below)
-- `GOOGLE_SECRET`: client secret for the Google authentication, find the value from the production environment (see below)
 - `DATABASE_URL`: a connection string to a PostgreSQL instance; this is optional, withtout the app falls back to memory store
 - `USER_AUTH_API_USERNAME`: basic auth username for web api
 - `USER_AUTH_API_PASSWORD`: basic auth password for web api
@@ -35,28 +31,15 @@ Contact dsi@zenika.com to get access to either of those.
 Start PostgreSQL instance using docker-compose.yml
 
 ```
-docker-compose up
+docker-compose up postgres
 ```
 
 ### 🚜 Start server 
 
-Create conf-google.js file for development
+Start your server with all environment variables
+
 ```
-module.exports = {
-    id: '1234567890.apps.googleusercontent.com',
-    secret: 'soupersecretcode',
-    callback: 'http://localhost:3000/login/google/callback',
-}
-```
-And start your server with all environment variables
-```
-PGUSER=postgres \
-  PGHOST=localhost \
-  PGPASSWORD=zenikadev \
-  DATABASE_URL=postgres \
-  PGDATABASE=postgres \
-  PGPORT=5432 \
-  node server.js
+DATABASE_URL=postgres://postgres:zenikadev@postgres:5432/postgres node server.js
 ```
 
 ### 🦄 Start front
@@ -65,9 +48,13 @@ PGUSER=postgres \
 npm run dev
 ```
 
-### 💻 Start code !
+### 💻 Start coding !
 
 # Monod
+
+> This is the original Monod readme from which this project is forked.
+> The following might or might not apply depending on how much the projects
+> have diverged.
 
 [![Circle CI](https://circleci.com/gh/TailorDev/monod.svg?style=svg)](https://circleci.com/gh/TailorDev/monod)
 
