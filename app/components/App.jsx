@@ -117,7 +117,7 @@ class App extends Component {
     });
 
     this.props.controller.on(Events.AUTHENTICATION_REQUIRED, () => {
-      auth.login();
+      auth.logout();
     });
 
     this.props.controller.on(`${Events.SYNCHRONIZE}, ${Events.CHANGE}`, (state) => {
