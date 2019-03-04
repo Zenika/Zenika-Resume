@@ -30,7 +30,8 @@ rory.williaws@zenika.box.com`,
   * Ecplise RCP`,
     column3: `# **Conférencier**
   * Devoxx
-  * Mix IT`
+  * Mix IT`,
+    theme: 'light'
   },
   DEFAULT_CONTENT: [
     `--expertise-start
