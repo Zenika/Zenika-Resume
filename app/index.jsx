@@ -47,13 +47,12 @@ auth.handleAuthentication().then(authResult => {
       <HashRouter>
         <MuiThemeProvider theme={theme}>
           <Header />
-          <Route path='/app' component={() => <App key={Date.now()} version={appVersion} controller={controller} />} />
-          <Route path='/list' component={List} />
-          <Route path='/help' component={Help} />
-          <Route exact path='/' component={Home} />
-          <Route exact path='/404' component={Page404} />
-          <Route exact path='/bye' component={Bye} />
-          />
+          <Route path="/app" component={() => <App key={Date.now()} version={appVersion} controller={controller} />} />
+          <Route path="/list" component={List} />
+          <Route path="/help" component={Help} />
+          <Route exact path="/" component={Home} />
+          <Route exact path="/404" component={Page404} />
+          <Route exact path="/bye" component={Bye} />
         </MuiThemeProvider>
       </HashRouter>,
       appElement
