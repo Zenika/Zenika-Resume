@@ -1,0 +1,125 @@
+{
+  "application": {
+    "name": "zenika_resume"
+  },
+  "model": {
+    "tables": {
+      "resume": {
+        "columns": {
+          "id": {
+            "type": "integer",
+            "constraints": {
+              "generated": "always",
+              "notNull": true
+            }
+          },
+          "content": {
+            "type": "text",
+            "constraints": {
+              "notNull": true
+            }
+          },
+          "metadata": {
+            "type": "text",
+            "constraints": {
+              "notNull": true
+            }
+          },
+          "email": {
+            "type": "text",
+            "constraints": {
+              "notNull": true
+            }
+          },
+          "auth0Id": {
+            "type": "text",
+            "constraints": {
+              "notNull": true
+            }
+          },
+          "uuid": {
+            "type": "text",
+            "constraints": {
+              "notNull": true
+            }
+          },
+          "path": {
+            "type": "text",
+            "constraints": {
+              "notNull": true
+            }
+          },
+          "version": {
+            "type": "integer",
+            "constraints": {
+              "notNull": true
+            }
+          },
+          "lastModified": {
+            "type": "timestamp",
+            "constraints": {
+              "notNull": true
+            }
+          }
+        },
+        "insert_permissions": [
+          {
+            "role": "employee",
+            "comment": null,
+            "permission": {
+              "set": {},
+              "check": { "auth0Id": { "_eq": "X-Hasura-User-Id" } },
+              "columns": [
+                "content",
+                "metadata",
+                "email",
+                "auth0Id",
+                "uuid",
+                "path",
+                "version",
+                "lastModified"
+              ]
+            }
+          }
+        ],
+        "select_permissions": [
+          {
+            "role": "employee",
+            "comment": null,
+            "permission": {
+              "allow_aggregations": false,
+              "columns": [
+                "content",
+                "metadata",
+                "email",
+                "auth0Id",
+                "uuid",
+                "path",
+                "version",
+                "lastModified"
+              ],
+              "filter": { "auth0Id": { "_eq": "X-Hasura-User-Id" } }
+            }
+          }
+        ],
+        "update_permissions": [
+          {
+            "role": "employee",
+            "comment": null,
+            "permission": {
+              "set": {},
+              "columns": [
+                "content",
+                "email",
+                "lastModified",
+                "metadata",
+                "version"
+              ],
+              "filter": { "auth0Id": { "_eq": "X-Hasura-User-Id" } }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

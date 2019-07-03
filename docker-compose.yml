@@ -1,24 +1,23 @@
-version: '2'
-
+version: "3.2"
 services:
-  zenika-resume:
-    build: .
-    environment:
-      HOST: 0.0.0.0
-      PORT: 3000
-      DATABASE_URL: postgres://postgres:zenikadev@postgres:5432/postgres
-    ports: 
-      - "3000:3000"
-    links:
-      - postgres
-
   postgres:
-    image: postgres
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: zenikadev
-      PGDATA: /data/postgres
-    volumes:
-       - ./database.sql:/docker-entrypoint-initdb.d/01-init.sql
+    image: postgres:11
     ports:
-      - "5432:5432"
+      - "5433:5432"
+    networks:
+      - netnet
+  hasura:
+    image: hasura/graphql-engine:v1.0.0-beta.2
+    ports:
+      - "8080:8080"
+    depends_on:
+      - "postgres"
+    networks:
+      - netnet
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:@postgres:5432/postgres
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
+
+networks:
+  netnet:
+    driver: bridge
