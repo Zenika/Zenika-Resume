@@ -115,11 +115,9 @@ api.get("/resumes/mine", jwtCheck, async (req, res) => {
     {},
     res,
     response =>
-      res
-        .status(200)
-        .send({
-          data: { rows: response.data.zenika_resume_resume.map(row => row) }
-        })
+      res.status(200).send({
+        data: { rows: response.data.zenika_resume_resume }
+      })
   );
 });
 
@@ -144,7 +142,7 @@ function findByPath(req, res, path) {
         lastModified
       }
     }`,
-    { path },
+    { path: { _eq: path } },
     res,
     response => {
       if (response.data.zenika_resume_resume < 1) {
@@ -153,7 +151,7 @@ function findByPath(req, res, path) {
         response.data.uuid = "";
         res.status(200).send(
           buildDocumentFromQueryResult({
-            data: { rows: response.data.zenika_resume_resume.map(row => row) }
+            data: { rows: response.data.zenika_resume_resume }
           })
         );
       }
@@ -174,7 +172,7 @@ function findByUuid(req, res, uuid) {
         lastModified
       }
     }`,
-    { uuid },
+    { uuid: { _eq: uuid } },
     res,
     response => {
       if (data.rows.length != 1) {
@@ -182,7 +180,7 @@ function findByUuid(req, res, uuid) {
       } else {
         res.status(200).send(
           buildDocumentFromQueryResult({
-            data: { rows: response.data.zenika_resume_resume.map(row => row) }
+            data: { rows: response.data.zenika_resume_resume }
           })
         );
       }
