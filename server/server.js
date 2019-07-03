@@ -6,8 +6,6 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
 const moment = require("moment");
-const superagent = require("superagent");
-
 const fetch = require("node-fetch");
 
 const app = express();
@@ -79,7 +77,7 @@ const fetchDms = async (query, params) => {
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify({ query })
+    body: JSON.stringify({ query, variables: params })
   });
   if (!response.ok) {
     throw new Error(
@@ -94,7 +92,8 @@ const fetchDms = async (query, params) => {
 const executeQueryWithCallback = async (query, params, res, callback) => {
   try {
     const response = await fetchDms(query, params);
-    callback(response);
+    if (response.errors) throw new Error(JSON.stringify(response.errors))
+    callback({rows: response.data.zenika_resume_resume});
   } catch (err) {
     console.error(err);
     res.status(500).send("Error: ", err);
@@ -114,10 +113,14 @@ api.get("/resumes/mine", jwtCheck, async (req, res) => {
   }`,
     {},
     res,
-    response =>
-      res.status(200).send({
-        data: { rows: response.data.zenika_resume_resume }
-      })
+    function (data) {	
+      res.status(200).json(	
+        data.rows.map(row => {	
+          row.metadata = JSON.parse(row.metadata);	
+          return row;	
+        })	
+      );	
+    }
   );
 });
 
@@ -144,17 +147,13 @@ function findByPath(req, res, path) {
     }`,
     { path: { _eq: path } },
     res,
-    response => {
-      if (response.data.zenika_resume_resume < 1) {
-        findByUuid(req, res, path);
-      } else {
-        response.data.uuid = "";
-        res.status(200).send(
-          buildDocumentFromQueryResult({
-            data: { rows: response.data.zenika_resume_resume }
-          })
-        );
-      }
+    function (data) {	
+      if (data.rows.length < 1) {	
+        findByUuid(req, res, path);	
+      } else {	
+        data.uuid = '';	
+        res.status(200).json(buildDocumentFromQueryResult(data));	
+      }	
     }
   );
 }
@@ -174,16 +173,12 @@ function findByUuid(req, res, uuid) {
     }`,
     { uuid: { _eq: uuid } },
     res,
-    response => {
-      if (data.rows.length != 1) {
-        res.status(404).send();
-      } else {
-        res.status(200).send(
-          buildDocumentFromQueryResult({
-            data: { rows: response.data.zenika_resume_resume }
-          })
-        );
-      }
+    function (data) {	
+      if (data.rows.length != 1) {	
+        res.status(404).json();	
+      } else {	
+        res.status(200).json(buildDocumentFromQueryResult(data));	
+      }	
     }
   );
 }
@@ -203,60 +198,64 @@ api.put("/documents/:uuid", jwtCheck, bodyParser.json(), (req, res) => {
     return;
   }
 
+
+  var document = {};
+  document.uuid = uuid;
+  document.content = req.body.content;
+  document.metadata = JSON.stringify(req.body.metadata);
+  document.last_modified = moment().format("YYYY-MM-DD HH:mm:ss");
+
+  const path = req.body.metadata.firstname
+    ? buildPath(
+        `${req.body.metadata.firstname} ${req.body.metadata.name} ${
+          req.body.metadata.agency
+        } ${req.body.metadata.lang}`
+      )
+    : buildPath(req.body.metadata.name + "");
+
   executeQueryWithCallback(
-    "SELECT id, content, uuid, path, version, last_modified FROM resume where uuid=($1)",
-    [uuid],
-    res,
-    function(data) {
-      var document = {};
-      document.uuid = uuid;
-      document.content = req.body.content;
-      document.metadata = JSON.stringify(req.body.metadata);
-      document.last_modified = moment().format("YYYY-MM-DD HH:mm:ss");
-
-      var sql = "";
-      if (data.rows.length == 0) {
-        sql =
-          "INSERT into resume (content, uuid, path, version, last_modified, metadata) VALUES($1, $2, $3, $4, $5, $6) RETURNING id";
-      } else {
-        sql =
-          "UPDATE resume SET content = $1, path = $3, version = $4, last_modified = $5, metadata = $6 where uuid = $2";
-      }
-
-      const path = req.body.metadata.firstname
-        ? buildPath(
-            `${req.body.metadata.firstname} ${req.body.metadata.name} ${
-              req.body.metadata.agency
-            } ${req.body.metadata.lang}`
-          )
-        : buildPath(req.body.metadata.name + "");
-
-      executeQueryWithCallback(
-        sql,
-        [
-          document.content,
-          document.uuid,
-          path,
-          1,
-          document.last_modified,
-          document.metadata
-        ],
-        res,
-        function(result) {
-          document.last_modified = moment(document.last_modified)
-            .toDate()
-            .getTime();
-          res.status(200).json(document);
+    `
+      mutation upsertResume($resume: zenika_resume_resume_insert_input!) {
+        insert_zenika_resume_resume(objects: [$resume] on_conflict: {constraint: resume_pkey, update_columns: [content, path, version, lastModified, metadata]}) {
+          affected_rows
         }
-      );
+      }
+    `,
+    {
+      resume: {
+        content: document.content,
+        metadata: document.metadata,
+        path,
+        version: 1,
+        lastModified: document.last_modified
+      }
+    },
+    res,
+    function(result) {
+      document.last_modified = moment(document.last_modified)
+        .toDate()
+        .getTime();
+      res.status(200).json(document);
     }
   );
+
 });
 
 // API
 api.get("/resumes", jwtCheck, (req, res) => {
   executeQueryWithCallback(
-    "SELECT uuid, metadata, path, version, last_modified FROM resume ORDER BY last_modified DESC",
+    `
+    {
+      zenika_resume_resume(order_by: {lastModified: desc}) {
+        uuid
+        metadata
+        path
+        version
+        lastModified
+      }
+    }
+    `,
+    //"SELECT uuid, metadata, path, version, last_modified FROM resume ORDER BY last_modified DESC",
     [],
     res,
     function(data) {

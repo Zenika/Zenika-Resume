@@ -38,9 +38,10 @@
             }
           },
           "uuid": {
-            "type": "text",
+            "type": "uuid",
             "constraints": {
-              "notNull": true
+              "notNull": true,
+              "primaryKey": true
             }
           },
           "path": {
