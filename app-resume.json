@@ -115,7 +115,7 @@
                 "metadata",
                 "version"
               ],
-              "filter": { "auth0_id": { "_eq": "X-Hasura-User-Id" } }
+              "filter": {}
             }
           }
         ]
