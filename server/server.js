@@ -6,6 +6,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
 const moment = require("moment");
+const superagent = require("superagent");
 const fetch = require("node-fetch");
 
 const app = express();
@@ -92,42 +93,17 @@ const fetchDms = async (query, params) => {
 const executeQueryWithCallback = async (query, params, res, callback) => {
   try {
     const response = await fetchDms(query, params);
-    if (response.errors) throw new Error(JSON.stringify(response.errors))
-    callback({rows: response.data.zenika_resume_resume});
+    if (response.errors) throw new Error(JSON.stringify(response.errors));
+    callback({ rows: response.data.zenika_resume_resume });
   } catch (err) {
     console.error(err);
-    res.status(500).send("Error: ", err);
+    res.status(500).json({ Error: err });
   }
 };
 
-api.get("/resumes/mine", jwtCheck, async (req, res) => {
-  executeQueryWithCallback(
-    `{
-    zenika_resume_resume {
-      lastModified
-      metadata
-      path
-      uuid
-      version
-    }
-  }`,
-    {},
-    res,
-    function (data) {	
-      res.status(200).json(	
-        data.rows.map(row => {	
-          row.metadata = JSON.parse(row.metadata);	
-          return row;	
-        })	
-      );	
-    }
-  );
-});
-
 function buildDocumentFromQueryResult(data) {
   data = data.rows[0];
-  data.metadata = JSON.parse(data.metadata);
-  data.last_modified = moment(data.last_modified)
+  data.last_modified = moment(data.lastModified)
     .toDate()
     .getTime();
   return data;
@@ -147,13 +123,13 @@ function findByPath(req, res, path) {
     }`,
     { path: { _eq: path } },
     res,
-    function (data) {	
-      if (data.rows.length < 1) {	
-        findByUuid(req, res, path);	
-      } else {	
-        data.uuid = '';	
-        res.status(200).json(buildDocumentFromQueryResult(data));	
-      }	
+    function(data) {
+      if (data.rows.length < 1) {
+        findByUuid(req, res, path);
+      } else {
+        data.uuid = "";
+        res.status(200).json(buildDocumentFromQueryResult(data));
+      }
     }
   );
 }
@@ -173,12 +149,12 @@ function findByUuid(req, res, uuid) {
     }`,
     { uuid: { _eq: uuid } },
     res,
-    function (data) {	
-      if (data.rows.length != 1) {	
-        res.status(404).json();	
-      } else {	
-        res.status(200).json(buildDocumentFromQueryResult(data));	
-      }	
+    function(data) {
+      if (data.rows.length != 1) {
+        res.status(404).json();
+      } else {
+        res.status(200).json(buildDocumentFromQueryResult(data));
+      }
     }
   );
 }
@@ -189,8 +165,12 @@ api.get("/documents/:uuid", jwtCheck, (req, res) => {
   findByPath(req, res, uuid);
 });
 
-api.put("/documents/:uuid", jwtCheck, bodyParser.json(), (req, res) => {
+api.put("/documents/:uuid", jwtCheck, bodyParser.json(), async (req, res) => {
   const uuid = req.params.uuid;
+  const userInfo = await superagent
+    .get("https://zenika.eu.auth0.com/userinfo")
+    .set("Authorization", req.get("Authorization"))
+    .set("Accept", "application/json");
 
   // request validation
   if (!req.body.content) {
@@ -198,8 +178,7 @@ api.put("/documents/:uuid", jwtCheck, bodyParser.json(), (req, res) => {
     return;
   }
 
-
-  var document = {};
+  let document = {};
   document.uuid = uuid;
   document.content = req.body.content;
   document.metadata = JSON.stringify(req.body.metadata);
@@ -216,7 +195,7 @@ api.put("/documents/:uuid", jwtCheck, bodyParser.json(), (req, res) => {
   executeQueryWithCallback(
     `
       mutation upsertResume($resume: zenika_resume_resume_insert_input!) {
-        insert_zenika_resume_resume(objects: [$resume] on_conflict: {constraint: resume_pkey, update_columns: [content, path, version, lastModified, metadata]}) {
+        insert_zenika_resume_resume(objects: [$resume] on_conflict: {constraint: resume_pkey, update_columns: [content, path, email, uuid, auth0Id version, lastModified, metadata]}) {
           affected_rows
         }
       }
@@ -225,6 +204,9 @@ api.put("/documents/:uuid", jwtCheck, bodyParser.json(), (req, res) => {
       resume: {
         content: document.content,
         metadata: document.metadata,
+        email: userInfo.body.email,
+        auth0Id: userInfo.body.sub,
+        uuid,
         path,
         version: 1,
         lastModified: document.last_modified
@@ -232,13 +214,35 @@ api.put("/documents/:uuid", jwtCheck, bodyParser.json(), (req, res) => {
     },
     res,
     function(result) {
-      document.last_modified = moment(document.last_modified)
+      document.lastModified = moment(document.lastModified)
         .toDate()
         .getTime();
       res.status(200).json(document);
     }
   );
+});
 
+api.get("/resumes/mine", jwtCheck, async (req, res) => {
+  try {
+    executeQueryWithCallback(
+      `{
+    zenika_resume_resume {
+      lastModified
+      metadata
+      path
+      uuid
+      version
+    }
+  }`,
+      undefined,
+      res,
+      data => {
+        res.status(200).json(data.rows);
+      }
+    );
+  } catch (err) {
+    console.error(err);
+  }
 });
 
 // API
@@ -256,15 +260,10 @@ api.get("/resumes", jwtCheck, (req, res) => {
     }
     `,
     //"SELECT uuid, metadata, path, version, last_modified FROM resume ORDER BY last_modified DESC",
-    [],
+    undefined,
     res,
-    function(data) {
-      res.status(200).json(
-        data.rows.map(row => {
-          row.metadata = JSON.parse(row.metadata);
-          return row;
-        })
-      );
+    data => {
+      res.status(200).json(data.rows);
     }
   );
 });
