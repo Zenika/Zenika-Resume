@@ -125,7 +125,6 @@ function findByPath(req, res, path) {
     { path: { _eq: path } },
     res,
     function(data) {
-      console.log(data);
       if (data.rows.length < 1) {
         findByUuid(req, res, path);
       } else {
@@ -311,7 +310,7 @@ api.get("/resumes/complete", authApi, (req, res) => {
 // Listen only when doing: `node app/server.js`
 if (require.main === module) {
   app.listen(app.get("port"), () => {
-    console.log(`Running at localhost: ${app.get("port")}`);
+    console.log(`Running at localhost:${app.get("port")}`);
   });
 }
 
