@@ -25,18 +25,6 @@
               "notNull": true
             }
           },
-          "email": {
-            "type": "text",
-            "constraints": {
-              "notNull": true
-            }
-          },
-          "auth0_id": {
-            "type": "text",
-            "constraints": {
-              "notNull": true
-            }
-          },
           "uuid": {
             "type": "uuid",
             "constraints": {
@@ -69,12 +57,10 @@
             "comment": null,
             "permission": {
               "set": {},
-              "check": { "auth0_id": { "_eq": "X-Hasura-User-Id" } },
+              "check": {},
               "columns": [
                 "content",
                 "metadata",
-                "email",
-                "auth0_id",
                 "uuid",
                 "path",
                 "version",
@@ -92,7 +78,6 @@
               "columns": [
                 "content",
                 "metadata",
-                "email",
                 "uuid",
                 "path",
                 "version",
@@ -108,13 +93,7 @@
             "comment": null,
             "permission": {
               "set": {},
-              "columns": [
-                "content",
-                "email",
-                "last_modified",
-                "metadata",
-                "version"
-              ],
+              "columns": ["content", "last_modified", "metadata", "version"],
               "filter": {}
             }
           }

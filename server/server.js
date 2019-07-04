@@ -205,8 +205,6 @@ api.put("/documents/:uuid", jwtCheck, bodyParser.json(), async (req, res) => {
       resume: {
         content: document.content,
         metadata: document.metadata,
-        email: userInfo.body.email,
-        auth0_id: userInfo.body.sub,
         uuid,
         path,
         version: 1,
@@ -279,32 +277,38 @@ api.get("/resumes", jwtCheck, (req, res) => {
 });
 
 api.get("/resumes/complete", authApi, (req, res) => {
-  executeQueryWithCallback(
-    "SELECT r1.uuid, r1.content, r1.metadata, r1.path, r1.version, r1.last_modified FROM resume r1\n" +
-      "INNER JOIN \n" +
-      "(\n" +
-      "   SELECT path, MAX(last_modified) AS MAXDATE\n" +
-      "   FROM resume\n" +
-      "   GROUP BY path\n" +
-      ") t2\n" +
-      "ON r1.path = t2.path\n" +
-      "AND r1.last_modified = t2.MAXDATE",
-    [],
-    res,
-    data => {
-      const promises = data.rows.map(row => {
-        row.metadata = JSON.parse(row.metadata);
-        return DecryptUtils.decrypt(row.content, "").then(ctDecrypted => {
-          row.content = ctDecrypted;
-          return row;
-        });
-      });
+  superagent
+    .get("https://zenika.eu.auth0.com/userinfo")
+    .set("Authorization", req.get("Authorization"))
+    .set("Accept", "application/json")
+    .then(userInfoRes => {
+      executeQueryWithCallback(
+        `query ($email: text_comparison_exp) {
+      zenika_resume_resume(where: {metadata: $email}) {
+        last_modified: last_modified
+        metadata
+        path
+        uuid
+        version
+      }
+    }`,
+        { email: { _like: `%${userInfoRes.body.email}%` } },
+        res,
+        data => {
+          const promises = data.rows.map(row => {
+            row.metadata = JSON.parse(row.metadata);
+            return DecryptUtils.decrypt(row.content, "").then(ctDecrypted => {
+              row.content = ctDecrypted;
+              return row;
+            });
+          });
 
-      Promise.all(promises).then(results => {
-        return res.status(200).json(results);
-      });
-    }
-  );
+          Promise.all(promises).then(results => {
+            return res.status(200).json(results);
+          });
+        }
+      );
+    });
 });
 
 // Listen only when doing: `node app/server.js`
