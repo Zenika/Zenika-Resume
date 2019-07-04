@@ -103,7 +103,8 @@ const executeQueryWithCallback = async (query, params, res, callback) => {
 
 function buildDocumentFromQueryResult(data) {
   data = data.rows[0];
-  data.last_modified = moment(data.lastModified)
+  data.metadata = JSON.parse(data.metadata);
+  data.last_modified = moment(data.last_modified)
     .toDate()
     .getTime();
   return data;
@@ -112,18 +113,19 @@ function buildDocumentFromQueryResult(data) {
 function findByPath(req, res, path) {
   executeQueryWithCallback(
     `query zenika_resume_resume($path: text_comparison_exp) {
-      zenika_resume_resume(where: {path: $path}, order_by: {lastModified: desc}) {
+      zenika_resume_resume(where: {path: $path}, order_by: {last_modified: desc}) {
         id
         content
         metadata
         path
         version
-        lastModified
+        last_modified
       }
     }`,
     { path: { _eq: path } },
     res,
     function(data) {
+      console.log(data);
       if (data.rows.length < 1) {
         findByUuid(req, res, path);
       } else {
@@ -136,15 +138,15 @@ function findByPath(req, res, path) {
 
 function findByUuid(req, res, uuid) {
   executeQueryWithCallback(
-    `query zenika_resume_resume($uuid: text_comparison_exp) {
-      zenika_resume_resume(where: {uuid: $uuid}, order_by: {lastModified: desc}) {
+    `query zenika_resume_resume($uuid: uuid_comparison_exp) {
+      zenika_resume_resume(where: {uuid: $uuid}, order_by: {last_modified: desc}) {
         id
         uuid
         content
         metadata
         path
         version
-        lastModified
+        last_modified
       }
     }`,
     { uuid: { _eq: uuid } },
@@ -195,7 +197,7 @@ api.put("/documents/:uuid", jwtCheck, bodyParser.json(), async (req, res) => {
   executeQueryWithCallback(
     `
       mutation upsertResume($resume: zenika_resume_resume_insert_input!) {
-        insert_zenika_resume_resume(objects: [$resume] on_conflict: {constraint: resume_pkey, update_columns: [content, path, email, uuid, auth0Id version, lastModified, metadata]}) {
+        insert_zenika_resume_resume(objects: [$resume] on_conflict: {constraint: resume_pkey, update_columns: [content, path, version, last_modified, metadata]}) {
           affected_rows
         }
       }
@@ -205,16 +207,16 @@ api.put("/documents/:uuid", jwtCheck, bodyParser.json(), async (req, res) => {
         content: document.content,
         metadata: document.metadata,
         email: userInfo.body.email,
-        auth0Id: userInfo.body.sub,
+        auth0_id: userInfo.body.sub,
         uuid,
         path,
         version: 1,
-        lastModified: document.last_modified
+        last_modified: document.last_modified
       }
     },
     res,
     function(result) {
-      document.lastModified = moment(document.lastModified)
+      document.last_modified = moment(document.last_modified)
         .toDate()
         .getTime();
       res.status(200).json(document);
@@ -227,7 +229,7 @@ api.get("/resumes/mine", jwtCheck, async (req, res) => {
     executeQueryWithCallback(
       `{
     zenika_resume_resume {
-      lastModified
+      last_modified: last_modified
       metadata
       path
       uuid
@@ -236,8 +238,13 @@ api.get("/resumes/mine", jwtCheck, async (req, res) => {
   }`,
       undefined,
       res,
-      data => {
-        res.status(200).json(data.rows);
+      function(data) {
+        res.status(200).json(
+          data.rows.map(row => {
+            row.metadata = JSON.parse(row.metadata);
+            return row;
+          })
+        );
       }
     );
   } catch (err) {
@@ -250,20 +257,24 @@ api.get("/resumes", jwtCheck, (req, res) => {
   executeQueryWithCallback(
     `
     {
-      zenika_resume_resume(order_by: {lastModified: desc}) {
+      zenika_resume_resume(order_by: {last_modified: desc}) {
         uuid
         metadata
         path
         version
-        lastModified
+        last_modified
       }
     }
     `,
-    //"SELECT uuid, metadata, path, version, last_modified FROM resume ORDER BY last_modified DESC",
     undefined,
     res,
-    data => {
-      res.status(200).json(data.rows);
+    function(data) {
+      res.status(200).json(
+        data.rows.map(row => {
+          row.metadata = JSON.parse(row.metadata);
+          return row;
+        })
+      );
     }
   );
 });

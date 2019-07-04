@@ -31,7 +31,7 @@
               "notNull": true
             }
           },
-          "auth0Id": {
+          "auth0_id": {
             "type": "text",
             "constraints": {
               "notNull": true
@@ -56,7 +56,7 @@
               "notNull": true
             }
           },
-          "lastModified": {
+          "last_modified": {
             "type": "timestamp",
             "constraints": {
               "notNull": true
@@ -69,16 +69,16 @@
             "comment": null,
             "permission": {
               "set": {},
-              "check": { "auth0Id": { "_eq": "X-Hasura-User-Id" } },
+              "check": { "auth0_id": { "_eq": "X-Hasura-User-Id" } },
               "columns": [
                 "content",
                 "metadata",
                 "email",
-                "auth0Id",
+                "auth0_id",
                 "uuid",
                 "path",
                 "version",
-                "lastModified"
+                "last_modified"
               ]
             }
           }
@@ -93,13 +93,12 @@
                 "content",
                 "metadata",
                 "email",
-                "auth0Id",
                 "uuid",
                 "path",
                 "version",
-                "lastModified"
+                "last_modified"
               ],
-              "filter": { "auth0Id": { "_eq": "X-Hasura-User-Id" } }
+              "filter": {}
             }
           }
         ],
@@ -112,11 +111,11 @@
               "columns": [
                 "content",
                 "email",
-                "lastModified",
+                "last_modified",
                 "metadata",
                 "version"
               ],
-              "filter": { "auth0Id": { "_eq": "X-Hasura-User-Id" } }
+              "filter": { "auth0_id": { "_eq": "X-Hasura-User-Id" } }
             }
           }
         ]
