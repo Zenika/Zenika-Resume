@@ -223,27 +223,33 @@ api.put("/documents/:uuid", jwtCheck, bodyParser.json(), async (req, res) => {
 
 api.get("/resumes/mine", jwtCheck, async (req, res) => {
   try {
-    executeQueryWithCallback(
-      `{
-    zenika_resume_resume {
-      last_modified: last_modified
-      metadata
-      path
-      uuid
-      version
-    }
-  }`,
-      undefined,
-      res,
-      function(data) {
-        res.status(200).json(
-          data.rows.map(row => {
-            row.metadata = JSON.parse(row.metadata);
-            return row;
-          })
+    superagent
+      .get("https://zenika.eu.auth0.com/userinfo")
+      .set("Authorization", req.get("Authorization"))
+      .set("Accept", "application/json")
+      .then(userInfoRes => {
+        executeQueryWithCallback(
+          `query ($email: text_comparison_exp) {
+              zenika_resume_resume(where: {metadata: $email}) {
+                last_modified: last_modified
+                metadata
+                path
+                uuid
+                version
+              }
+            }`,
+          { email: { _like: `%${userInfoRes.body.email}%` } },
+          res,
+          function(data) {
+            res.status(200).json(
+              data.rows.map(row => {
+                row.metadata = JSON.parse(row.metadata);
+                return row;
+              })
+            );
+          }
         );
-      }
-    );
+      });
   } catch (err) {
     console.error(err);
   }
@@ -277,14 +283,9 @@ api.get("/resumes", jwtCheck, (req, res) => {
 });
 
 api.get("/resumes/complete", authApi, (req, res) => {
-  superagent
-    .get("https://zenika.eu.auth0.com/userinfo")
-    .set("Authorization", req.get("Authorization"))
-    .set("Accept", "application/json")
-    .then(userInfoRes => {
-      executeQueryWithCallback(
-        `query ($email: text_comparison_exp) {
-      zenika_resume_resume(where: {metadata: $email}) {
+  executeQueryWithCallback(
+    `{
+      zenika_resume_resume {
         last_modified: last_modified
         metadata
         path
@@ -292,23 +293,22 @@ api.get("/resumes/complete", authApi, (req, res) => {
         version
       }
     }`,
-        { email: { _like: `%${userInfoRes.body.email}%` } },
-        res,
-        data => {
-          const promises = data.rows.map(row => {
-            row.metadata = JSON.parse(row.metadata);
-            return DecryptUtils.decrypt(row.content, "").then(ctDecrypted => {
-              row.content = ctDecrypted;
-              return row;
-            });
-          });
+    undefined,
+    res,
+    data => {
+      const promises = data.rows.map(row => {
+        row.metadata = JSON.parse(row.metadata);
+        return DecryptUtils.decrypt(row.content, "").then(ctDecrypted => {
+          row.content = ctDecrypted;
+          return row;
+        });
+      });
 
-          Promise.all(promises).then(results => {
-            return res.status(200).json(results);
-          });
-        }
-      );
-    });
+      Promise.all(promises).then(results => {
+        return res.status(200).json(results);
+      });
+    }
+  );
 });
 
 // Listen only when doing: `node app/server.js`
