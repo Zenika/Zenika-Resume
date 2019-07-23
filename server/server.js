@@ -98,7 +98,7 @@ const executeQueryWithCallback = async (query, params, req, res, callback) => {
     if (response.errors) throw new Error(JSON.stringify(response.errors));
     callback({ rows: response.data.zenika_resume_resume });
   } catch (err) {
-    console.error(err);
+    console.error(err); 
     res.status(500).json({ Error: err });
   }
 };
