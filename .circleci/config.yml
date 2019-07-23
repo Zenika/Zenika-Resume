@@ -73,19 +73,25 @@ workflows:
 
   deploy: 
     jobs:
-      - install-dependencies:
+      - ui-install-dependencies:
+          filters:
+            branches:
+              only: rewrite-back-for-dms
+      - server-install-dependencies:
           filters:
             branches:
               only: rewrite-back-for-dms
       - lint:
           requires: 
-            - install-dependencies
+            - ui-install-dependencies
+            - server-install-dependencies
           filters:
             branches:
               only: rewrite-back-for-dms
       - build:
           requires: 
-            - install-dependencies
+            - ui-install-dependencies
+            - server-install-dependencies
           filters:
             branches:
               only: rewrite-back-for-dms
