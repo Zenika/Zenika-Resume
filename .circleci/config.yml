@@ -15,8 +15,8 @@ jobs:
           command: npm ci
       - save_cache:
           paths:
-          - node_modules
-        key: dependencies-{{ checksum "package-lock.json" }}
+            - node_modules
+          key: dependencies-{{ checksum "package-lock.json" }}
       - persist_to_workspace:
           root: ./
           paths:
