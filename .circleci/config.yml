@@ -8,19 +8,19 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - ui-dependencies-{{ checksum "ui/package-lock.json" }}
-            - ui-dependencies-
+            - dependencies-{{ checksum "package-lock.json" }}
+            - dependencies-
       - run:
           name: Download UI dependencies
           command: npm ci
       - save_cache:
           paths:
-          - ui/node_modules
-        key: ui-dependencies-{{ checksum "ui/package-lock.json" }}
+          - node_modules
+        key: dependencies-{{ checksum "package-lock.json" }}
       - persist_to_workspace:
           root: ./
           paths:
-            - ui/node_modules
+            - node_modules
   lint:
     docker:
       - image: circleci/node:lts
