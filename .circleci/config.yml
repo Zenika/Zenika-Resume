@@ -3,7 +3,7 @@ version: 2
 jobs:
   ui-install-dependencies:
     docker:
-      - image: circleci/node:5.7
+      - image: node:5.7
     steps:
       - checkout
       - restore_cache:
@@ -43,7 +43,7 @@ jobs:
             - server/node_modules
   lint:
     docker:
-      - image: circleci/node:5.7
+      - image: node:5.7
     steps:
       - checkout
       - attach_workspace:
@@ -51,7 +51,7 @@ jobs:
       - run: npm run lint
   build:
     docker:
-      - image: circleci/node:5.7
+      - image: node:5.7
     steps:
       - checkout
       - attach_workspace:
