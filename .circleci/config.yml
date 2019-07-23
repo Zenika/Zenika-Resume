@@ -1,7 +1,27 @@
 version: 2
 
 jobs:
-  install-dependencies:
+  ui-install-dependencies:
+    docker:
+      - image: circleci/node:5.7
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - dependencies-{{ checksum "package-lock.json" }}
+            - dependencies-
+      - run:
+          name: Download UI dependencies
+          command: npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: dependencies-{{ checksum "package-lock.json" }}
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - node_modules
+  server-install-dependencies:
     docker:
       - image: circleci/node:lts
     steps:
@@ -12,7 +32,7 @@ jobs:
             - dependencies-
       - run:
           name: Download UI dependencies
-          command: npm ci
+          command: npm --prefix server install
       - save_cache:
           paths:
             - node_modules
@@ -20,10 +40,10 @@ jobs:
       - persist_to_workspace:
           root: ./
           paths:
-            - node_modules
+            - server/node_modules
   lint:
     docker:
-      - image: circleci/node:lts
+      - image: circleci/node:5.7
     steps:
       - checkout
       - attach_workspace:
@@ -42,7 +62,7 @@ jobs:
       - image: circleci/node:lts
     environment:
       CLEVER_ORG: orga_6bf89bba-cabf-4a31-960a-c062a9f42b96
-      CLEVER_APP_ID: app_0e78ca64-57e8-425e-a695-e0894dbf5fcc      
+      CLEVER_APP_ID: app_55d02708-7230-4078-a556-36a1bce62247     
     steps:
       - run: npx --package clever-tools clever login --token=$CLEVER_TOKEN --secret=$CLEVER_SECRET
       - run: npx --package clever-tools clever link --org=$CLEVER_ORG $CLEVER_APP_ID
