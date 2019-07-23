@@ -97,7 +97,6 @@ workflows:
               only: rewrite-back-for-dms
       - deploy:
           requires: 
-            - lint
             - build
           context: clever-cloud-zenika-dev
           filters:
