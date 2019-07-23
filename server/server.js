@@ -72,10 +72,11 @@ app.use(api);
 
 app.use(express.static(staticPath));
 
-const fetchDms = async (query, params) => {
+const fetchDms = async (query, params, authorizationHeader) => {
   const response = await fetch(dmsUrl, {
     method: "POST",
     headers: {
+      "Authorization": authorizationHeader,
       "Content-Type": "application/json"
     },
     body: JSON.stringify({ query, variables: params })
@@ -90,9 +91,10 @@ const fetchDms = async (query, params) => {
   return await response.json();
 };
 
-const executeQueryWithCallback = async (query, params, res, callback) => {
+const executeQueryWithCallback = async (query, params, req, res, callback) => {
   try {
-    const response = await fetchDms(query, params);
+    const authorizationHeader = req.headers.authorization;
+    const response = await fetchDms(query, params, authorizationHeader);
     if (response.errors) throw new Error(JSON.stringify(response.errors));
     callback({ rows: response.data.zenika_resume_resume });
   } catch (err) {
@@ -123,6 +125,7 @@ function findByPath(req, res, path) {
       }
     }`,
     { path: { _eq: path } },
+    req,
     res,
     function(data) {
       if (data.rows.length < 1) {
@@ -149,6 +152,7 @@ function findByUuid(req, res, uuid) {
       }
     }`,
     { uuid: { _eq: uuid } },
+    req,
     res,
     function(data) {
       if (data.rows.length != 1) {
@@ -211,6 +215,7 @@ api.put("/documents/:uuid", jwtCheck, bodyParser.json(), async (req, res) => {
         last_modified: document.last_modified
       }
     },
+    req,
     res,
     function(result) {
       document.last_modified = moment(document.last_modified)
@@ -239,6 +244,7 @@ api.get("/resumes/mine", jwtCheck, async (req, res) => {
               }
             }`,
           { email: { _like: `%${userInfoRes.body.email}%` } },
+          req,
           res,
           function(data) {
             res.status(200).json(
@@ -270,6 +276,7 @@ api.get("/resumes", jwtCheck, (req, res) => {
     }
     `,
     undefined,
+    req,
     res,
     function(data) {
       res.status(200).json(
@@ -294,6 +301,7 @@ api.get("/resumes/complete", authApi, (req, res) => {
       }
     }`,
     undefined,
+    req,
     res,
     data => {
       const promises = data.rows.map(row => {

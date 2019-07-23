@@ -1,0 +1,79 @@
+version: 2
+
+jobs:
+  install-dependencies:
+    docker:
+      - image: circleci/node:lts
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - ui-dependencies-{{ checksum "ui/package-lock.json" }}
+            - ui-dependencies-
+      - run:
+          name: Download UI dependencies
+          command: npm ci
+      - save_cache:
+          paths:
+          - ui/node_modules
+        key: ui-dependencies-{{ checksum "ui/package-lock.json" }}
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - ui/node_modules
+  lint:
+    docker:
+      - image: circleci/node:lts
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ./
+      - run: npm run lint
+  build:
+    docker:
+      - image: circleci/node:5.7
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ./
+      - run: npm run build
+  deploy:
+    docker:
+      - image: circleci/node:lts
+    environment:
+      CLEVER_ORG: orga_6bf89bba-cabf-4a31-960a-c062a9f42b96
+      CLEVER_APP_ID: app_0e78ca64-57e8-425e-a695-e0894dbf5fcc      
+    steps:
+      - run: npx --package clever-tools clever login --token=$CLEVER_TOKEN --secret=$CLEVER_SECRET
+      - run: npx --package clever-tools clever link --org=$CLEVER_ORG $CLEVER_APP_ID
+      - run: npx --package clever-tools clever deploy --force
+  
+workflows:
+  version: 2
+
+  deploy: 
+    jobs:
+      - install-dependencies:
+          filters:
+            branches:
+              only: rewrite-back-for-dms
+      - lint:
+          requires: 
+            - install-dependencies
+          filters:
+            branches:
+              only: rewrite-back-for-dms
+      - build:
+          requires: 
+            - install-dependencies
+          filters:
+            branches:
+              only: rewrite-back-for-dms
+      - deploy:
+          requires: 
+            - lint
+            - build
+          context: clever-cloud-zenika-dev
+          filters:
+            branches:
+              only: rewrite-back-for-dms
