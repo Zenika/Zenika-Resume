@@ -27,17 +27,7 @@ jobs:
       - image: circleci/node:lts
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - dependencies-{{ checksum "package.json" }}
-            - dependencies-
-      - run:
-          name: Download UI dependencies
-          command: npm --prefix server install
-      - save_cache:
-          paths:
-            - node_modules
-          key: dependencies-{{ checksum "package.json" }}
+      - run: npm --prefix server ci
       - persist_to_workspace:
           root: ./
           paths:
