@@ -99,23 +99,22 @@ workflows:
           filters:
             branches:
               only: rewrite-back-for-dms
-      - ui-lint:
-          requires:
-            - ui-install-dependencies
-            - server-install-dependencies
-          filters:
-            branches:
-              only: rewrite-back-for-dms
+      # - ui-lint:
+      #     requires:
+      #       - ui-install-dependencies
+      #     filters:
+      #       branches:
+      #         only: rewrite-back-for-dms
       - ui-build:
           requires:
             - ui-install-dependencies
-            - server-install-dependencies
           filters:
             branches:
               only: rewrite-back-for-dms
       - deploy:
           requires:
             - ui-build
+            - server-install-dependencies
           context: clever-cloud-zenika-dev
           filters:
             branches:
