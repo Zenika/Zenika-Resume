@@ -6,7 +6,6 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
 const moment = require("moment");
-const superagent = require("superagent");
 const fetch = require("node-fetch");
 
 const app = express();
@@ -76,7 +75,7 @@ const fetchDms = async (query, params, authorizationHeader) => {
   const response = await fetch(dmsUrl, {
     method: "POST",
     headers: {
-      "Authorization": authorizationHeader,
+      Authorization: authorizationHeader,
       "Content-Type": "application/json"
     },
     body: JSON.stringify({ query, variables: params })
@@ -98,7 +97,7 @@ const executeQueryWithCallback = async (query, params, req, res, callback) => {
     if (response.errors) throw new Error(JSON.stringify(response.errors));
     callback({ rows: response.data.zenika_resume_resume });
   } catch (err) {
-    console.error(err); 
+    console.error(err);
     res.status(500).json({ Error: err });
   }
 };
@@ -172,10 +171,6 @@ api.get("/documents/:uuid", jwtCheck, (req, res) => {
 
 api.put("/documents/:uuid", jwtCheck, bodyParser.json(), async (req, res) => {
   const uuid = req.params.uuid;
-  const userInfo = await superagent
-    .get("https://zenika.eu.auth0.com/userinfo")
-    .set("Authorization", req.get("Authorization"))
-    .set("Accept", "application/json");
 
   // request validation
   if (!req.body.content) {
@@ -228,13 +223,18 @@ api.put("/documents/:uuid", jwtCheck, bodyParser.json(), async (req, res) => {
 
 api.get("/resumes/mine", jwtCheck, async (req, res) => {
   try {
-    superagent
-      .get("https://zenika.eu.auth0.com/userinfo")
-      .set("Authorization", req.get("Authorization"))
-      .set("Accept", "application/json")
-      .then(userInfoRes => {
-        executeQueryWithCallback(
-          `query ($email: text_comparison_exp) {
+    const response = await fetch("https://zenika.eu.auth0.com/userinfo", {
+      headers: {
+        Authorization: req.get("Authorization"),
+        Accept: "application/json"
+      }
+    });
+    if (!response.ok) {
+      throw response;
+    }
+    const { email } = await response.json();
+    executeQueryWithCallback(
+      `query ($email: text_comparison_exp) {
               zenika_resume_resume(where: {metadata: $email}) {
                 last_modified: last_modified
                 metadata
@@ -243,21 +243,21 @@ api.get("/resumes/mine", jwtCheck, async (req, res) => {
                 version
               }
             }`,
-          { email: { _like: `%${userInfoRes.body.email}%` } },
-          req,
-          res,
-          function(data) {
-            res.status(200).json(
-              data.rows.map(row => {
-                row.metadata = JSON.parse(row.metadata);
-                return row;
-              })
-            );
-          }
+      { email: { _like: `%${email}%` } },
+      req,
+      res,
+      function(data) {
+        res.status(200).json(
+          data.rows.map(row => {
+            row.metadata = JSON.parse(row.metadata);
+            return row;
+          })
         );
-      });
+      }
+    );
   } catch (err) {
     console.error(err);
+    res.sendStatus(502);
   }
 });
 
