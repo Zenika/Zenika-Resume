@@ -60,7 +60,7 @@ jobs:
       - image: circleci/node:lts
     environment:
       CLEVER_ORG: orga_6bf89bba-cabf-4a31-960a-c062a9f42b96
-      CLEVER_APP_ID: app_f11f4a8f-230a-4f53-9f84-93372bb825b1
+      CLEVER_APP_ID: app_4376723b-2b71-4eb5-8065-1d4cc498ff57
     steps:
       - checkout
       - attach_workspace:
