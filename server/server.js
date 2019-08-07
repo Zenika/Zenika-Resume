@@ -1,6 +1,6 @@
 "use strict";
 
-const DecryptUtils = require("../app/DecryptUtils");
+const DecryptUtils = require("./DecryptUtils");
 
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -12,7 +12,7 @@ const fetch = require("node-fetch");
 const app = express();
 const api = express.Router();
 
-const buildPath = require("../build-path");
+const buildPath = require("./build-path");
 
 const jwt = require("express-jwt");
 const jwks = require("jwks-rsa");

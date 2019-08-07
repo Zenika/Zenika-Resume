@@ -22,13 +22,6 @@ COPY server/package-lock.json .
 RUN npm install
 COPY server/server.js .
 
-WORKDIR /server
-COPY --from=front /app/build/ build/
-COPY app/DecryptUtils.js app/
-COPY build-path.js .
-RUN npm init -y
-RUN npm install sjcl
-
 EXPOSE 3000
 
 WORKDIR /server/server
