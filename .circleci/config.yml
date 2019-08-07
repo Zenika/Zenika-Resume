@@ -21,6 +21,7 @@ jobs:
           root: ./
           paths:
             - node_modules
+
   server-install-dependencies:
     docker:
       - image: circleci/node:lts
@@ -41,7 +42,8 @@ jobs:
           root: ./
           paths:
             - server/node_modules
-  lint:
+
+  ui-lint:
     docker:
       - image: node:5.7
     steps:
@@ -49,7 +51,8 @@ jobs:
       - attach_workspace:
           at: ./
       - run: npm run lint
-  build:
+
+  ui-build:
     docker:
       - image: node:5.7
     steps:
@@ -57,22 +60,46 @@ jobs:
       - attach_workspace:
           at: ./
       - run: npm run build
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - build
+
   deploy:
     docker:
       - image: circleci/node:lts
     environment:
       CLEVER_ORG: orga_6bf89bba-cabf-4a31-960a-c062a9f42b96
-      CLEVER_APP_ID: app_f11f4a8f-230a-4f53-9f84-93372bb825b1     
+      CLEVER_APP_ID: app_f11f4a8f-230a-4f53-9f84-93372bb825b1
     steps:
       - checkout
-      - run: npx --package clever-tools clever login --token=$CLEVER_TOKEN --secret=$CLEVER_SECRET
-      - run: npx --package clever-tools clever link --org=$CLEVER_ORG $CLEVER_APP_ID
-      - run: npx --package clever-tools clever deploy --force
-  
+      - attach_workspace:
+          at: ./
+      - run:
+          name: Package deployment artifact
+          command: |
+            mkdir ~/deploy
+            cd ~/deploy
+            cp -r ~/project/build build
+            cp -r ~/project/server server
+      - run:
+          name: Deploy to Clever Cloud
+          working_directory: ~/deploy
+          command: |
+            git config --global user.email "dsi-ext@zenika.com"
+            git config --global user.name "Zenika"
+            git init
+            git add .
+            git commit -m "deploy!"
+            npm install --global clever-tools
+            clever login --token=$CLEVER_TOKEN --secret=$CLEVER_SECRET
+            clever link --org=$CLEVER_ORG $CLEVER_APP_ID
+            clever deploy --force
+
 workflows:
   version: 2
 
-  deploy: 
+  deploy:
     jobs:
       - ui-install-dependencies:
           filters:
@@ -83,21 +110,21 @@ workflows:
             branches:
               only: rewrite-back-for-dms
       - lint:
-          requires: 
+          requires:
             - ui-install-dependencies
             - server-install-dependencies
           filters:
             branches:
               only: rewrite-back-for-dms
       - build:
-          requires: 
+          requires:
             - ui-install-dependencies
             - server-install-dependencies
           filters:
             branches:
               only: rewrite-back-for-dms
       - deploy:
-          requires: 
+          requires:
             - build
           context: clever-cloud-zenika-dev
           filters:
