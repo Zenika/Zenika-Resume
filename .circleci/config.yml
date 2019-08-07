@@ -8,15 +8,15 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - dependencies-{{ checksum "package.json" }}
-            - dependencies-
+            - v1-ui-dependencies-{{ checksum "package.json" }}
+            - v1-ui-dependencies-
       - run:
           name: Download UI dependencies
           command: npm install
       - save_cache:
           paths:
             - node_modules
-          key: dependencies-{{ checksum "package.json" }}
+          key: v1-ui-dependencies-{{ checksum "package.json" }}
       - persist_to_workspace:
           root: ./
           paths:
