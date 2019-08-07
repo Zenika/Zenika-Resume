@@ -81,7 +81,7 @@ jobs:
             git init
             git add .
             git commit -m "deploy!"
-            npm install --global clever-tools
+            sudo npm install --global clever-tools
             clever login --token=$CLEVER_TOKEN --secret=$CLEVER_SECRET
             clever link --org=$CLEVER_ORG $CLEVER_APP_ID
             clever deploy --force
