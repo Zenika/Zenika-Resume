@@ -115,7 +115,6 @@ function findByPath(req, res, path) {
   executeQueryWithCallback(
     `query zenika_resume_resume($path: text_comparison_exp) {
       zenika_resume_resume(where: {path: $path}, order_by: {last_modified: desc}) {
-        id
         content
         metadata
         path
@@ -141,7 +140,6 @@ function findByUuid(req, res, uuid) {
   executeQueryWithCallback(
     `query zenika_resume_resume($uuid: uuid_comparison_exp) {
       zenika_resume_resume(where: {uuid: $uuid}, order_by: {last_modified: desc}) {
-        id
         uuid
         content
         metadata
@@ -191,7 +189,7 @@ api.put("/documents/:uuid", jwtCheck, bodyParser.json(), async (req, res) => {
         } ${req.body.metadata.lang}`
       )
     : buildPath(req.body.metadata.name + "");
-
+    
   executeQueryWithCallback(
     `
       mutation upsertResume($resume: zenika_resume_resume_insert_input!) {

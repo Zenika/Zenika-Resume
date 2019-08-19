@@ -6,13 +6,6 @@
     "tables": {
       "resume": {
         "columns": {
-          "id": {
-            "type": "integer",
-            "constraints": {
-              "generated": "always",
-              "notNull": true
-            }
-          },
           "content": {
             "type": "text",
             "constraints": {
@@ -53,7 +46,7 @@
         },
         "insert_permissions": [
           {
-            "role": "employee",
+            "role": "world",
             "comment": null,
             "permission": {
               "set": {},
@@ -71,7 +64,7 @@
         ],
         "select_permissions": [
           {
-            "role": "employee",
+            "role": "world",
             "comment": null,
             "permission": {
               "allow_aggregations": false,
@@ -89,11 +82,11 @@
         ],
         "update_permissions": [
           {
-            "role": "employee",
+            "role": "world",
             "comment": null,
             "permission": {
               "set": {},
-              "columns": ["content", "last_modified", "metadata", "version"],
+              "columns": ["content", "last_modified", "path", "metadata", "version"],
               "filter": {}
             }
           }
