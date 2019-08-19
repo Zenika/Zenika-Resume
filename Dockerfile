@@ -13,14 +13,17 @@ COPY build-path.js .
 COPY .babelrc .
 RUN npm run build
 
-FROM node:12.4
-
+FROM node:12.0
+COPY --from=front /app/build/ /server/build/
 WORKDIR /server/server
 
 COPY server/package.json .
 COPY server/package-lock.json .
-RUN npm install
+RUN npm ci
 COPY server/server.js .
+COPY server/DecryptUtils.js .
+COPY server/build-path.js .
+
 
 EXPOSE 3000
 
