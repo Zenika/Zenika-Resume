@@ -1,14 +1,18 @@
 import uuid from 'uuid';
 import sjcl from 'sjcl';
-import Document from './document';
+import {Document, initDocument, isNew, hasNeverBeenSync, hasNoLocalChanges} from './document';
 import { Config } from '../config';
-import DecryptUtils from './decrypt-utils';
 import {authInfo} from './auth';
 import { EventEmitter } from 'events';
 import LocalForage from "localforage"
 
+type State = {
+    document: Document;
+    secret: string;
+};
+
 type Store = {
-    state: {[key: string]: any};
+    state: State;
     events: EventEmitter;
     endpoint: string;
     localforage: LocalForage;
@@ -27,8 +31,21 @@ export const Events = {
   AUTHENTICATION_REQUIRED: 'store:authentication-required',
 };
 
+// ?????????????????????????????????????????????????????????????????????????????????????????????????????????????,
+const buildSecret = () => {
+    //return sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 10), 0);
+    return '';
+  }
+
 const store: Store = {
-    state: {},
+    state: 
+        {
+            // we automatically create a default document, but it might not be used
+            document: initDocument(),
+            // we automatically generate a secret, but it might not be used
+            secret: buildSecret(),
+          }
+    ,
     events: new EventEmitter(),
     endpoint: "",
     localforage: LocalForage
@@ -37,7 +54,7 @@ const store: Store = {
 export const initStore = (name: string, events: EventEmitter, endpoint: string, localforage: LocalForage) => {
     store.state = {
       // we automatically create a default document, but it might not be used
-      document: new Document(),
+      document: initDocument(),
       // we automatically generate a secret, but it might not be used
       secret: buildSecret(),
     };
@@ -51,11 +68,7 @@ export const initStore = (name: string, events: EventEmitter, endpoint: string, 
       storeName: name,
     });
   }
-// ?????????????????????????????????????????????????????????????????????????????????????????????????????????????,
-const buildSecret = () => {
-    //return sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 10), 0);
-    return '';
-  }
+
 
   /**
    * The aim of this method is to load a document by:
@@ -97,29 +110,30 @@ const load = async (id: string, secret: string) => {
             if(!res || !res.body) {
                 throw new Error("Invalid server response")
             }
-            const document = new Document({
+            const document: Document = {
                 uuid: res.body.uuid,
                 content: res.body.content,
                 metadata: res.body.metadata,
                 path: res.body.path,
-                last_modified: res.body.last_modified
-              });
-            const decryptedContent = decrypt(document.get('content'), secret)
-            let metadata = document.get('metadata');
+                last_modified: res.body.last_modified,
+                last_modified_locally: 0
+              };
+            const decryptedContent = decrypt(document.content, secret)
+            let metadata = document.metadata;
             try {
-              metadata = document.get('metadata').toJS();
+              metadata = document.metadata;
             } catch (err) {
             }
 
             setState({
-              document: new Document({
-                uuid: document.get('uuid'),
+              document: {
+                uuid: document.uuid,
                 content: decryptedContent,
                 metadata: metadata,
-                path: document.get('path'),
-                last_modified: document.get('last_modified'),
-                last_modified_locally: document.get('last_modified_locally')
-              }),
+                path: document.path,
+                last_modified: document.last_modified,
+                last_modified_locally: document.last_modified_locally
+              },
               secret: secret
             });
             return localPersist();
@@ -140,14 +154,14 @@ const load = async (id: string, secret: string) => {
     }
 
     setState({
-      document: new Document({
-        uuid: document.get('uuid'),
-        content: document.get('content'),
-        metadata: document.get('metadata'),
-        path: document.get('path'),
-        last_modified: document.get('last_modified'),
+      document: {
+        uuid: document.uuid,
+        content: document.content,
+        metadata: document.metadata,
+        path: document.path,
+        last_modified: document.last_modified,
         last_modified_locally: Date.now()
-      }),
+      },
       secret: store.state.secret
     });
 
@@ -159,18 +173,18 @@ const load = async (id: string, secret: string) => {
    */
   const sync = async ()  => {
     console.log('start sync');
-    if (store.state.document.isNew()) {
+    if (isNew(store.state.document)) {
       return store.state;
     }
 
-    if (store.state.document.hasNeverBeenSync()) {
+    if (hasNeverBeenSync(store.state.document)) {
       console.log('sync never been');
       return serverPersist();
     }
 
     console.log('sync ');
 
-    let uri = `${store.endpoint}/documents/${store.state.document.get('uuid')}`;
+    let uri = `${store.endpoint}/documents/${store.state.document.uuid}`;
 
     if (uri.indexOf('undefined') != -1) {
       return;
@@ -186,20 +200,24 @@ const load = async (id: string, secret: string) => {
     handleRequestSuccess();
     const res = await response.json();
     const localDoc = store.state.document;
-        const serverDoc = new Document({
+        const serverDoc: Document = {
           uuid: res.body.uuid,
           content: res.body.content,
           metadata: res.body.metadata,
           path: res.body.path,
           last_modified: res.body.last_modified,
-        });
+          last_modified_locally: 0
+        };
 
-        console.log(serverDoc.get('last_modified'), localDoc.get('last_modified'), localDoc.get('last_modified_locally'));
-
-        if (serverDoc.get('last_modified') === localDoc.get('last_modified')) {
+        console.log(serverDoc.last_modified, localDoc.last_modified, localDoc.last_modified_locally);
+        const lastModified = serverDoc.last_modified
+        if(!lastModified){
+            return;
+        }
+        if (lastModified === localDoc.last_modified) {
           // here, document on the server has not been updated, so we can
           // probably push safely
-          if (serverDoc.get('last_modified') < localDoc.get('last_modified_locally')) {
+          if (lastModified < localDoc.last_modified_locally) {
             return serverPersist();
           }
 
@@ -208,18 +226,19 @@ const load = async (id: string, secret: string) => {
 
         // In theory, it should never happened, but... what happens if:
         // localDoc.get('last_modified') > serverDoc.get('last_modified') ?
-        if (serverDoc.get('last_modified') > localDoc.get('last_modified')) {
-          if (localDoc.hasNoLocalChanges()) {
+        if (lastModified > localDoc.last_modified) {
+          if (hasNoLocalChanges(localDoc)) {
             const secret = store.state.secret;
-
-            const decryptedContent = decrypt(serverDoc.content, secret)
-                const updatedDocument = new Document({
-                  uuid: serverDoc.get('uuid'),
+            try{
+                const decryptedContent = decrypt(serverDoc.content, secret)
+                const updatedDocument: Document = {
+                  uuid: serverDoc.uuid,
                   content: decryptedContent,
-                  path: serverDoc.get('path'),
-                  metadata: serverDoc.get('metadata'),
-                  last_modified: serverDoc.get('last_modified'),
-                });
+                  path: serverDoc.path,
+                  metadata: serverDoc.metadata,
+                  last_modified: lastModified,
+                  last_modified_locally: 0
+                };
 
                 setState(
                   {
@@ -232,6 +251,10 @@ const load = async (id: string, secret: string) => {
                   }
                 );
                 return localPersist();
+            }catch(err) {
+                handleRequestError(err);
+            }
+            
             }
         }
          // someone modified my document!
@@ -242,41 +265,46 @@ const load = async (id: string, secret: string) => {
 
           // what we want is to create a fork
           const encryptedContent = encrypt(localDoc.content, forkSecret)
-              const forkDocument = new Document({
+              const forkDocument: Document = {
                 uuid: uuid.v4(),
                 content: localDoc.content,
                 metadata: localDoc.metadata,
-                path: localDoc.path
-              });
+                path: localDoc.path,
+                last_modified: localDoc.last_modified,
+                last_modified_locally: localDoc.last_modified_locally
+              };
 
               // persist fork'ed document
               const fork = await store.localforage.setItem(
-                forkDocument.get('uuid'),
-                new Document({
-                  uuid: forkDocument.get('uuid'),
+                forkDocument.uuid,
+                {
+                  uuid: forkDocument.uuid,
                   content: encryptedContent,
                   metadata: forkDocument.metadata,
-                  path: forkDocument.path
-                }).toJS()
+                  path: forkDocument.path,
+                  last_modified: forkDocument.last_modified,
+                  last_modified_locally: forkDocument.last_modified_locally
+                }
               )
               // now, we can update the former doc with server content
-              const former = new Document({
-                uuid: serverDoc.get('uuid'),
-                content: serverDoc.get('content'),
-                metadata: serverDoc.get('metadata'),
-                path: serverDoc.get('path'),
-                last_modified: serverDoc.get('last_modified')
-              });
+              const former = {
+                uuid: serverDoc.uuid,
+                content: serverDoc.content,
+                metadata: serverDoc.metadata,
+                path: serverDoc.path,
+                last_modified: serverDoc.last_modified,
+                last_modified_locally: serverDoc.last_modified_locally
+              };
                 await store.localforage
                 .setItem(
-                  former.get('uuid'),
-                  former.toJS()
+                  former.uuid,
+                  former
                 )
                   const conflictState = {
                     fork: {
                       document: fork,
                       secret: forkSecret
-                    },
+                    } as State,
                     document: former,
                     secret: store.state.secret
                   };
@@ -295,38 +323,39 @@ const load = async (id: string, secret: string) => {
   }
 
   // Pure / side-effect free method
-  const decrypt = (content: string, secret: string) => {
-    return DecryptUtils.decrypt(content, secret, store.events, store.state);
+  const decrypt = (content: string, secret: string) => {  try {
+    return sjcl.decrypt(secret, content);
+  } catch (e) {
+    store.events.emit('Estore:decryption_failed', store.state);
+
+    throw new Error('decryption failed');
+  }
   }
 
   // Pure / side-effect free method
   const encrypt = (content: string, secret: string) => {
     secret = "";
-    return Promise.resolve(sjcl.encrypt(secret, content, { ks: 256 }));
+    return sjcl.encrypt(secret, content);//, { ks: 256 });
   }
 
   // Impure / side-effect free method
-  const localPersist = () => {
+  const localPersist = async () => {
     const doc = store.state.document;
     const secret = store.state.secret;
 
-    return encrypt(doc.get('content'), secret)
-      .then((encryptedContent) => {
-        return store.localforage.setItem(
-          doc.get('uuid'),
-          new Document({
-            uuid: doc.get('uuid'),
+    const encryptedContent = encrypt(doc.content, secret)
+    await store.localforage.setItem(
+          doc.uuid,
+          {
+            uuid: doc.uuid,
             content: encryptedContent,
-            metadata: doc.get('metadata'),
-            path: doc.get('path'),
-            last_modified: doc.get('last_modified'),
-            last_modified_locally: doc.get('last_modified_locally')
-          }).toJS()
+            metadata: doc.metadata,
+            path: doc.path,
+            last_modified: doc.last_modified,
+            last_modified_locally: doc.last_modified_locally
+          }
         );
-      })
-      .then(() => {
-        return Promise.resolve(store.state);
-      });
+        return store.state
   }
 
   // Impure / side-effect free method
@@ -334,9 +363,9 @@ const load = async (id: string, secret: string) => {
     const doc = store.state.document;
     const secret = store.state.secret;
 
-    const encryptedContent = await  encrypt(doc.get('content'), secret)
+    const encryptedContent = await  encrypt(doc.content, secret)
     try{
-          const response = await fetch(`${store.endpoint}/documents/${doc.get('uuid')}`, {
+          const response = await fetch(`${store.endpoint}/documents/${doc.uuid}`, {
               headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -344,22 +373,22 @@ const load = async (id: string, secret: string) => {
               },
               body: JSON.stringify({
                 content: encryptedContent,
-                metadata: doc.get('metadata'),
-                path: doc.get('path')
+                metadata: doc.metadata,
+                path: doc.path
               })
           })
           const res = await response.json();
            handleRequestSuccess()
            setState(
             {
-              document: new Document({
-                uuid: doc.get('uuid'),
-                content: doc.get('content'),
-                metadata: doc.get('metadata'),
-                path: doc.get('path'),
+              document: {
+                uuid: doc.uuid,
+                content: doc.content,
+                metadata: doc.metadata,
+                path: doc.path,
                 last_modified: res.body.last_modified,
-                last_modified_locally: null
-              }),
+                last_modified_locally: 0
+              },
               secret: secret
             },
             Events.SYNCHRONIZE
@@ -390,7 +419,7 @@ const load = async (id: string, secret: string) => {
     return Promise.reject(new Error('request failed (network)'));
   }
 
-  const setState = (newState: {[key: string]: any}, eventName?: string, eventState?: any) => {
+  const setState = (newState: State, eventName?: string, eventState?: any) => {
     store.state = newState;
 
     store.events.emit(eventName || Events.CHANGE, eventState || store.state);
