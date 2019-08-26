@@ -1,39 +1,39 @@
 export const Config = {
-    APP_NAME: 'Zenika Resume',
-    THEMES: [
-      {
-        name: 'default',
-        author: 'Rory Willians',
-        email: '',
-      },
-      {
-        name: 'light',
-        author: 'Aurelien Loyer',
-        email: 'aurelien.loyer@zenika.com',
-      },
-    ],
-    DEFAULT_METADATA: {
-      name: 'Williams',
-      firstname: 'Rory',
-      email: 'rory.williaws@zenika.box.com',
-      agency: 'Montreal',
-      lang: 'fr',
-      experience: '2 ans d\'expérience',
-      description: `# Architecte – ScrumMaster - Développeur Front Senior
+  APP_NAME: "Zenika Resume",
+  THEMES: [
+    {
+      name: "default",
+      author: "Rory Willians",
+      email: ""
+    },
+    {
+      name: "light",
+      author: "Aurelien Loyer",
+      email: "aurelien.loyer@zenika.com"
+    }
+  ],
+  DEFAULT_METADATA: {
+    name: "Williams",
+    firstname: "Rory",
+    email: "rory.williaws@zenika.box.com",
+    agency: "Montreal",
+    lang: "fr",
+    experience: "2 ans d'expérience",
+    description: `# Architecte – ScrumMaster - Développeur Front Senior
   rory.williaws@zenika.box.com`,
-      column1: `* Portfolio : bbc.in/1OCrHKk
+    column1: `* Portfolio : bbc.in/1OCrHKk
   * Exemples de code : codepen.io/phenax/pen/WQXerz`,
-      column2: `# **Formateur**
+    column2: `# **Formateur**
     * Angular JS
     * Angular 2
     * Ecplise RCP`,
-      column3: `# **Conférencier**
+    column3: `# **Conférencier**
     * Devoxx
     * Mix IT`,
-      theme: 'light'
-    },
-    DEFAULT_CONTENT: [
-      `--expertise-start
+    theme: "light"
+  },
+  DEFAULT_CONTENT: [
+    `--expertise-start
   
   --expertise-archive
   
@@ -132,6 +132,5 @@ export const Config = {
     * Anglais
     
   `
-    ].join('\n')
-  };
-  
+  ].join("\n")
+};
