@@ -1,0 +1,58 @@
+@charset 'utf-8';
+
+// Overridde foundation settings
+@import 'settings';
+
+/* -- Foundation stuffs -- */
+@import '~foundation-sites/scss/foundation';
+@include foundation-global-styles;
+@include foundation-typography;
+@include foundation-forms;
+@include foundation-table;
+@include foundation-callout;
+@include foundation-close-button;
+@include foundation-reveal;
+
+/* -- FontAwesome -- */
+$fa-font-path: '~font-awesome/fonts';
+@import '~font-awesome/scss/font-awesome.scss';
+
+/* -- Monod styles -- */
+
+// Application layout
+@import 'layout';
+@import 'fonts';
+
+// Components
+@import 'components/header';
+@import 'components/template_form';
+@import 'components/editor';
+@import 'components/markdown';
+@import 'components/codemirror_theme';
+@import 'components/vertical_handler';
+@import 'components/preview';
+@import 'components/footer';
+@import 'components/sync';
+@import 'components/message_box';
+@import 'components/menu';
+
+// Misc
+@import 'print';
+
+
+.reveal{
+  padding-left: 25%;
+  padding-right: 25%;
+  top: 0;
+  bottom: 35px;
+  left: 0;
+  right: 0;
+  border: 0;
+  border-radius: 0;
+  position: absolute;
+  max-width: 100%;
+  width: 100%;
+  .lead {
+    font-weight: bold;
+  }
+}

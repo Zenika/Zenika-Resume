@@ -1,0 +1,16 @@
+/*
+ * Header component
+ */
+
+header.main {
+    background-color: $primary-color;
+
+    h1 {
+        margin-left: 1rem;
+        color: $white;
+
+        small {
+            color: darken($primary-color, 10%);
+        }
+    }
+}

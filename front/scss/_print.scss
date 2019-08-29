@@ -1,0 +1,85 @@
+/* -- Monod print styles -- */
+@media print {
+
+    @page {
+        size: 'A4';
+        margin: 3cm 2cm !important;
+    }
+
+    // Page breaks
+    p,
+    h2,
+    h3 {
+        orphans: 3;
+        widows: 3;
+    }
+
+    h2,
+    h3 {
+        page-break-after: avoid;
+    }
+
+    tr,
+    blockquote,
+    img {
+        page-break-inside: avoid;
+    }
+
+    // Hide unwanted elements
+    header.main,
+    form#templateForm,
+    div.markdown,
+    div.vertical-handler,
+    footer.main {
+        display: none;
+    }
+
+    // Force preview max width/height
+    .layout {
+        display: block !important;
+
+        .editor {
+            height: 100% !important;
+            display: block !important;
+
+            .preview {
+                overflow: visible;
+
+                .rendered {
+                    padding: 0;
+                }
+            }
+        }
+    }
+
+    // Override styles
+    a {
+        border: 0 !important;
+    }
+
+    pre, blockquote {
+        border: 0;
+        border-left: 3px solid $silver;
+
+        & > * {
+            color: $emperor !important;
+        }
+    }
+
+    blockquote {
+        font-style: italic;
+    }
+
+    pre {
+        font-size: 10pt;
+
+        & > code {
+            margin: 0 !important;
+            background: transparent !important;
+        }
+    }
+
+    p {
+        font-size: 11pt !important;
+    }
+}

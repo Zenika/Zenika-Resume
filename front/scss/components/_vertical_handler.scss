@@ -1,0 +1,31 @@
+/*
+ * Vertical Handler component
+ */
+
+.vertical-handler {
+    background-color: rgba($mercury, 0.7);
+    height: 100%;
+    display: flex;
+
+    .left,
+    .right {
+        width: 20px;
+        cursor: pointer;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        i.fa {
+            color: $silver;
+        }
+
+        &:hover {
+            background-color: #acafaa;
+
+            i.fa {
+                color: $white;
+            }
+        }
+    }
+}

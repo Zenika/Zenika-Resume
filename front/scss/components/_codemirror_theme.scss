@@ -1,0 +1,40 @@
+/*
+ * Code mirror 'monod' theme
+ */
+
+.cm-s-monod {
+    background: lighten($secondary-color, 7%) !important;
+    color: $emperor;
+    font-size: 1.2rem !important;
+    font-family: $font-family-monospace !important;
+
+    .CodeMirror-cursor {
+        border-left: 1px solid $mine-shaft;
+    }
+
+    .CodeMirror-gutters {
+        background: lighten($secondary-color, 2%) !important;
+    }
+
+    .CodeMirror-focused div.CodeMirror-selected,
+    div.CodeMirror-selected {
+        background: rgba(lighten($td-blue, 40%), 0.2);
+    }
+
+    span.cm-builtin { color: $emperor }
+    span.cm-comment { color: lighten($td-blue, 20%) }
+    span.cm-header { color: $mine-shaft }
+    span.cm-keyword {
+        color: $mine-shaft;
+        font-weight: bold;
+    }
+    span.cm-link {
+        color: $primary-color;
+        text-decoration: none;
+    }
+    span.cm-quote { color: $gray }
+    span.cm-string { color: $gray }
+    span.cm-tag {
+        color: $primary-color;
+    }
+}

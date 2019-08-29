@@ -1,0 +1,155 @@
+/*
+ * Monod Layout
+ */
+
+/* -- variables -- */
+$main-header-height: 70px;
+$main-footer-height: 35px;
+$vertical-handler-width: 40px;
+
+/* -- mixins -- */
+@function header-height($breakpoint){
+    @if $breakpoint == small {
+        @return $main-header-height * .5;
+    }
+    @return $main-header-height;
+};
+
+@function footer-height($breakpoint){
+    @if $breakpoint == small {
+        @return $main-footer-height * .9;
+    }
+    @return $main-footer-height;
+};
+
+@function editor-height($breakpoint){
+    /*$header-footer-height: header-height($breakpoint) + footer-height($breakpoint);*/
+    $header-footer-height: footer-height($breakpoint);
+
+    @return calc(100vh - #{$header-footer-height});
+};
+
+/* -- styles -- */
+.layout {
+    display: flex;
+    flex-direction: column;
+
+    header.main {
+        height: header-height(small);
+
+        @include breakpoint(medium) {
+            height: header-height(medium);
+        }
+    }
+
+    .loader {
+        height: editor-height(small);
+
+        @include breakpoint(medium) {
+            height: editor-height(medium);
+        }
+    }
+
+    .editor {
+        display: flex;
+        height: editor-height(small);
+        width: 100%;
+
+        @include breakpoint(medium) {
+            height: editor-height(medium);
+        }
+
+        .markdown {
+            height: 100%;
+            width: 100%;
+
+            @include breakpoint(medium) {
+                flex: 1 1 calc(50% - #{$vertical-handler-width / 2});
+            }
+        }
+
+        .vertical-handler {
+            width: $vertical-handler-width;
+        }
+
+        .preview {
+            @include show-for(medium);
+            height: 100%;
+
+            @include breakpoint(medium) {
+                flex: 1 1 calc(50% - #{$vertical-handler-width / 2});
+            }
+        }
+
+        &.focus {
+            @include breakpoint(medium) {
+                .markdown {}
+
+                .vertical-handler {
+                    width: $vertical-handler-width / 2;
+
+                    .right {
+                        display: none;
+                    }
+                }
+
+                .preview {
+                    display: none;
+                }
+            }
+        }
+
+        &.edit-preview {
+            @include breakpoint(medium) {
+                .markdown {
+                    display: block;
+                }
+
+                .preview {
+                    display: block;
+                }
+            }
+        }
+
+        &.reading {
+            @include breakpoint(medium) {
+                .markdown {
+                    display: none;
+                }
+
+                .vertical-handler {
+                    width: $vertical-handler-width / 2;
+
+                    .left {
+                        display: none;
+                    }
+                }
+
+                .preview {}
+            }
+        }
+    }
+
+    footer.main {
+        height: footer-height(small);
+
+        @include breakpoint(medium) {
+            height: footer-height(medium);
+        }
+    }
+}
+
+
+.viewMode {
+    .markdown {
+        display: none !important;
+    }
+    .vertical-handler {
+        display: none;
+    }
+    .editor{
+        height: 100%;
+        margin: 0 auto;
+        max-width: 800px;
+    }
+}

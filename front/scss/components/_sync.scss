@@ -1,0 +1,25 @@
+.sync {
+  float: right;
+
+  .status {
+    padding: 0.4rem 0.5rem 0.3rem;
+    margin-right: 0.1rem;
+    border-radius: $global-radius;
+    background-color: transparent;
+    color: $white;
+  }
+
+  .is-offline {
+    color: white !important;
+  }
+
+  .is-online {
+    color: white !important;
+  }
+
+
+  button {
+    @include button();
+    font-size: 0.6rem;
+  }
+}
