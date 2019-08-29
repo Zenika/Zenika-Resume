@@ -36,23 +36,41 @@ const styles = (theme: Theme)  => createStyles({
   },
 });
 
-const Home = (props: any) => {
+type LastResumeProps = {
+  resumes: [{
+    last_modified: String,
+    metadata: {
+      agency: String,
+      column1: String,
+      column2: String,
+      column3: String,
+      description: String,
+      email: String,
+      experience: String,
+      firstname: String,
+      lang: String,
+      name: String,
+      theme: String
+    },
+    path: String,
+    uuid: String,
+    version: String
+  }]
+}
 
-  const { classes } = props;
+const Home: React.FC<LastResumeProps> = (props) => {
+
+  // const { classes } = props;
 
   return (
     <MuiThemeProvider theme={theme}>
-      <div className={classNames(classes.layout, classes.cardGrid)}>
+      {/* <div className={classNames(classes.layout, classes.cardGrid)}> */}
         <MyResumes></MyResumes>
         <br/>
-        <LastResumes></LastResumes> 
-      </div>
+        <LastResumes {...props}></LastResumes> 
+      {/* </div> */}
     </MuiThemeProvider>
   )
 }
-
-Home.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
 
 export default withStyles(styles)(Home);

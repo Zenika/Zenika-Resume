@@ -69,9 +69,11 @@ const isAuthenticated = () => {
 };
 
 export const authorizedFetch = (url: string, headers?: string[][]) => {
-  headers = headers
-    ? [...headers, ["Authorization", `Bearer ${authInfo.accessToken}`]]
-    : headers;
+  headers = headers && [...headers, ["Authorization", `Bearer ${authInfo.accessToken}`]]
+  // headers = headers
+  //   ? [...headers, ["Authorization", `Bearer ${authInfo.accessToken}`]]
+  //   : headers;
+    console.log(headers)
   return fetch(url, { headers }).then(response => {
     if (401 === response.status) {
       logout();
@@ -80,3 +82,16 @@ export const authorizedFetch = (url: string, headers?: string[][]) => {
     return response;
   });
 };
+
+// export const authorizedFetch = (url, init) => {
+//   init = init || {};
+//   init.headers = init.headers || {};
+//   init.headers.Authorization = `Bearer ${auth.accessToken}`;
+//   return fetch(url, init).then(response => {
+//     if (401 === response.status) {
+//       auth.logout();
+//       throw new Error('not logged in');
+//     }
+//     return response;
+//   });
+// };

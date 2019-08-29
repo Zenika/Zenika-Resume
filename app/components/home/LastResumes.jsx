@@ -34,7 +34,7 @@ class LastResumes extends Component {
   }
 
   render() {
-
+    console.log(this.state.resumes)
     return (
       <div>
         <h4>
