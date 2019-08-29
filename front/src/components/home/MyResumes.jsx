@@ -10,13 +10,13 @@ const styles = theme => ({
     padding: '25px',
   },
   button: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(),
   },
   leftIcon: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(),
   },
   rightIcon: {
-    marginLeft: theme.spacing.unit,
+    marginLeft: theme.spacing(),
   },
   iconSmall: {
     fontSize: 20,

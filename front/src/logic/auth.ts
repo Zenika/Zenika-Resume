@@ -70,6 +70,7 @@ const isAuthenticated = () => {
 };
 
 export const authorizedFetch = async (url: string) => {
+  if (isAuthenticated) {
   const handleAuth = handleAuthentication();
   console.log(`handleAuth `, handleAuth)
   console.log(`url `, url)
@@ -86,6 +87,7 @@ export const authorizedFetch = async (url: string) => {
   console.log(`response `, response)
   if (response.ok) {
     return response.json();
-  }
+  } else if (response.status === 401) logout();
   throw response;
+} else login();
 };
