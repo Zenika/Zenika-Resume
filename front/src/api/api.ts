@@ -5,34 +5,25 @@ import { authorizedFetch } from '../logic/auth';
 
 export type Resumes = {
     resumes: [{
-      last_modified: String,
+      last_modified: string,
       metadata: {
-        agency: String,
-        column1: String,
-        column2: String,
-        column3: String,
-        description: String,
-        email: String,
-        experience: String,
-        firstname: String,
-        lang: String,
-        name: String,
-        theme: String
+        agency: string,
+        column1: string,
+        column2: string,
+        column3: string,
+        description: string,
+        email: string,
+        experience: string,
+        firstname: string,
+        lang: string,
+        name: string,
+        theme: string
       },
-      path: String,
-      uuid: String,
-      version: String
+      path: string,
+      uuid: string,
+      version: string
     }]
 }
 
-export const getResumes = async (): Promise<Resumes> => {
-    const response = await authorizedFetch(`/resumes`)
-
-    console.log(response)
-
-    if (response.ok) {
-      return response.json();
-    }
-    throw response;
-  };
+export const getResumes = async (): Promise<Resumes> => authorizedFetch(`/resumes`)
 

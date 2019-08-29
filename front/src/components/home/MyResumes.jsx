@@ -35,7 +35,6 @@ class MyResumes extends Component {
 
   componentDidMount() {
     authorizedFetch(`/resumes/mine`)
-      .then(res => res.json())
       .then(data => {
         this.setState({ resumes: data });
       });

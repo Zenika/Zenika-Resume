@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { MuiThemeProvider, createMuiTheme, Theme, createStyles } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
+import {Resumes} from "../api/api"
 
 import MyResumes from './home/MyResumes';
 import LastResumes from './home/LastResumes';
@@ -36,29 +37,7 @@ const styles = (theme: Theme)  => createStyles({
   },
 });
 
-type LastResumeProps = {
-  resumes: [{
-    last_modified: String,
-    metadata: {
-      agency: String,
-      column1: String,
-      column2: String,
-      column3: String,
-      description: String,
-      email: String,
-      experience: String,
-      firstname: String,
-      lang: String,
-      name: String,
-      theme: String
-    },
-    path: String,
-    uuid: String,
-    version: String
-  }]
-}
-
-const Home: React.FC<LastResumeProps> = (props) => {
+const Home: React.FC<Resumes> = (props) => {
 
   // const { classes } = props;
 

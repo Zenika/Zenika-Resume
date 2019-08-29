@@ -10,11 +10,12 @@ const App: React.FC = () => {
   
   useEffect(() => {
     loadResumes()
-  })
+  }, [])
 
-  console.log(`resumes : ${resumes}`)
+  console.log('asfdgsdf : ', resumes)
+
   if(!resumes) return <p>Chargement des CV</p>
-  return <Home {...resumes}></Home>
+  return <Home resumes={resumes}></Home>
   // return <p>Chargement des CV</p>
 };
 

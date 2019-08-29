@@ -51,6 +51,7 @@ const setSession = (authResult: auth0.Auth0DecodedHash) => {
   authInfo = authResult;
 };
 
+
 const computeExpiresAt = (expiresIn: number) =>
   expiresIn * 1000 + new Date().getTime();
 
@@ -68,30 +69,23 @@ const isAuthenticated = () => {
   return new Date().getTime() < expiresAt;
 };
 
-export const authorizedFetch = (url: string, headers?: string[][]) => {
-  headers = headers && [...headers, ["Authorization", `Bearer ${authInfo.accessToken}`]]
-  // headers = headers
-  //   ? [...headers, ["Authorization", `Bearer ${authInfo.accessToken}`]]
-  //   : headers;
-    console.log(headers)
-  return fetch(url, { headers }).then(response => {
-    if (401 === response.status) {
-      logout();
-      throw new Error("not logged in");
-    }
-    return response;
-  });
-};
+export const authorizedFetch = async (url: string) => {
+  const handleAuth = handleAuthentication();
+  console.log(`handleAuth `, handleAuth)
+  console.log(`url `, url)
 
-// export const authorizedFetch = (url, init) => {
-//   init = init || {};
-//   init.headers = init.headers || {};
-//   init.headers.Authorization = `Bearer ${auth.accessToken}`;
-//   return fetch(url, init).then(response => {
-//     if (401 === response.status) {
-//       auth.logout();
-//       throw new Error('not logged in');
-//     }
-//     return response;
-//   });
-// };
+  const request = fetch(
+    url, { 
+    headers: {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${handleAuth.accessToken}` 
+    }
+  })
+  const response = await request
+  console.log(`response `, response)
+  if (response.ok) {
+    return response.json();
+  }
+  throw response;
+};
