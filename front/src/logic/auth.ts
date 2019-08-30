@@ -25,7 +25,6 @@ export const handleAuthentication = () => {
       setSession(savedAuthResult);
       // now need to check if token in local storage is still valid
       if (isAuthenticated()) {
-        console.log("resolving1", savedAuthResult)
         resolve(savedAuthResult);
       }
     } catch (err) {
@@ -39,7 +38,6 @@ export const handleAuthentication = () => {
       } else {
         if (authResult && authResult.accessToken && authResult.idToken) {
           setSession(authResult);
-          console.log("resolving2", authResult)
           resolve(authResult);
         }else reject("authResult is undefined");
       }

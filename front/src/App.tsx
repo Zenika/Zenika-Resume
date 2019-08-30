@@ -8,15 +8,13 @@ import { useAsyncEffect } from "./utils/async-use-effect";
 const App = () => {
   const [authentified, setAuthentified] = useState(false);
   useAsyncEffect(async () => {
-    console.log("starting async hook effect");
     try {
       const authResult = await handleAuthentication();
-      console.log("authResult", authResult);
       if (authResult) {
         setAuthentified(true);
       }
     } catch (err) {
-      console.error("Error in asyncHookEffect", err);
+      console.error("login error", err);
       login();
     }
   });
