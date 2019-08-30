@@ -1,6 +1,6 @@
 import auth0, { Auth0DecodedHash } from "auth0-js";
 
-const auth = new auth0.WebAuth({
+export const auth = new auth0.WebAuth({
   domain: "zenika.eu.auth0.com",
   clientID: "60hXTJPUSI2lD7gMilLEvOa7DH1zC0WO",
   redirectUri: window.location.origin,
@@ -13,7 +13,7 @@ const auth = new auth0.WebAuth({
 // we ultimately want this in a store
 export let authInfo: Auth0DecodedHash = {};
 
-const login = () => {
+export const login = () => {
   auth.authorize();
 };
 
@@ -62,7 +62,7 @@ const logout = () => {
   login();
 };
 
-const isAuthenticated = () => {
+export const isAuthenticated = () => {
   // Check whether the current time is past the
   // access token's expiry time
   const expiresAt = computeExpiresAt(authInfo.expiresIn || 0);

@@ -38,8 +38,6 @@ const styles = (theme: Theme)  => createStyles({
 });
 
 const Home: React.FC = () => {
-
-
   const [resumes, setResumes] = useState()
   const loadResumes =  async() => setResumes(await getResumes());
   

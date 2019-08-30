@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 
-import {Resumes} from "../../api/api"
+import { Resumes } from "../../api/api"
 import Grid from '@material-ui/core/Grid';
 import ResumeCard from '../ResumeCard';
 import Button from '@material-ui/core/Button';
+import { Router, Link } from "@reach/router"
 
-const MyResumes: React.FC<Resumes> = ( {resumes} ) => {
+const MyResumes: React.FC<Resumes> = ({ resumes }) => {
   if (!resumes) return (
     <div>
       <h4>
@@ -27,12 +28,12 @@ const MyResumes: React.FC<Resumes> = ( {resumes} ) => {
         ))}
       </Grid>
       <div>
-        {/* <Link to={`app/`}> */}
+        <Link to={`app/`}>
           <Button variant="contained" size="large" color="secondary" >
             New resume
           {/* <NoteAdd className={this.classes.rightIcon} /> */}
           </Button>
-        {/* </Link> */}
+        </Link>
       </div>
     </div>
   )
