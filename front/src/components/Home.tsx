@@ -1,10 +1,10 @@
-import React from 'react';
+import React, {useState, useEffect} from "react";
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { MuiThemeProvider, createMuiTheme, Theme, createStyles } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
-import {Resumes} from "../api/api"
 
+import {getResumes, getMyResumes, Resumes} from "../api/api"
 import MyResumes from './home/MyResumes';
 import LastResumes from './home/LastResumes';
 
@@ -37,16 +37,29 @@ const styles = (theme: Theme)  => createStyles({
   },
 });
 
-const Home: React.FC<Resumes> = (props) => {
+const Home: React.FC = () => {
 
-  // const { classes } = props;
+
+  const [resumes, setResumes] = useState()
+  const loadResumes =  async() => setResumes(await getResumes());
+  
+  useEffect(() => {
+    loadResumes()
+  }, [])
+
+  const [myResumes, setMyResumes] = useState()
+  const loadMyResumes =  async() => setMyResumes(await getMyResumes());
+  
+  useEffect(() => {
+    loadMyResumes()
+  }, [])
 
   return (
     <MuiThemeProvider theme={theme}>
       {/* <div className={classNames(classes.layout, classes.cardGrid)}> */}
-        <MyResumes></MyResumes>
+        <MyResumes resumes={myResumes}></MyResumes>
         <br/>
-        <LastResumes {...props}></LastResumes> 
+        <LastResumes resumes={resumes}></LastResumes> 
       {/* </div> */}
     </MuiThemeProvider>
   )

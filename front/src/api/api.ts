@@ -28,3 +28,5 @@ export type Resume = {
 
 export const getResumes = async (): Promise<Resumes> => authorizedFetch(`/resumes`)
 
+export const getMyResumes = async(): Promise<Resumes> => authorizedFetch(`/resumes/mine`)
+

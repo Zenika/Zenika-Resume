@@ -4,7 +4,14 @@ import Grid from '@material-ui/core/Grid';
 import ResumeCard from '../ResumeCard';
 
 const LastResumes: React.FC<Resumes> = ( {resumes} ) => {
-  console.log('resumes : ', resumes)
+  if (!resumes) return (
+    <div>
+      <h4>
+        Last edited Resumes
+      </h4>
+      <p>Chargement des CV</p>
+    </div>
+  )
     return (
       <div>
         <h4>
