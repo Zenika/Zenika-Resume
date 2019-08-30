@@ -12,6 +12,7 @@ const App = () => {
       const authResult = await handleAuthentication();
       if (authResult) {
         setAuthentified(true);
+        window.location.hash = '';
       }
     } catch (err) {
       console.error("login error", err);
