@@ -17,31 +17,35 @@ export const login = () => {
   auth.authorize();
 };
 
-const handleAuthentication = () => {
-  // first, try recovering from localstorage
-  try {
-    const savedAuthResult = JSON.parse(localStorage.getItem("auth0") || "");
-    setSession(savedAuthResult);
-    // now need to check if token in local storage is still valid
-    if (isAuthenticated()) {
-      return savedAuthResult;
-    }
-  } catch (err) {
-    // just in case it contains garbage
-    localStorage.removeItem("auth0");
-  }
-  // localstorage failed, let's try the hash
-  auth.parseHash((err, authResult) => {
-    if (err) {
-      throw err;
-    } else {
-      if (authResult && authResult.accessToken && authResult.idToken) {
-        setSession(authResult);
+export const handleAuthentication = () => {
+  return new Promise((resolve, reject) => {
+    // first, try recovering from localstorage
+    try {
+      const savedAuthResult = JSON.parse(localStorage.getItem('auth0') || "");
+      setSession(savedAuthResult);
+      // now need to check if token in local storage is still valid
+      if (isAuthenticated()) {
+        console.log("resolving1", savedAuthResult)
+        resolve(savedAuthResult);
       }
-      return authResult;
+    } catch (err) {
+      // just in case it contains garbage
+      localStorage.removeItem('auth0');
     }
+    // localstorage failed, let's try the hash
+    auth.parseHash((err, authResult) => {
+      if (err) {
+        reject(err);
+      } else {
+        if (authResult && authResult.accessToken && authResult.idToken) {
+          setSession(authResult);
+          console.log("resolving2", authResult)
+          resolve(authResult);
+        }else reject("authResult is undefined");
+      }
+    });
   });
-};
+}
 
 const setSession = (authResult: auth0.Auth0DecodedHash) => {
   // Set isLoggedIn flag in localStorage
@@ -70,9 +74,7 @@ export const isAuthenticated = () => {
 };
 
 export const authorizedFetch = async (url: string) => {
-  if (isAuthenticated) {
-  const handleAuth = handleAuthentication();
-  console.log(`handleAuth `, handleAuth)
+  if (isAuthenticated()) {
   console.log(`url `, url)
 
   const request = fetch(
@@ -80,7 +82,7 @@ export const authorizedFetch = async (url: string) => {
     headers: {
       "Accept": "application/json",
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${handleAuth.accessToken}` 
+      "Authorization": `Bearer ${authInfo.accessToken}` 
     }
   })
   const response = await request
