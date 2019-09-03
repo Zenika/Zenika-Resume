@@ -1,10 +1,5 @@
 import React, { useState, useEffect, ChangeEvent } from "react";
-import classNames from 'classnames';
-import PropTypes from 'prop-types';
-import { Router, Link } from "@reach/router"
-
-import { createMuiTheme } from '@material-ui/core/styles';
-import { withStyles } from '@material-ui/core/styles';
+import { Link } from "@reach/router"
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -13,9 +8,12 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Avatar from '@material-ui/core/Avatar';
+
 // import SearchIcon from '@material-ui/icons/Search';
 import Input from '@material-ui/core/Input';
-import { getResumes, getMyResumes, Resumes, Resume } from "../api/api"
+import { getResumes } from "../api/api"
+import { Resume } from '../Types/Resume'
+import { Resumes } from '../Types/Resumes'
 
 // const theme = createMuiTheme();
 
@@ -86,29 +84,29 @@ import { getResumes, getMyResumes, Resumes, Resume } from "../api/api"
 //   }
 // });
 
+const ListAll: React.FC<Resumes> = ({ resumes }) => {
+  const [inputValue, setInputValue] = useState('')
 
-const ListAll: React.FC<Resumes> = () => {
-  const [resumes, setResumes] = useState()
-  const loadResumes = async () => setResumes(await getResumes());
+  const [filteredResumes, setFilteredResumes] = useState(resumes)
 
   useEffect(() => {
-    loadResumes()
-  }, [])
-
-  const [filteredResumes, setFilteredResumes] = useState()
-  const loadFilteredResumes = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.currentTarget.value.length < 3) {
+    if (inputValue.length < 3) {
       setFilteredResumes(resumes);
     } else {
       setFilteredResumes(resumes.filter((resume: Resume) =>
-        JSON.stringify(resume).toLocaleLowerCase().includes(event.currentTarget.value.toLocaleLowerCase())
+        JSON.stringify(resume).toLocaleLowerCase().includes(inputValue.toLocaleLowerCase())
       ));
     }
-  }
+  }, [resumes, inputValue])
 
+  if (!filteredResumes) {
+    return <div>
+      <p>Chargement en cours</p>
+    </div>
+  }
   return (
     <div>
-      <h4>Resumes ({resumes.length})</h4>
+      <h4>Resumes ({filteredResumes.length})</h4>
       <br /><br />
       <div>
         {/* <div>
@@ -117,7 +115,7 @@ const ListAll: React.FC<Resumes> = () => {
         <Input
           placeholder="Search…"
           disableUnderline
-          onChange={loadFilteredResumes}
+          onChange={(event) => setInputValue(event.currentTarget.value)}
         />
       </div>
 
@@ -136,6 +134,7 @@ const ListAll: React.FC<Resumes> = () => {
           </TableHead>
           <TableBody>
             {filteredResumes.map((resume: Resume) => {
+              console.log('LIST resume ', resume)
               return (
                 <TableRow key={resume.uuid}>
                   <TableCell component="th" scope="resume">
@@ -173,4 +172,4 @@ const ListAll: React.FC<Resumes> = () => {
   )
 }
 
-export default ListAll
+export default ListAll;

@@ -7,7 +7,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 
-import {Resume} from "../api/api"
+import {Resume} from "../Types/Resume"
 
 const ResumeCard: React.FC<{resume: Resume}> = ( {resume} ) => {
     console.log(resume)
