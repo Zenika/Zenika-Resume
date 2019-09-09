@@ -1,10 +1,8 @@
 import React, {useState, useEffect} from "react";
-import classNames from 'classnames';
-import PropTypes from 'prop-types';
 import { MuiThemeProvider, createMuiTheme, Theme, createStyles } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
 
-import {getResumes, getMyResumes, Resumes} from "../api/api"
+import {getResumes, getMyResumes} from "../api/api"
 import MyResumes from './home/MyResumes';
 import LastResumes from './home/LastResumes';
 
@@ -53,13 +51,16 @@ const Home: React.FC = () => {
   }, [])
 
   return (
-    <MuiThemeProvider theme={theme}>
-      {/* <div className={classNames(classes.layout, classes.cardGrid)}> */}
-        <MyResumes resumes={myResumes}></MyResumes>
-        <br/>
-        <LastResumes resumes={resumes}></LastResumes> 
-      {/* </div> */}
-    </MuiThemeProvider>
+    <div> 
+        <MuiThemeProvider theme={theme}>
+          {/* <div className={classNames(classes.layout, classes.cardGrid)}> */}
+            <MyResumes resumes={myResumes}></MyResumes>
+            <br/>
+            <LastResumes resumes={resumes}></LastResumes> 
+          {/* </div> */}
+        </MuiThemeProvider>
+    
+    </div>
   )
 }
 

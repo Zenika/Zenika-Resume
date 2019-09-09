@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { Resumes } from "../../api/api"
+import { Resumes } from "../../Types/Resumes"
 import Grid from '@material-ui/core/Grid';
 import ResumeCard from '../ResumeCard';
 import Button from '@material-ui/core/Button';
