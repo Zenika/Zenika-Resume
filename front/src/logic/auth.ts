@@ -1,4 +1,4 @@
-import auth0, { Auth0DecodedHash } from "auth0-js";
+import auth0, { Auth0DecodedHash, Auth0Error, Auth0UserProfile } from "auth0-js";
 
 export const auth = new auth0.WebAuth({
   domain: "zenika.eu.auth0.com",
@@ -9,6 +9,8 @@ export const auth = new auth0.WebAuth({
     "openid email profile list:all-resumes list:own-resumes write:resume read:resume",
   audience: "https://resume.zenika.com"
 });
+
+export const getUserInfo = (auth: auth0.WebAuth, accessToken: string, cb: (error: null | Auth0Error, result: Auth0UserProfile) => void ) => auth.client.userInfo(accessToken, cb);
 
 // we ultimately want this in a store
 export let authInfo: Auth0DecodedHash = {};
@@ -57,7 +59,7 @@ const setSession = (authResult: auth0.Auth0DecodedHash) => {
 const computeExpiresAt = (expiresIn: number) =>
   expiresIn * 1000 + new Date().getTime();
 
-const logout = () => {
+export const logout = () => {
   authInfo = {};
   localStorage.removeItem("isLoggedIn");
   localStorage.removeItem("auth0");

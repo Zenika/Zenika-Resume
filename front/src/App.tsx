@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Router, RouteComponentProps } from "@reach/router";
 import "./App.css";
 import Home from "./components/Home";
 import { handleAuthentication, login } from "./logic/auth";
 import { useAsyncEffect } from "./utils/async-use-effect";
+import Header from "./components/Header";
 
 const App = () => {
   const [authentified, setAuthentified] = useState(false);
@@ -22,6 +23,7 @@ const App = () => {
   if (authentified) {
     return (
       <Router>
+         <Header />
         <RouterPage path="/" pageComponent={<Home></Home>} />
       </Router>
     );
