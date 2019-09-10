@@ -21,7 +21,6 @@ COPY server/package.json .
 COPY server/package-lock.json .
 RUN npm ci
 COPY server/server.js .
-COPY server/DecryptUtils.js .
 COPY server/build-path.js .
 
 
