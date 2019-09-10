@@ -2,14 +2,7 @@ const pg = require("pg");
 const fetch = require("node-fetch");
 const sjcl = require("sjcl");
 
-const pool = new pg.Pool({
-  host: "ec2-54-225-112-215.compute-1.amazonaws.com",
-  user: "icqlysvpfrqpqc",
-  password: "8XAQOVosFhaCik9M66lmiXceYR",
-  port: "5432",
-  database: "d2fgmvlsecv82g",
-  ssl: true
-});
+const pool = new pg.Pool({ssl: true});
 
 function decrypt(content, secret, events, state) {
   try {
@@ -53,7 +46,7 @@ const executeQueryWithCallback = (query, params, callback) => {
 const insertResumeIntoDms = async resume => {
   try {
     console.log("metadata", resume.metadata);
-    const response = await fetch("http://localhost:8080/v1/graphql", {
+    const response = await fetch(process.env.DMS_URL, {
       method: "POST",
       headers: {
         "X-Hasura-Admin-Secret": "key",
