@@ -1,7 +1,5 @@
 "use strict";
 
-const DecryptUtils = require("./DecryptUtils");
-
 const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
@@ -304,10 +302,7 @@ api.get("/resumes/complete", authApi, (req, res) => {
     data => {
       const promises = data.rows.map(row => {
         row.metadata = JSON.parse(row.metadata);
-        return DecryptUtils.decrypt(row.content, "").then(ctDecrypted => {
-          row.content = ctDecrypted;
-          return row;
-        });
+        return row;
       });
 
       Promise.all(promises).then(results => {
