@@ -2,9 +2,9 @@ const pg = require("pg");
 const fetch = require("node-fetch");
 const sjcl = require("sjcl");
 
-const pool = new pg.Pool({ssl: true});
+const pool = new pg.Pool({ ssl: true });
 
-function decrypt(content, secret, events, state) {
+const decrypt = (content, secret, events, state) => {
   try {
     return Promise.resolve(sjcl.decrypt(secret, content));
   } catch (e) {
@@ -12,35 +12,35 @@ function decrypt(content, secret, events, state) {
 
     return Promise.reject(new Error("decryption failed"));
   }
-}
+};
 
-const executeQueryWithCallback = (query, params, callback) => {
-  pool.connect(function(err, client, done) {
-    try {
+const executeQuery = (query, params) => {
+  return new Promise((resolve, reject) =>
+    pool.connect((err, client, done) => {
       if (err) {
-        console.error(err);
-      }
-      if (!client) {
-        console.error("no pg client available");
+        reject(err);
         return;
       }
-      client.query(query, params, function(err, result) {
-        done();
-        if (err) {
-          console.error(err);
-        } else {
-          callback(result);
-        }
-      });
-    } catch (error) {
-      try {
-        done();
-      } catch (error) {
-        // nothing to do just keep the program running
+      if (!client) {
+        reject("no pg client available");
+        return;
       }
-      console.error(error);
-    }
-  });
+
+      try {
+        client.query(query, params, (err, result) => {
+          done();
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result);
+          }
+        });
+      } catch (error) {
+        reject(error);
+        return;
+      }
+    })
+  );
 };
 
 const insertResumeIntoDms = async resume => {
@@ -101,39 +101,29 @@ const insertResumeIntoDms = async resume => {
   }
 };
 
-const buildDocumentFromQueryResult = async data => {
-  data = data.rows[0];
+const decryptResumeContent = async data => {
   data.content = await decrypt(data.content, "");
   return data;
 };
 
-const handleResume = async data => {
-  if (data.rows.length < 1) {
-    console.log("WARNING: EMPTY RESUME");
-  } else {
-    insertResumeIntoDms(await buildDocumentFromQueryResult(data));
-  }
-};
+const handleResume = async resume =>
+  insertResumeIntoDms(await decryptResumeContent(resume));
 
-const handleResumeList = data => {
-  const resumeMetadatas = data.rows.map(row => {
-    row.metadata = JSON.parse(row.metadata);
-    return row;
-  });
-  resumeMetadatas.map(resumeMetadata => {
-    if (!resumeMetadata.path) {
-      return;
-    }
-    executeQueryWithCallback(
-      "SELECT id, uuid, content, metadata, path, version, last_modified FROM resume where path=($1) ORDER BY last_modified DESC",
-      [resumeMetadata.path],
-      handleResume
+const handleResumeList = data =>
+  Promise.all(data.rows.map(row => handleResume(row)));
+
+(async () => {
+  try {
+    console.log("Querying resumes ...");
+    const resumesData = await executeQuery(
+      "SELECT id, uuid, content, metadata, path, version, last_modified FROM resume ORDER BY last_modified DESC",
+      []
     );
-  });
-};
-
-executeQueryWithCallback(
-  "SELECT uuid, metadata, path, version, last_modified FROM resume ORDER BY last_modified DESC",
-  [],
-  handleResumeList
-);
+    console.log(`Query successful, got ${resumesData.length} rows`);
+    console.log("Inserting rows into the DMS ...")
+    await handleResumeList(resumesData);
+    console.log("Migration finished !");
+  } catch (err) {
+    console.error(err);
+  }
+})();
