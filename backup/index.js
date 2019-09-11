@@ -45,11 +45,10 @@ const executeQueryWithCallback = (query, params, callback) => {
 
 const insertResumeIntoDms = async resume => {
   try {
-    console.log("metadata", resume.metadata);
     const response = await fetch(process.env.DMS_URL, {
       method: "POST",
       headers: {
-        "X-Hasura-Admin-Secret": "key",
+        "X-Hasura-Admin-Secret": process.env.HASURA_ADMIN_SECRET || "key",
         "content-type": "application/json"
       },
       body: JSON.stringify({
@@ -112,7 +111,6 @@ const handleResume = async data => {
   if (data.rows.length < 1) {
     console.log("WARNING: EMPTY RESUME");
   } else {
-    console.log(data)
     insertResumeIntoDms(await buildDocumentFromQueryResult(data));
   }
 };
