@@ -61,7 +61,6 @@ jobs:
     parameters:
       clever-app-id:
         type: string
-      CLEVER_APP_ID: app_4376723b-2b71-4eb5-8065-1d4cc498ff57
     steps:
       - checkout
       - attach_workspace:
