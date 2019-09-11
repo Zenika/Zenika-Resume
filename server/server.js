@@ -111,7 +111,7 @@ function buildDocumentFromQueryResult(data) {
 
 function findByPath(req, res, path) {
   executeQueryWithCallback(
-    `query zenika_resume_resume($path: text_comparison_exp) {
+    `query zenika_resume_resume($path: String_comparison_exp) {
       zenika_resume_resume(where: {path: $path}, order_by: {last_modified: desc}) {
         content
         metadata
@@ -182,12 +182,10 @@ api.put("/documents/:uuid", jwtCheck, bodyParser.json(), async (req, res) => {
 
   const path = req.body.metadata.firstname
     ? buildPath(
-        `${req.body.metadata.firstname} ${req.body.metadata.name} ${
-          req.body.metadata.agency
-        } ${req.body.metadata.lang}`
+        `${req.body.metadata.firstname} ${req.body.metadata.name} ${req.body.metadata.agency} ${req.body.metadata.lang}`
       )
     : buildPath(req.body.metadata.name + "");
-    
+
   executeQueryWithCallback(
     `
       mutation upsertResume($resume: zenika_resume_resume_insert_input!) {
@@ -230,7 +228,7 @@ api.get("/resumes/mine", jwtCheck, async (req, res) => {
     }
     const { email } = await response.json();
     executeQueryWithCallback(
-      `query ($email: text_comparison_exp) {
+      `query ($email: String_comparison_exp) {
               zenika_resume_resume(where: {metadata: $email}) {
                 last_modified: last_modified
                 metadata
