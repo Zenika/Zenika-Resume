@@ -1,0 +1,19 @@
+{
+  "name": "backup",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node -r dotenv/config index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^8.1.0",
+    "moment": "^2.24.0",
+    "node-fetch": "^2.6.0",
+    "pg": "^7.12.1",
+    "sjcl": "^1.0.8"
+  }
+}

@@ -162,28 +162,6 @@ describe('Store', () => {
     });
   });
 
-  describe('decrypt', () => {
-    it('emits an event when decryption has failed', () => {
-      let promise = store.decrypt('foo', 'secret');
-
-      expect(eventEmitterSpy.calledOnce).to.be.true;
-      expect(eventEmitterSpy.calledWith(Events.DECRYPTION_FAILED)).to.be.true;
-
-      return expect(promise).to.be.rejected;
-    });
-
-    it('returns a promise with the decrypted content', (done) => {
-      const content = 'foo';
-      const secret = 'secret';
-
-      store.encrypt(content, secret).then((encrypted) => {
-        const promise = store.decrypt(encrypted, secret);
-
-        expect(promise).to.be.eventually.equal(content).notify(done);
-      });
-    });
-  });
-
   describe('update', () => {
     it('should not modify the passed document that will be persisted', () => {
       const doc = new Document({ uuid: 'foo', content: 'bar' });
