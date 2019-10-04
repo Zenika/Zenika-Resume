@@ -1,0 +1,19 @@
+- args:
+    role: world
+    table:
+      name: resume
+      schema: resume
+  type: drop_insert_permission
+- args:
+    permission:
+      check: {}
+      columns: []
+      localPresets:
+      - key: ""
+        value: ""
+      set: {}
+    role: world
+    table:
+      name: resume
+      schema: resume
+  type: create_insert_permission

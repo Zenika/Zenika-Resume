@@ -1,0 +1,3 @@
+- args:
+    sql: drop schema "resume" cascade;
+  type: run_sql
