@@ -54,7 +54,24 @@ jobs:
           root: ./
           paths:
             - build
-
+  run-migrations:
+      docker:
+        - image: hasura/graphql-engine:v1.0.0-beta.6.cli-migrations
+      parameters:
+        hasura-admin-secret:
+          type: string
+        hasura-endpoint:
+          type: string
+      steps:
+        - checkout
+        - attach_workspace:
+            at: ./
+        - run:
+            name: Run migrations
+            command: |
+              cd .hasura
+              hasura migrate apply --admin-secret << parameters.hasura-admin-secret >> --endpoint << parameters.hasura-endpoint >>
+              hasura metadata apply --admin-secret << parameters.hasura-admin-secret >> --endpoint << parameters.hasura-endpoint >>
   deploy:
     docker:
       - image: circleci/node:lts
@@ -94,39 +111,61 @@ workflows:
       - ui-install-dependencies:
           filters:
             branches:
-              only: staging-deploy
+              only: master
       - server-install-dependencies:
           filters:
             branches:
-              only: staging-deploy
-      # - ui-lint:
-      #     requires:
-      #       - ui-install-dependencies
-      #     filters:
-      #       branches:
-      #         only: staging-deploy
+              only: master
+      - ui-lint:
+          requires:
+            - ui-install-dependencies
+          filters:
+            branches:
+              only: master
       - ui-build:
           requires:
             - ui-install-dependencies
           filters:
             branches:
-              only: staging-deploy
-      - deploy:
-          clever-app-id: app_41f798bc-7a32-4426-aa13-16d5a9326d30
+              only: master
+      - run-migrations:
+          name: run-migrations-staging
+          hasura-admin-secret: $HASURA_STAGING_ADMIN_SECRET
+          hasura-endpoint: $HASURA_STAGING_ENDPOINT
+          requires:
+            - ui-build
+            - server-install-dependencies
+          filters:
+            branches:
+              only: rewrite-back-for-dms
+      - run-migrations:
+          name: run-migrations-prod
+          hasura-admin-secret: $HASURA_ADMIN_SECRET
+          hasura-endpoint: $HASURA_ENDPOINT
           requires:
             - ui-build
             - server-install-dependencies
           context: clever-cloud-zenika
           filters:
             branches:
-              only: staging-deploy
+              ignore: /.*/
+            tags:
+              only: /v.+/
+      - deploy:
+          clever-app-id: app_41f798bc-7a32-4426-aa13-16d5a9326d30
+          requires:
+            - run-migrations-staging
+          context: clever-cloud-zenika
+          filters:
+            branches:
+              only: master
       - deploy:
           clever-app-id: app_69c5464d-594e-4c48-863b-07cd050dbfe4
           requires:
-            - ui-build
-            - server-install-dependencies
-          context: clever-cloud-zenika-dev
+            - run-migrations-prod
+          context: clever-cloud-zenika
           filters:
             branches:
-              only: rewrite-back-for-dms
-
+              ignore: /.*/
+            tags:
+              only: /v.+/
