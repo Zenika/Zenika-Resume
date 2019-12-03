@@ -111,23 +111,23 @@ workflows:
       - ui-install-dependencies:
           filters:
             branches:
-              only: master
+              only: rewrite-back-for-dms
       - server-install-dependencies:
           filters:
             branches:
-              only: master
+              only: rewrite-back-for-dms
       - ui-lint:
           requires:
             - ui-install-dependencies
           filters:
             branches:
-              only: master
+              only: rewrite-back-for-dms
       - ui-build:
           requires:
             - ui-install-dependencies
           filters:
             branches:
-              only: master
+              only: rewrite-back-for-dms
       - run-migrations:
           name: run-migrations-staging
           hasura-admin-secret: $HASURA_STAGING_ADMIN_SECRET
@@ -158,7 +158,7 @@ workflows:
           context: clever-cloud-zenika
           filters:
             branches:
-              only: master
+              only: rewrite-back-for-dms
       - deploy:
           clever-app-id: app_69c5464d-594e-4c48-863b-07cd050dbfe4
           requires:
