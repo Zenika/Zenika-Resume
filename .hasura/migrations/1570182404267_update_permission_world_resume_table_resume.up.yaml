@@ -2,7 +2,7 @@
     role: world
     table:
       name: resume
-      schema: resume
+      schema: public
   type: drop_insert_permission
 - args:
     permission:
@@ -21,5 +21,5 @@
     role: world
     table:
       name: resume
-      schema: resume
+      schema: public
   type: create_insert_permission

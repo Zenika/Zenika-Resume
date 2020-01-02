@@ -1,3 +1,0 @@
-- args:
-    sql: create schema "resume";
-  type: run_sql

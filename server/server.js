@@ -93,7 +93,7 @@ const executeQueryWithCallback = async (query, params, req, res, callback) => {
     const authorizationHeader = req.headers.authorization;
     const response = await fetchDms(query, params, authorizationHeader);
     if (response.errors) throw new Error(JSON.stringify(response.errors));
-    callback({ rows: response.data.zenika_resume_resume });
+    callback({ rows: response.data.resume });
   } catch (err) {
     console.error(err);
     res.status(500).json({ Error: err });
@@ -111,8 +111,8 @@ function buildDocumentFromQueryResult(data) {
 
 function findByPath(req, res, path) {
   executeQueryWithCallback(
-    `query zenika_resume_resume($path: String_comparison_exp) {
-      zenika_resume_resume(where: {path: $path}, order_by: {last_modified: desc}) {
+    `query resume($path: String_comparison_exp) {
+      resume(where: {path: $path}, order_by: {last_modified: desc}) {
         content
         metadata
         path
@@ -136,8 +136,8 @@ function findByPath(req, res, path) {
 
 function findByUuid(req, res, uuid) {
   executeQueryWithCallback(
-    `query zenika_resume_resume($uuid: uuid_comparison_exp) {
-      zenika_resume_resume(where: {uuid: $uuid}, order_by: {last_modified: desc}) {
+    `query resume($uuid: uuid_comparison_exp) {
+      resume(where: {uuid: $uuid}, order_by: {last_modified: desc}) {
         uuid
         content
         metadata
@@ -188,8 +188,8 @@ api.put("/documents/:uuid", jwtCheck, bodyParser.json(), async (req, res) => {
 
   executeQueryWithCallback(
     `
-      mutation upsertResume($resume: zenika_resume_resume_insert_input!) {
-        insert_zenika_resume_resume(objects: [$resume] on_conflict: {constraint: resume_pkey, update_columns: [content, path, version, last_modified, metadata]}) {
+      mutation upsertResume($resume: resume_insert_input!) {
+        insert_resume(objects: [$resume] on_conflict: {constraint: resume_pkey, update_columns: [content, path, version, last_modified, metadata]}) {
           affected_rows
         }
       }
@@ -229,7 +229,7 @@ api.get("/resumes/mine", jwtCheck, async (req, res) => {
     const { email } = await response.json();
     executeQueryWithCallback(
       `query ($email: String_comparison_exp) {
-              zenika_resume_resume(where: {metadata: $email}) {
+              resume(where: {metadata: $email}) {
                 last_modified: last_modified
                 metadata
                 path
@@ -260,7 +260,7 @@ api.get("/resumes", jwtCheck, (req, res) => {
   executeQueryWithCallback(
     `
     {
-      zenika_resume_resume(order_by: {last_modified: desc}) {
+      resume(order_by: {last_modified: desc}) {
         uuid
         metadata
         path
@@ -286,7 +286,7 @@ api.get("/resumes", jwtCheck, (req, res) => {
 api.get("/resumes/complete", authApi, (req, res) => {
   executeQueryWithCallback(
     `{
-      zenika_resume_resume {
+      resume {
         last_modified: last_modified
         metadata
         path

@@ -2,5 +2,5 @@
     role: world
     table:
       name: resume
-      schema: resume
+      schema: public
   type: drop_insert_permission

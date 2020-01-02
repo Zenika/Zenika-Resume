@@ -5,7 +5,7 @@
   "allowlist": [],
   "tables": [
     {
-      "table": { "schema": "resume", "name": "resume" },
+      "table": { "schema": "public", "name": "resume" },
       "is_enum": false,
       "configuration": {
         "custom_root_fields": {
