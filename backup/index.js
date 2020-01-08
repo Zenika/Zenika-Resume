@@ -2,7 +2,14 @@ const pg = require("pg");
 const fetch = require("node-fetch");
 const sjcl = require("sjcl");
 
-const pool = new pg.Pool({ ssl: true });
+const pool = new pg.Pool({
+  host: process.env.PGHOST,
+  database: process.env.PGDB,
+  port: process.env.PGPORT,
+  user: process.env.PGUSER,
+  password: process.env.PGPASSWORD,
+  ssl: true
+});
 
 const decrypt = (content, secret, events, state) => {
   try {
@@ -55,13 +62,13 @@ const insertResumeIntoDms = async resume => {
         query: `
           mutation (
             $content: String!, 
-            $last_modified: timestamp!, 
+            $last_modified: timestamptz!, 
             $metadata: String!, 
             $path: String!, 
             $uuid: uuid!, 
             $version: Int!
           ) {
-            insert_zenika_resume_resume(
+            insert_resume(
               objects: [
                 {
                   last_modified: $last_modified, 
@@ -119,8 +126,8 @@ const handleResumeList = data =>
       "SELECT id, uuid, content, metadata, path, version, last_modified FROM resume ORDER BY last_modified DESC",
       []
     );
-    console.log(`Query successful, got ${resumesData.length} rows`);
-    console.log("Inserting rows into the DMS ...")
+    console.log(`Query successful, got ${resumesData.rows.length} rows`);
+    console.log("Inserting rows into the DMS ...");
     await handleResumeList(resumesData);
     console.log("Migration finished !");
   } catch (err) {
