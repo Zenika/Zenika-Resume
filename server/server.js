@@ -5,6 +5,8 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const moment = require("moment");
 const fetch = require("node-fetch");
+const { hsts } = require("helmet");
+const express_enforces_ssl = require('express-enforces-ssl');
 
 const app = express();
 const api = express.Router();
@@ -54,6 +56,11 @@ app.set("etag", false);
 
 // middlewares
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(hsts());
+
+if(process.env.NODE_ENV === "production") {
+  app.use(express_enforces_ssl());
+}
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
