@@ -31,7 +31,7 @@ const jwtCheck = jwt({
 // config
 const staticPath = path.join(__dirname, "../build");
 
-const dmsUrl = process.env.DMS_URL;
+const hasuraGraphQlUrl = process.env.HASURA_GRAPHQL_URL;
 
 const basicAuth = require("basic-auth");
 
@@ -74,7 +74,7 @@ app.use(api);
 app.use(express.static(staticPath));
 
 const fetchDms = async (query, params, authorizationHeader) => {
-  const response = await fetch(dmsUrl, {
+  const response = await fetch(hasuraGraphQlUrl, {
     method: "POST",
     headers: {
       Authorization: authorizationHeader,
@@ -232,15 +232,17 @@ api.get("/resumes/mine", jwtCheck, async (req, res) => {
     }
     const { email } = await response.json();
     executeQueryWithCallback(
-      `query ($email: String_comparison_exp) {
-              resume(where: {metadata: $email}) {
-                last_modified: last_modified
-                metadata
-                path
-                uuid
-                version
-              }
-            }`,
+      `
+        query ($email: String_comparison_exp) {
+          resume(where: {metadata: $email}) {
+            last_modified: last_modified
+            metadata
+            path
+            uuid
+            version
+          }
+        }
+      `,
       { email: { _like: `%${email}%` } },
       req,
       res,

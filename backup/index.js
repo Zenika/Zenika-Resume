@@ -1,3 +1,9 @@
+/**
+ * This script reads resumes in the database, decrypts them, and them inserts them into Hasura
+ * It is meant as a one-time migration script when we transitioned to Hasura.
+ * Some env vars are expected, see .env.example.
+ */
+
 const pg = require("pg");
 const fetch = require("node-fetch");
 const sjcl = require("sjcl");
@@ -52,7 +58,7 @@ const executeQuery = (query, params) => {
 
 const insertResumeIntoDms = async resume => {
   try {
-    const response = await fetch(process.env.DMS_URL, {
+    const response = await fetch(process.env.HASURA_GRAPHQL_URL, {
       method: "POST",
       headers: {
         "X-Hasura-Admin-Secret": process.env.HASURA_ADMIN_SECRET || "key",
