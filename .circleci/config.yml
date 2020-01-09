@@ -56,7 +56,7 @@ jobs:
             - build
   run-migrations:
       docker:
-        - image: hasura/graphql-engine:v1.0.0-rc.1.cli-migrations
+        - image: hasura/graphql-engine:v1.0.0.cli-migrations
       parameters:
         hasura-admin-secret:
           type: string
@@ -130,8 +130,8 @@ workflows:
               only: /.*/
       - run-migrations:
           name: run-migrations-staging
-          hasura-admin-secret: $HASURA_STAGING_ADMIN_SECRET
-          hasura-endpoint: $HASURA_STAGING_ENDPOINT
+          hasura-admin-secret: $HASURA_ADMIN_SECRET_STAGING
+          hasura-endpoint: $HASURA_ENDPOINT_STAGING
           requires:
             - ui-build
             - server-install-dependencies
@@ -140,8 +140,8 @@ workflows:
               only: master
       - run-migrations:
           name: run-migrations-prod
-          hasura-admin-secret: $HASURA_ADMIN_SECRET
-          hasura-endpoint: $HASURA_ENDPOINT
+          hasura-admin-secret: $HASURA_ADMIN_SECRET_PROD
+          hasura-endpoint: $HASURA_ENDPOINT_PROD
           requires:
             - ui-build
             - server-install-dependencies
@@ -160,7 +160,7 @@ workflows:
             branches:
               only: master
       - deploy:
-          clever-app-id: app_69c5464d-594e-4c48-863b-07cd050dbfe4
+          clever-app-id: app_0f9c5731-aae3-4bf3-89c7-781157ec985a
           requires:
             - run-migrations-prod
           context: clever-cloud-zenika
