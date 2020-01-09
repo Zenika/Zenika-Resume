@@ -6,7 +6,7 @@ const path = require("path");
 const moment = require("moment");
 const fetch = require("node-fetch");
 const helmet = require("helmet");
-const redirectSSL = require("redirect-ssl");
+const redirectSsl = require("redirect-ssl");
 
 const app = express();
 const api = express.Router();
@@ -55,9 +55,9 @@ app.set("port", process.env.PORT || 3000);
 app.set("etag", false);
 
 // middlewares
-app.use(redirectSSL);
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(redirectSsl);
 app.use(helmet());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
