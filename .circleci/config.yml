@@ -82,9 +82,9 @@ jobs:
             cd ~/deploy
             cp -r ~/project/build build
             cp -r ~/project/server server
-            tar cfz ~/zenika-resume-${CIRCLE_TAG:${CIRCLE_SHA1}}.tar.gz ~/deploy
+            tar cfz ~/artifacts/zenika-resume-${CIRCLE_TAG:${CIRCLE_SHA1}}.tar.gz ~/deploy
       - store_artifacts:
-          path: ~/zenika-resume-${CIRCLE_TAG:${CIRCLE_SHA1}}.tar.gz
+          path: ~/artifacts
       # - run:
       #     name: Deploy to Clever Cloud
       #     working_directory: ~/deploy
