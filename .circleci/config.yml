@@ -33,15 +33,6 @@ jobs:
           paths:
             - server/node_modules
 
-  ui-lint:
-    docker:
-      - image: node:5.7
-    steps:
-      - checkout
-      - attach_workspace:
-          at: ./
-      - run: npm run lint
-
   ui-build:
     docker:
       - image: node:5.7
@@ -113,12 +104,6 @@ workflows:
             tags:
               only: /.*/
       - server-install-dependencies:
-          filters:
-            tags:
-              only: /.*/
-      - ui-lint:
-          requires:
-            - ui-install-dependencies
           filters:
             tags:
               only: /.*/
