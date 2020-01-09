@@ -45,6 +45,7 @@ jobs:
           root: ./
           paths:
             - build
+
   run-migrations:
       docker:
         - image: hasura/graphql-engine:v1.0.0.cli-migrations
@@ -63,6 +64,7 @@ jobs:
               cd .hasura
               hasura-cli migrate apply --admin-secret << parameters.hasura-admin-secret >> --endpoint << parameters.hasura-endpoint >>
               hasura-cli metadata apply --admin-secret << parameters.hasura-admin-secret >> --endpoint << parameters.hasura-endpoint >>
+
   deploy:
     docker:
       - image: circleci/node:lts
@@ -80,6 +82,9 @@ jobs:
             cd ~/deploy
             cp -r ~/project/build build
             cp -r ~/project/server server
+            tar cfz ~/zenika-resume-${CIRCLE_TAG:${CIRCLE_SHA1}}.tar.gz ~/deploy
+      - store_artifacts:
+          path: ~/zenika-resume-${CIRCLE_TAG:${CIRCLE_SHA1}}.tar.gz
       - run:
           name: Deploy to Clever Cloud
           working_directory: ~/deploy
