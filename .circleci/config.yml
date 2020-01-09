@@ -85,19 +85,19 @@ jobs:
             tar cfz ~/zenika-resume-${CIRCLE_TAG:${CIRCLE_SHA1}}.tar.gz ~/deploy
       - store_artifacts:
           path: ~/zenika-resume-${CIRCLE_TAG:${CIRCLE_SHA1}}.tar.gz
-      - run:
-          name: Deploy to Clever Cloud
-          working_directory: ~/deploy
-          command: |
-            git config --global user.email "dsi-ext@zenika.com"
-            git config --global user.name "Zenika"
-            git init
-            git add .
-            git commit -m "deploy!"
-            sudo npm install --global clever-tools
-            clever login --token=$CLEVER_TOKEN --secret=$CLEVER_SECRET
-            clever link << parameters.clever-app-id >>
-            clever deploy --force
+      # - run:
+      #     name: Deploy to Clever Cloud
+      #     working_directory: ~/deploy
+      #     command: |
+      #       git config --global user.email "dsi-ext@zenika.com"
+      #       git config --global user.name "Zenika"
+      #       git init
+      #       git add .
+      #       git commit -m "deploy!"
+      #       sudo npm install --global clever-tools
+      #       clever login --token=$CLEVER_TOKEN --secret=$CLEVER_SECRET
+      #       clever link << parameters.clever-app-id >>
+      #       clever deploy --force
 
 workflows:
   version: 2
@@ -144,11 +144,12 @@ workflows:
       - deploy:
           clever-app-id: app_41f798bc-7a32-4426-aa13-16d5a9326d30
           requires:
-            - run-migrations-staging
-          context: clever-cloud-zenika
-          filters:
-            branches:
-              only: master
+            - ui-build
+            - server-install-dependencies
+          # context: clever-cloud-zenika
+          #filters:
+          #  branches:
+          #    only: master
       - deploy:
           clever-app-id: app_0f9c5731-aae3-4bf3-89c7-781157ec985a
           requires:
