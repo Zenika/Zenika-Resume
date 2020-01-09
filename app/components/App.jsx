@@ -55,19 +55,6 @@ class App extends Component {
       });
     });
 
-    this.props.controller.on(Events.DECRYPTION_FAILED, (state) => {
-      const message = {
-        content: [
-          'We were unable to decrypt the document. Either the secret has not',
-          'been supplied or it is invalid.',
-          'We have redirected you to a new document.'
-        ].join(' '),
-        type: 'error'
-      };
-
-      this.loadAndRedirect(state.document, '/', message);
-    });
-
     this.props.controller.on(Events.DOCUMENT_NOT_FOUND, (state) => {
       const message = {
         content: [

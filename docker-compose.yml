@@ -1,24 +1,31 @@
-version: '2'
+version: "3.2"
 
 services:
-  zenika-resume:
-    build: .
-    environment:
-      HOST: 0.0.0.0
-      PORT: 3000
-      DATABASE_URL: postgres://postgres:zenikadev@postgres:5432/postgres
-    ports: 
-      - "3000:3000"
-    links:
-      - postgres
 
   postgres:
-    image: postgres
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: zenikadev
-      PGDATA: /data/postgres
-    volumes:
-       - ./database.sql:/docker-entrypoint-initdb.d/01-init.sql
+    image: postgres:12
     ports:
       - "5432:5432"
+
+  hasura:
+    image: hasura/graphql-engine:v1.0.0
+    ports:
+      - "8080:8080"
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:@postgres:5432/postgres
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
+      HASURA_GRAPHQL_ENABLED_APIS: "metadata,graphql"
+      HASURA_GRAPHQL_ADMIN_SECRET: hasura
+      # This is a public key, it's OK for it to be here
+      HASURA_GRAPHQL_JWT_SECRET: "{\"type\": \"RS512\", \"key\": \"-----BEGIN CERTIFICATE-----\nMIIC7jCCAdagAwIBAgIJA8atJv4gkIatMA0GCSqGSIb3DQEBCwUAMB4xHDAaBgNV\nBAMTE3plbmlrYS5ldS5hdXRoMC5jb20wHhcNMTcwMzA3MDkzNTEzWhcNMzAxMTE0\nMDkzNTEzWjAeMRwwGgYDVQQDExN6ZW5pa2EuZXUuYXV0aDAuY29tMIIBIjANBgkq\nhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxax68QL7odBGpRzWEIo6MQzvSMGCepPj\nSYCMA17Azz6MZUMwfMdi7VD6V1dnP9mMbgGWaj6MFF5tAIRywM/Q5rc6ZuYvGBz/\nTZWfDfX19EarFO9O6czsM/Bj8AYJDINk2hON26qtPMihykndG8LkJgH60STzKkhF\n2xY7leVSqNVuAz1tWaRM2+7N4HLasaY3M69tK23ZMSkJXyfnxW31x8JtZNciSEXH\nS0gf27oAdYt9sqYbGfOom2x7lrirA4FWQKakbkb8yZTxyS9FiqgkVPAhH6+PbAx7\nD+TxOMTPDfRqxutjdZT5l0KdXmr4NWotiwk1cbr0Am8pN/JTHLQiBQIDAQABoy8w\nLTAMBgNVHRMEBTADAQH/MB0GA1UdDgQWBBShEaJbf9n8lF7UC5OtJ6PE1O3QqzAN\nBgkqhkiG9w0BAQsFAAOCAQEABIxvy9+tDgAtNfeJRKXd7QCI+FV2SPcoXwmpNimH\nxqPkYBJEoIY8tAQkGFSiDHYUpRhSnD1iacyrKxRlLzAgSRTm7eM80565HT87V/1I\nGAehPXla928y5P6bmZceT1KgbZas3YflnhAadm5ohlplK+d92+LTZ7530OPwwtCn\nHr7a/00v2vKdzCfY9VvdVU6Dhjuap969i3/JjhQAMvr796ArLIJb7zBfr859bWRc\n9BnBDQZhRlrUCb/rVJHOElymWdSnONntfitNOyXq+yl6NBYLM6tjlEBuvTX9L+bS\nP/+nOPRq0kOnUkc5fQ7PMRCZKE/54IYnXYO24aVObbNN5Q==\n-----END CERTIFICATE-----\n\"}"
+    depends_on:
+      - postgres
+
+  zenika-resume:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      HASURA_GRAPHQL_URL: http://hasura:8080/v1/graphql
+    depends_on:
+      - hasura

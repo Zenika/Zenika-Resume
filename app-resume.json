@@ -1,0 +1,97 @@
+{
+  "application": {
+    "name": "zenika_resume"
+  },
+  "model": {
+    "tables": {
+      "resume": {
+        "columns": {
+          "content": {
+            "type": "text",
+            "constraints": {
+              "notNull": true
+            }
+          },
+          "metadata": {
+            "type": "text",
+            "constraints": {
+              "notNull": true
+            }
+          },
+          "uuid": {
+            "type": "uuid",
+            "constraints": {
+              "notNull": true,
+              "primaryKey": true
+            }
+          },
+          "path": {
+            "type": "text",
+            "constraints": {
+              "notNull": true
+            }
+          },
+          "version": {
+            "type": "integer",
+            "constraints": {
+              "notNull": true
+            }
+          },
+          "last_modified": {
+            "type": "timestamp",
+            "constraints": {
+              "notNull": true
+            }
+          }
+        },
+        "insert_permissions": [
+          {
+            "role": "world",
+            "comment": null,
+            "permission": {
+              "set": {},
+              "check": {},
+              "columns": [
+                "content",
+                "metadata",
+                "uuid",
+                "path",
+                "version",
+                "last_modified"
+              ]
+            }
+          }
+        ],
+        "select_permissions": [
+          {
+            "role": "world",
+            "comment": null,
+            "permission": {
+              "allow_aggregations": false,
+              "columns": [
+                "content",
+                "metadata",
+                "uuid",
+                "path",
+                "version",
+                "last_modified"
+              ],
+              "filter": {}
+            }
+          }
+        ],
+        "update_permissions": [
+          {
+            "role": "world",
+            "comment": null,
+            "permission": {
+              "set": {},
+              "columns": ["content", "last_modified", "path", "metadata", "version"],
+              "filter": {}
+            }
+          }
+        ]
+      }
+    }
+  }
+}

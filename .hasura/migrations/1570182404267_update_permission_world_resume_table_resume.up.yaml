@@ -1,0 +1,25 @@
+- args:
+    role: world
+    table:
+      name: resume
+      schema: public
+  type: drop_insert_permission
+- args:
+    permission:
+      check: {}
+      columns:
+      - version
+      - content
+      - metadata
+      - path
+      - last_modified
+      - uuid
+      localPresets:
+      - key: ""
+        value: ""
+      set: {}
+    role: world
+    table:
+      name: resume
+      schema: public
+  type: create_insert_permission

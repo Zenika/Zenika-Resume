@@ -1,0 +1,19 @@
+- args:
+    permission:
+      columns:
+      - version
+      - content
+      - metadata
+      - path
+      - last_modified
+      - uuid
+      filter: {}
+      localPresets:
+      - key: ""
+        value: ""
+      set: {}
+    role: world
+    table:
+      name: resume
+      schema: public
+  type: create_update_permission

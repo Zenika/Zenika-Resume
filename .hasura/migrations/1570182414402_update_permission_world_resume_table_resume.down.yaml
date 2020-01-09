@@ -1,0 +1,6 @@
+- args:
+    role: world
+    table:
+      name: resume
+      schema: public
+  type: drop_update_permission

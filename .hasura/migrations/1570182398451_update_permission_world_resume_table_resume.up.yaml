@@ -1,0 +1,17 @@
+- args:
+    permission:
+      allow_aggregations: false
+      columns:
+      - content
+      - last_modified
+      - metadata
+      - path
+      - uuid
+      - version
+      filter: {}
+      limit: null
+    role: world
+    table:
+      name: resume
+      schema: public
+  type: create_select_permission

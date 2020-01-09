@@ -68,7 +68,7 @@ auth.handleAuthentication().then(authResult => {
     'An authentication error occured. Click OK to retry.',
     'If this keeps happening, contact dreamlab@zenika.com.',
     'Give them the following message:',
-    err
+    JSON.stringify(err)
   ].join(' '));
   auth.login();
 });

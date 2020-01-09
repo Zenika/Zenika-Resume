@@ -2,53 +2,33 @@
 
 A Markdown resume editor based on Monod (see the original Monod readme below).
 
-## Running
-
-For running locally or to build the production artifacts, see Installation in the Monod readme.
-Keep it mind that running locally requires Node.js 5.7 (no more, no less).
-
-### Docker Compose
-
-`docker-compose up --build` should give you a running app on port 3000.
-
-### Docker
-
-Build the provided Dockerfile, then run with the port 3000 mapped, and the following environment variables.
-
-- `DATABASE_URL`: a connection string to a PostgreSQL instance; this is optional, withtout the app falls back to memory store
-- `USER_AUTH_API_USERNAME`: basic auth username for web api
-- `USER_AUTH_API_PASSWORD`: basic auth password for web api
-
 ## Production environment
 
-The app is hosted on Heroku. The authentication is provided by Auth0.
-Contact dsi@zenika.com to get access to either of those.
+The app is hosted on Clever Cloud. The authentication is provided by Auth0.
+Contact dreamlab@zenika.com to get access to either of those.
 
 ## Development 🛠
 
-### 🐳 Docker Compose
+> :information_source: Requires the Hasura CLI
 
-Start PostgreSQL instance using docker-compose.yml
+- Start attached services with `docker-compose up -d postgres hasura`
+- Apply database migrations with `cd .hasura && hasura migrate apply`
 
-```
-docker-compose up postgres
-```
+### Running locally
 
-### 🚜 Start server 
+> :warning: Requires Node.js 5.7, no more, no less
 
-Start your server with all environment variables
+- Start the back-end server with `HASURA_GRAPHQL_URL=http://localhost:8080 npm start`
+  - You may use nodemon to enable live reload using `HASURA_GRAPHQL_URL=http://localhost:8080 npx nodemon server/server.js`
+- Start the front-end server with `npm run dev`
 
-```
-DATABASE_URL=postgres://postgres:zenikadev@postgres:5432/postgres node server.js
-```
 
-### 🦄 Start front
+### Running using Docker Compose 🐳
 
-```
-npm run dev
-```
+- `docker-compose up --build -d`
 
-### 💻 Start coding !
+This builds and runs the production version of the app. You'll need to rebuild to see changes.
+
 
 # Monod
 

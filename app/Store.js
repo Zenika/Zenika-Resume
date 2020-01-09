@@ -1,11 +1,9 @@
 /* eslint consistent-return: 1 */
 import uuid from 'uuid';
-import sjcl from 'sjcl';
 import request from 'superagent';
 import Document from './Document';
 import { Config } from './Config';
 import Immutable from 'immutable';
-import DecryptUtils from './DecryptUtils';
 import auth from './auth';
 
 const { Promise } = global;
@@ -17,7 +15,6 @@ export const Events = {
   APP_IS_ONLINE: 'store:app-is-online',
   CHANGE: 'store:change',
   SYNCHRONIZE: 'store:synchronize',
-  DECRYPTION_FAILED: 'store:decryption_failed',
   CONFLICT: 'store:conflict',
   UPDATE_WITHOUT_CONFLICT: 'store:update-without-conflict',
   AUTHENTICATION_REQUIRED: 'store:authentication-required',
@@ -54,13 +51,9 @@ export default class Store {
    *   0. No ID => Events.NO_DOCUMENT_ID
    *   1. Looking into the local database first
    *     1.1. If it is not found => go to 2.
-   *     1.2. If found, we attempt to decrypt it
-   *       1.2.1 Decryption OK => document loaded + Events.CHANGE
-   *       1.2.2 Decryption KO => Events.DECRYPTION_FAILED
+   *     1.2. document loaded + Events.CHANGE
    *   2. Fetch the document on the server
-   *     2.1 Found => We attempt to decrypt it
-   *       2.1.1 Decryption OK => document loaded + Events.CHANGE
-   *       2.1.2 Decryption KO => Events.DECRYPTION_FAILED
+   *     2.1 Found => document loaded + Events.CHANGE
    *     2.2 Not found => Events.DOCUMENT_NOT_FOUND
    *
    */
@@ -99,9 +92,6 @@ export default class Store {
           });
       })
       .then((document) => {
-        return this
-          .decrypt(document.get('content'), secret)
-          .then((decryptedContent) => {
             let metadata = document.get('metadata');
             try {
               metadata = document.get('metadata').toJS();
@@ -111,7 +101,7 @@ export default class Store {
             this._setState({
               document: new Document({
                 uuid: document.get('uuid'),
-                content: decryptedContent,
+                content: document.get('content'),
                 metadata: metadata,
                 path: document.get('path'),
                 last_modified: document.get('last_modified'),
@@ -119,11 +109,9 @@ export default class Store {
               }),
               secret: secret
             });
+            return this._localPersist();
           });
-      })
-      .then(() => {
-        return this._localPersist();
-      });
+
   }
 
   /**
@@ -207,12 +195,9 @@ export default class Store {
           if (localDoc.hasNoLocalChanges()) {
             const secret = this.state.secret;
 
-            return this
-              .decrypt(serverDoc.content, secret)
-              .then((decryptedContent) => {
                 const updatedDocument = new Document({
                   uuid: serverDoc.get('uuid'),
-                  content: decryptedContent,
+                  content: serverDoc.get('content'),
                   path: serverDoc.get('path'),
                   metadata: serverDoc.get('metadata'),
                   last_modified: serverDoc.get('last_modified'),
@@ -228,10 +213,8 @@ export default class Store {
                     document: updatedDocument
                   }
                 );
-              })
-              .then(() => {
                 return this._localPersist();
-              });
+              }
           }
 
           // someone modified my document!
@@ -241,9 +224,6 @@ export default class Store {
           const forkSecret = this.buildSecret();
 
           // what we want is to create a fork
-          return this
-            .encrypt(localDoc.content, forkSecret)
-            .then((encryptedContent) => {
               const fork = new Document({
                 uuid: uuid.v4(),
                 content: localDoc.content,
@@ -252,20 +232,16 @@ export default class Store {
               });
 
               // persist fork'ed document
-              return this.localforage.setItem(
+              this.localforage.setItem(
                 fork.get('uuid'),
                 new Document({
                   uuid: fork.get('uuid'),
-                  content: encryptedContent,
+                  content: localDoc.content,
                   metadata: fork.metadata,
                   path: fork.path
                 }).toJS()
               )
-                .then(() => {
-                  return Promise.resolve(fork);
-                });
-            })
-            .then((fork) => {
+                
               // now, we can update the former doc with server content
               const former = new Document({
                 uuid: serverDoc.get('uuid'),
@@ -300,45 +276,26 @@ export default class Store {
 
                   return Promise.resolve(conflictState);
                 });
-            });
-        }
-      });
+        });
   }
 
-  // Pure / side-effect free method
-  decrypt(content, secret) {
-    return DecryptUtils.decrypt(content, secret, this.events, this.state);
-  }
-
-  // Pure / side-effect free method
-  encrypt(content, secret) {
-    secret = '';
-    return Promise.resolve(sjcl.encrypt(secret, content, { ks: 256 }));
-  }
 
   // Impure / side-effect free method
   _localPersist() {
     const doc = this.state.document;
-    const secret = this.state.secret;
 
-    return this
-      .encrypt(doc.get('content'), secret)
-      .then((encryptedContent) => {
-        return this.localforage.setItem(
+        this.localforage.setItem(
           doc.get('uuid'),
           new Document({
             uuid: doc.get('uuid'),
-            content: encryptedContent,
+            content: doc.get('content'),
             metadata: doc.get('metadata'),
             path: doc.get('path'),
             last_modified: doc.get('last_modified'),
             last_modified_locally: doc.get('last_modified_locally')
           }).toJS()
         );
-      })
-      .then(() => {
         return Promise.resolve(this.state);
-      });
   }
 
   // Impure / side-effect free method
@@ -346,16 +303,13 @@ export default class Store {
     const doc = this.state.document;
     const secret = this.state.secret;
 
-    return this
-      .encrypt(doc.get('content'), secret)
-      .then((encryptedContent) => {
           return request
             .put(`${this.endpoint}/documents/${doc.get('uuid')}`)
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json')
             .set('Authorization', `Bearer ${auth.accessToken}`)
             .send({
-              content: encryptedContent,
+              content: doc.get('content'),
               metadata: doc.get('metadata'),
               path: doc.get('path')
             })
@@ -379,8 +333,6 @@ export default class Store {
 
               return this._localPersist();
             });
-      }
-      );
   }
 
   _handleRequestSuccess(res) {

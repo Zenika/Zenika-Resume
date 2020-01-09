@@ -1,0 +1,163 @@
+version: 2.1
+
+jobs:
+  ui-install-dependencies:
+    docker:
+      - image: node:5.7
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-ui-dependencies-{{ checksum "package.json" }}
+            - v1-ui-dependencies-
+      - run:
+          name: Download UI dependencies
+          command: npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-ui-dependencies-{{ checksum "package.json" }}
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - node_modules
+
+  server-install-dependencies:
+    docker:
+      - image: circleci/node:lts
+    steps:
+      - checkout
+      - run: npm --prefix server ci
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - server/node_modules
+
+  ui-build:
+    docker:
+      - image: node:5.7
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ./
+      - run: npm run build
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - build
+
+  run-migrations:
+      docker:
+        - image: hasura/graphql-engine:v1.0.0.cli-migrations
+      parameters:
+        hasura-admin-secret:
+          type: string
+        hasura-endpoint:
+          type: string
+      steps:
+        - checkout
+        - attach_workspace:
+            at: ./
+        - run:
+            name: Run migrations
+            command: |
+              cd .hasura
+              hasura-cli migrate apply --admin-secret << parameters.hasura-admin-secret >> --endpoint << parameters.hasura-endpoint >>
+
+  deploy:
+    docker:
+      - image: circleci/node:lts
+    parameters:
+      clever-app-id:
+        type: string
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ./
+      - run:
+          name: Package deployment artifact
+          command: |
+            mkdir ~/deploy
+            cd ~/deploy
+            cp -r ~/project/build build
+            cp -r ~/project/server server
+            mkdir -p ~/artifacts
+            tar cfz ~/artifacts/zenika-resume-${CIRCLE_TAG:-${CIRCLE_SHA1}}.tar.gz ~/deploy
+      - store_artifacts:
+          path: ~/artifacts
+      - run:
+          name: Deploy to Clever Cloud
+          working_directory: ~/deploy
+          command: |
+            git config --global user.email "dsi-ext@zenika.com"
+            git config --global user.name "Zenika"
+            git init
+            git add .
+            git commit -m "deploy!"
+            sudo npm install --global clever-tools
+            clever login --token=$CLEVER_TOKEN --secret=$CLEVER_SECRET
+            clever link << parameters.clever-app-id >>
+            clever deploy --force
+
+workflows:
+  version: 2
+
+  deploy:
+    jobs:
+      - ui-install-dependencies:
+          filters:
+            tags:
+              only: /.*/
+      - server-install-dependencies:
+          filters:
+            tags:
+              only: /.*/
+      - ui-build:
+          requires:
+            - ui-install-dependencies
+          filters:
+            tags:
+              only: /.*/
+      - run-migrations:
+          name: run-migrations-staging
+          hasura-admin-secret: $HASURA_ADMIN_SECRET_STAGING
+          hasura-endpoint: $HASURA_ENDPOINT_STAGING
+          requires:
+            - ui-build
+            - server-install-dependencies
+          filters:
+            branches:
+              only: master
+      - run-migrations:
+          name: run-migrations-prod
+          hasura-admin-secret: $HASURA_ADMIN_SECRET_PROD
+          hasura-endpoint: $HASURA_ENDPOINT_PROD
+          requires:
+            - ui-build
+            - server-install-dependencies
+          context: clever-cloud-zenika
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /v.+/
+      - deploy:
+          name: deploy-staging
+          clever-app-id: app_41f798bc-7a32-4426-aa13-16d5a9326d30
+          requires:
+            - run-migrations-staging
+          context: clever-cloud-zenika
+          filters:
+            branches:
+              only: master
+      - deploy:
+          name: deploy-prod
+          clever-app-id: app_0f9c5731-aae3-4bf3-89c7-781157ec985a
+          requires:
+            - run-migrations-prod
+          context: clever-cloud-zenika
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /v.+/
