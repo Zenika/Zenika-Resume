@@ -142,6 +142,7 @@ workflows:
             tags:
               only: /v.+/
       - deploy:
+          name: deploy-staging
           clever-app-id: app_41f798bc-7a32-4426-aa13-16d5a9326d30
           requires:
             - ui-build
@@ -151,6 +152,7 @@ workflows:
           #  branches:
           #    only: master
       - deploy:
+          name: deploy-prod
           clever-app-id: app_0f9c5731-aae3-4bf3-89c7-781157ec985a
           requires:
             - run-migrations-prod
