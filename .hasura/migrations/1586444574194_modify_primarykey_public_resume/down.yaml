@@ -1,0 +1,6 @@
+- args:
+    sql: alter table "public"."resume" drop constraint "resume_pkey";
+  type: run_sql
+- sql: "alter table \"public\".\"resume\"\n    add constraint \"resume_pkey\" \n    primary
+    key ( \"uuid\" );"
+  type: run_sql
