@@ -3,6 +3,9 @@ FROM node:5.7 AS front
 WORKDIR /app
 COPY package.json .
 COPY package-lock.json .
+RUN mv /usr/local/lib/node_modules /usr/local/lib/node_modules.tmp \
+  && mv /usr/local/lib/node_modules.tmp /usr/local/lib/node_modules \
+  && npm install -g npm@3.10.10
 RUN npm install --quiet
 
 COPY app/ app/
