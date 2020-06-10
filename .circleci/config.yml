@@ -13,10 +13,10 @@ jobs:
       - run:
           name: Download UI dependencies
           command: |
-            npm install
             mv /usr/local/lib/node_modules /usr/local/lib/node_modules.tmp \
               && mv /usr/local/lib/node_modules.tmp /usr/local/lib/node_modules \
               && npm install -g npm@3.10.10
+            npm install
       - save_cache:
           paths:
             - node_modules
