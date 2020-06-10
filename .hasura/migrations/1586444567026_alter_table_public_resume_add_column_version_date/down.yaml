@@ -1,3 +1,5 @@
 - args:
-    sql: ALTER TABLE "public"."resume" DROP COLUMN "version_date";
+    sql: |-
+      ALTER TABLE "public"."resume"
+      DROP COLUMN "version_date";
   type: run_sql

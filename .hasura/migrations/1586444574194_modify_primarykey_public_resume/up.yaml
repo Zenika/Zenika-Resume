@@ -1,7 +1,10 @@
 - args:
-    sql: alter table "public"."resume" drop constraint "resume_pkey";
+    sql: |-
+      ALTER TABLE "public"."resume"
+      DROP CONSTRAINT "resume_pkey";
   type: run_sql
 - args:
-    sql: "alter table \"public\".\"resume\"\n    add constraint \"resume_pkey\" \n
-      \   primary key ( \"uuid\", \"version_date\" );"
+    sql: |-
+      ALTER TABLE public.resume ADD CONSTRAINT resume_pkey PRIMARY KEY (UUID,
+      version_date)
   type: run_sql
