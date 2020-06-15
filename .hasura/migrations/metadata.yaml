@@ -1,0 +1,95 @@
+functions: []
+remote_schemas: []
+query_collections: []
+allowlist: []
+version: 2
+tables:
+- table: latest_resume
+  is_enum: false
+  configuration:
+    custom_root_fields:
+      select: null
+      select_by_pk: null
+      select_aggregate: null
+      insert: null
+      update: null
+      delete: null
+    custom_column_names: {}
+  object_relationships: []
+  array_relationships: []
+  insert_permissions: []
+  select_permissions:
+  - role: world
+    comment: null
+    permission:
+      allow_aggregations: false
+      computed_fields: []
+      columns:
+      - uuid
+      - metadata
+      - content
+      - path
+      - version
+      - last_modified
+      - version_date
+      filter: {}
+  update_permissions: []
+  delete_permissions: []
+  event_triggers: []
+  computed_fields: []
+- table: resume
+  is_enum: false
+  configuration:
+    custom_root_fields:
+      select: null
+      select_by_pk: null
+      select_aggregate: null
+      insert: null
+      update: null
+      delete: null
+    custom_column_names: {}
+  object_relationships: []
+  array_relationships: []
+  insert_permissions:
+  - role: world
+    comment: null
+    permission:
+      set: {}
+      check: {}
+      columns:
+      - content
+      - metadata
+      - uuid
+      - path
+      - version
+      - last_modified
+  select_permissions:
+  - role: world
+    comment: null
+    permission:
+      allow_aggregations: false
+      computed_fields: []
+      columns:
+      - content
+      - last_modified
+      - metadata
+      - path
+      - uuid
+      - version
+      - version_date
+      filter: {}
+  update_permissions:
+  - role: world
+    comment: null
+    permission:
+      set: {}
+      columns:
+      - content
+      - last_modified
+      - path
+      - metadata
+      - version
+      filter: {}
+  delete_permissions: []
+  event_triggers: []
+  computed_fields: []

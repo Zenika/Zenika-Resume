@@ -1,0 +1,24 @@
+- args:
+    role: world
+    table:
+      name: resume
+      schema: public
+  type: drop_select_permission
+- args:
+    permission:
+      allow_aggregations: false
+      columns:
+      - content
+      - last_modified
+      - metadata
+      - path
+      - uuid
+      - version
+      - version_date
+      computed_fields: []
+      filter: {}
+    role: world
+    table:
+      name: resume
+      schema: public
+  type: create_select_permission

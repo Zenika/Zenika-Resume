@@ -116,7 +116,7 @@ function buildDocumentFromQueryResult(data) {
 function findByPath(req, res, path) {
   executeQueryWithCallback(
     `query resume($path: String_comparison_exp) {
-      resume(where: {path: $path}, order_by: {last_modified: desc}) {
+      resume: latest_resume(where: {path: $path}) {
         content
         metadata
         path
@@ -141,7 +141,7 @@ function findByPath(req, res, path) {
 function findByUuid(req, res, uuid) {
   executeQueryWithCallback(
     `query resume($uuid: uuid_comparison_exp) {
-      resume(where: {uuid: $uuid}, order_by: {last_modified: desc}) {
+      resume: latest_resume(where: {uuid: $uuid}) {
         uuid
         content
         metadata
@@ -232,17 +232,15 @@ api.get("/resumes/mine", jwtCheck, async (req, res) => {
     }
     const { email } = await response.json();
     executeQueryWithCallback(
-      `
-        query ($email: String_comparison_exp) {
-          resume(where: {metadata: $email}) {
-            last_modified: last_modified
-            metadata
-            path
-            uuid
-            version
-          }
+      `query ($email: String_comparison_exp) {
+        resume: latest_resume(where: {metadata: $email}) {
+          last_modified: last_modified
+          metadata
+          path
+          uuid
+          version
         }
-      `,
+      }`,
       { email: { _like: `%${email}%` } },
       req,
       res,
@@ -266,15 +264,14 @@ api.get("/resumes", jwtCheck, (req, res) => {
   executeQueryWithCallback(
     `
     {
-      resume(order_by: {last_modified: desc}) {
+      resume: latest_resume(order_by: {last_modified: desc}) {
         uuid
         metadata
         path
         version
         last_modified
       }
-    }
-    `,
+    }`,
     undefined,
     req,
     res,
@@ -292,7 +289,7 @@ api.get("/resumes", jwtCheck, (req, res) => {
 api.get("/resumes/complete", authApi, (req, res) => {
   executeQueryWithCallback(
     `{
-      resume {
+      resume: latest_resume {
         last_modified: last_modified
         metadata
         path
