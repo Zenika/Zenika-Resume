@@ -144,7 +144,7 @@ workflows:
           requires:
             - ui-build
             - server-install-dependencies
-          context: clever-cloud-zenika
+          context: clever-cloud2-zenika-dev
           filters:
             branches:
               ignore: /.*/
@@ -155,7 +155,7 @@ workflows:
           clever-app-id: app_41f798bc-7a32-4426-aa13-16d5a9326d30
           requires:
             - run-migrations-staging
-          context: clever-cloud-zenika
+          context: clever-cloud2-zenika-dev
           filters:
             branches:
               only: master
@@ -164,7 +164,7 @@ workflows:
           clever-app-id: app_0f9c5731-aae3-4bf3-89c7-781157ec985a
           requires:
             - run-migrations-prod
-          context: clever-cloud-zenika
+          context: clever-cloud2-zenika-dev
           filters:
             branches:
               ignore: /.*/
