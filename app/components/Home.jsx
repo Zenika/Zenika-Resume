@@ -5,7 +5,6 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
 
 import MyResumes from './home/MyResumes';
-import LastResumes from './home/LastResumes';
 
 const theme = createMuiTheme({
   palette: {
@@ -44,8 +43,6 @@ function Home(props) {
     <MuiThemeProvider theme={theme}>
       <div className={classNames(classes.layout, classes.cardGrid)}>
         <MyResumes></MyResumes>
-        <br/>
-        <LastResumes></LastResumes> 
       </div>
     </MuiThemeProvider>
   )
