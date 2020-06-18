@@ -10,10 +10,10 @@ import {
   IntlProvider,
   FormattedMessage,
 } from 'react-intl';
-import en from 'react-intl/locale-data/en';
-import fr from 'react-intl/locale-data/fr';
+// import en from 'react-intl/locale-data/en';
+// import fr from 'react-intl/locale-data/fr';
 
-addLocaleData([...en, ...fr]);
+// addLocaleData([...en, ...fr]);
 
 import Translations from '../Translations';
 import Header from './Header';

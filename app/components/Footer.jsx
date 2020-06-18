@@ -128,7 +128,7 @@ export default class Footer extends Component {
               return (
                 <li key={theme.name} className="theme-item">
                   <button onClick={() => this.props.changeTheme(theme)}>
-                    <img src={require(`../static/img/theme-${theme.name}.png`)} alt="default" />
+                    {/* <img src={require(`../static/img/theme-${theme.name}.png`)} alt="default" /> */}
                     <span>{theme.name} <i className="fa fa-info"></i></span>
                   </button>
                 </li>

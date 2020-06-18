@@ -1,27 +1,23 @@
 const { Promise } = global;
 
 export default () => {
-  return new Promise(resolve => {
-    require.ensure([], () => {
-      require('codemirror/mode/gfm/gfm');
-      require('codemirror/mode/dockerfile/dockerfile');
-      require('codemirror/mode/elm/elm');
-      require('codemirror/mode/gherkin/gherkin');
-      require('codemirror/mode/go/go');
-      require('codemirror/mode/javascript/javascript');
-      require('codemirror/mode/jinja2/jinja2');
-      require('codemirror/mode/jsx/jsx');
-      require('codemirror/mode/php/php');
-      require('codemirror/mode/properties/properties');
-      require('codemirror/mode/python/python');
-      require('codemirror/mode/ruby/ruby');
-      require('codemirror/mode/sass/sass');
-      require('codemirror/mode/shell/shell');
-      require('codemirror/mode/twig/twig');
-      require('codemirror/mode/xml/xml');
-      require('codemirror/mode/yaml/yaml');
-
-      resolve();
-    });
-  });
+  return Promise.all([
+      import('codemirror/mode/gfm/gfm'),
+      import('codemirror/mode/dockerfile/dockerfile'),
+      import('codemirror/mode/elm/elm'),
+      import('codemirror/mode/gherkin/gherkin'),
+      import('codemirror/mode/go/go'),
+      import('codemirror/mode/javascript/javascript'),
+      import('codemirror/mode/jinja2/jinja2'),
+      import('codemirror/mode/jsx/jsx'),
+      import('codemirror/mode/php/php'),
+      import('codemirror/mode/properties/properties'),
+      import('codemirror/mode/python/python'),
+      import('codemirror/mode/ruby/ruby'),
+      import('codemirror/mode/sass/sass'),
+      import('codemirror/mode/shell/shell'),
+      import('codemirror/mode/twig/twig'),
+      import('codemirror/mode/xml/xml'),
+      import('codemirror/mode/yaml/yaml'),
+  ]);
 };

@@ -7,8 +7,8 @@ import {
   IntlProvider,
   FormattedMessage,
 } from 'react-intl';
-import en from 'react-intl/locale-data/en';
-import fr from 'react-intl/locale-data/fr';
+// import en from 'react-intl/locale-data/en';
+// import fr from 'react-intl/locale-data/fr';
 import { Events } from '../Store';
 import Document from '../Document';
 import Translations from '../Translations';
@@ -21,7 +21,7 @@ import MessageBoxes from './MessageBox';
 import auth, { redirectToLogin } from '../auth';
 
 const { object, string } = PropTypes;
-addLocaleData([...en, ...fr]);
+// addLocaleData([...en, ...fr]);
 
 class App extends Component {
   constructor(props, context) {

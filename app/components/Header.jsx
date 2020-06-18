@@ -17,6 +17,8 @@ import InputIcon from '@material-ui/icons/Input';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 
+import logo from '../static/img/logo.png';
+
 import auth from '../auth';
 
 const styles = theme => ({
@@ -96,7 +98,7 @@ class Header extends Component {
           <Toolbar className={this.classes.toolBar}>
             <Link to={`/`}>
               <Typography variant="title" color="inherit">
-                <img height="50" src="static/img/logo.png" alt="" className={this.classes.logo} /> Zenika Resumes 📑
+                <img height="50" src={logo} alt="" className={this.classes.logo} /> Zenika Resumes 📑
             </Typography>
             </Link>
             <Typography variant="title" color="inherit">

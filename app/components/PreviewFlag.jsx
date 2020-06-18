@@ -27,7 +27,6 @@ class PreviewChunk extends Component {
       this.props.markdownIt.options,
       this.props.markdownItEnv
     );
-    html = this.props.emojione.toImage(html);
 
     return {
       __html: html
@@ -46,7 +45,6 @@ class PreviewChunk extends Component {
 PreviewChunk.propTypes = {
   key: string,
   markdownIt: object.isRequired,
-  emojione: object.isRequired,
   chunk: array.isRequired,
   markdownItEnv: object.isRequired
 };
@@ -63,7 +61,7 @@ export default class PreviewFlag {
     return data;
   }
 
-  generateHeader(chunks, i, contentDescr, contentExp, markdownItEnv, markdownIt, emojione) {
+  generateHeader(chunks, i, contentDescr, contentExp, markdownItEnv, markdownIt) {
     let description = [];
     let chunk = chunks[++i];
 
@@ -91,7 +89,7 @@ export default class PreviewFlag {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  generateSection(chunks, i, isFirstPage, contentDescr, contentExp, markdownItEnv, markdownIt, emojione) {
+  generateSection(chunks, i, isFirstPage, contentDescr, contentExp, markdownItEnv, markdownIt) {
     let experiences = [];
     let chunk = chunks[++i];
 
@@ -127,14 +125,13 @@ export default class PreviewFlag {
     return chunks.map((chunk, index) => this.buildPreview('metadata-' + index, chunk, this.markdownItEnv))
   }
 
-  generate(chunks, contentDescr, contentExp, markdownItEnv, htmlData, markdownIt, emojione) {
+  generate(chunks, contentDescr, contentExp, markdownItEnv, htmlData, markdownIt) {
     let experiences = undefined;
     let description = undefined;
     let isFirstPage = true;
 
     this.markdownItEnv = markdownItEnv;
     this.markdownIt = markdownIt;
-    this.emojione = emojione;
 
     htmlData.description = this.buildHTML(htmlData.description);
     htmlData.column1 = this.buildHTML(htmlData.column1);
@@ -145,12 +142,12 @@ export default class PreviewFlag {
       var chunk = chunks[i];
 
       if (this.hasRule(chunk, '--expertise-start')) {
-        i = this.generateHeader(chunks, i, contentDescr, contentExp, markdownItEnv, markdownIt, emojione);
+        i = this.generateHeader(chunks, i, contentDescr, contentExp, markdownItEnv, markdownIt);
         continue;
       }
 
       if (this.hasRule(chunk, '--section-start')) {
-        i = this.generateSection(chunks, i, isFirstPage, contentDescr, contentExp, markdownItEnv, markdownIt, emojione);
+        i = this.generateSection(chunks, i, isFirstPage, contentDescr, contentExp, markdownItEnv, markdownIt);
         continue;
       }
 

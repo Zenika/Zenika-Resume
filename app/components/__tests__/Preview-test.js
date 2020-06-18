@@ -1,7 +1,6 @@
 import React from 'react';
 import { mount, shallow, render } from 'enzyme';
 import { expect } from 'chai';
-import emojione from 'emojione';
 import hljs from 'highlight.js';
 import mdit from 'markdown-it';
 
@@ -33,8 +32,7 @@ describe('<Preview />', () => {
           mditSup,
           mditMark,
         ],
-        hljs: hljs,
-        emojione: emojione
+        hljs: hljs
       });
     };
   });

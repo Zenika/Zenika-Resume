@@ -1,21 +1,18 @@
 const { Promise } = global;
 
-export default () => {
-  return new Promise(resolve => {
-    require.ensure([], () => {
-      require('highlight.js/styles/zenburn.css');
-
-      resolve({
-        hljs: require('highlight.js'),
-        markdownIt: require('markdown-it'),
-        markdownItPlugins: [
-          require('markdown-it-fontawesome'),
-          require('markdown-it-modify-token'),
-          require('markdown-it-sup'),
-          require('markdown-it-mark'),
-        ],
-        emojione: require('emojione')
-      });
-    });
-  });
+export default async () => {
+  const [hljs,markdownIt, ...markdownItPlugins] = await Promise.all([
+    import("highlight.js"),
+    // import('highlight.js/styles/zenburn.css'),
+    import("markdown-it"),
+    import('markdown-it-fontawesome'),
+    import('markdown-it-modify-token'),
+    import('markdown-it-sup'),
+    import('markdown-it-mark'),
+  ])
+  return {
+    hljs,
+    markdownIt,
+    markdownItPlugins
+  }
 };

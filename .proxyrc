@@ -1,0 +1,8 @@
+{
+  "/resumes": {
+    target: "http://localhost:3001",
+  },
+  "/documents": {
+    target: "http://localhost:3001",
+  }
+}

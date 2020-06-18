@@ -8,3 +8,5 @@
 .DS_Store
 conf-google.js
 .env
+.parcel-cache/
+dist/

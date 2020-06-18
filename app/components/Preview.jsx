@@ -7,7 +7,7 @@ import {Templates} from './TemplateForm';
 import grayMatter from 'gray-matter';
 import PreviewFlag from './PreviewFlag';
 
-import 'emojione/assets/sprites/emojione.sprites.css';
+// import 'emojione/assets/sprites/emojione.sprites.css';
 
 const {array, func, number, object, string} = PropTypes;
 
@@ -52,9 +52,9 @@ export default class Preview extends Component {
         this.markdownIt.use(plugin);
       });
 
-      this.emojione = deps.emojione;
-      this.emojione.ascii = true;
-      this.emojione.sprites = true;
+      // this.emojione = deps.emojione;
+      // this.emojione.ascii = true;
+      // this.emojione.sprites = true;
 
       this.forceUpdate();
     });
@@ -167,7 +167,7 @@ export default class Preview extends Component {
       contentExp = [];
       contentDescr = [];
 
-      new PreviewFlag().generate(chunks, contentDescr, contentExp, markdownItEnv, htmlData, this.markdownIt, this.emojione);
+      new PreviewFlag().generate(chunks, contentDescr, contentExp, markdownItEnv, htmlData, this.markdownIt);
     }
     let page = undefined;
     // Compile selected template with given data
