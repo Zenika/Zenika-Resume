@@ -155,7 +155,7 @@ function findByPathForVersionDate(req, res, path, version_date) {
     res,
     function(data) {
       if (data.rows.length < 1) {
-        findByUuid(req, res, path);
+        res.status(404).json();
       } else {
         data.uuid = "";
         res.status(200).json(buildDocumentFromQueryResult(data));
@@ -192,11 +192,11 @@ function findByUuid(req, res, uuid) {
 // API
 api.get("/documents/:uuid", jwtCheck, (req, res) => {
   const uuid = req.params.uuid;
-  const { version_date } = req.query;
-  if (!version_date) {
+  const { version_date :versionDate } = req.query;
+  if (!versionDate) {
     findByPath(req, res, uuid);
   } else {
-    findByPathForVersionDate(req, res, uuid, version_date);
+    findByPathForVersionDate(req, res, uuid, versionDate);
   }
 });
 
