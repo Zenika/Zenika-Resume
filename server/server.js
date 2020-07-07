@@ -131,7 +131,31 @@ function findByPath(req, res, path) {
       if (data.rows.length < 1) {
         findByUuid(req, res, path);
       } else {
-        data.uuid = "";
+        res.status(200).json(buildDocumentFromQueryResult(data));
+      }
+    }
+  );
+}
+
+function findByPathForVersionDate(req, res, path, versionDate) {
+  executeQueryWithCallback(
+    `query resume($path: String_comparison_exp, $version_date: date_comparison_exp) {
+      resume(where: {path: $path, version_date: $version_date}) {
+        content
+        metadata
+        path
+        version
+        last_modified
+      }
+    }
+    `,
+    { path: { _eq: path }, version_date: { _eq: versionDate} },
+    req,
+    res,
+    function(data) {
+      if (data.rows.length < 1) {
+        res.status(404).json();
+      } else {
         res.status(200).json(buildDocumentFromQueryResult(data));
       }
     }
@@ -166,7 +190,12 @@ function findByUuid(req, res, uuid) {
 // API
 api.get("/documents/:uuid", jwtCheck, (req, res) => {
   const uuid = req.params.uuid;
-  findByPath(req, res, uuid);
+  const { version_date :versionDate } = req.query;
+  if (!versionDate) {
+    findByPath(req, res, uuid);
+  } else {
+    findByPathForVersionDate(req, res, uuid, versionDate);
+  }
 });
 
 api.put("/documents/:uuid", jwtCheck, bodyParser.json(), async (req, res) => {
