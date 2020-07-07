@@ -131,14 +131,13 @@ function findByPath(req, res, path) {
       if (data.rows.length < 1) {
         findByUuid(req, res, path);
       } else {
-        data.uuid = "";
         res.status(200).json(buildDocumentFromQueryResult(data));
       }
     }
   );
 }
 
-function findByPathForVersionDate(req, res, path, version_date) {
+function findByPathForVersionDate(req, res, path, versionDate) {
   executeQueryWithCallback(
     `query resume($path: String_comparison_exp, $version_date: date_comparison_exp) {
       resume(where: {path: $path, version_date: $version_date}) {
@@ -150,14 +149,13 @@ function findByPathForVersionDate(req, res, path, version_date) {
       }
     }
     `,
-    { path: { _eq: path }, version_date: { _eq: version_date} },
+    { path: { _eq: path }, version_date: { _eq: versionDate} },
     req,
     res,
     function(data) {
       if (data.rows.length < 1) {
         res.status(404).json();
       } else {
-        data.uuid = "";
         res.status(200).json(buildDocumentFromQueryResult(data));
       }
     }
