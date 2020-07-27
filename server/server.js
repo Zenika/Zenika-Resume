@@ -139,8 +139,14 @@ function findByPath(req, res, path) {
 
 function findByPathForVersionDate(req, res, path, versionDate) {
   executeQueryWithCallback(
-    `query resume($path: String_comparison_exp, $version_date: date_comparison_exp) {
-      resume(where: {path: $path, version_date: $version_date}) {
+    `query resume($path: String, $version_date: date) {
+      resume(
+        where: {
+          path: { _eq: $path }
+          version_date: { _lte: $version_date }
+        }
+        order_by: { version_date: desc }
+      ) {
         content
         metadata
         path
@@ -149,7 +155,10 @@ function findByPathForVersionDate(req, res, path, versionDate) {
       }
     }
     `,
-    { path: { _eq: path }, version_date: { _eq: versionDate} },
+    { 
+      path, 
+      version_date: versionDate 
+    },
     req,
     res,
     function(data) {
