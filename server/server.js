@@ -115,8 +115,14 @@ function buildDocumentFromQueryResult(data) {
 
 function findByPath(req, res, path) {
   executeQueryWithCallback(
-    `query resume($path: String_comparison_exp) {
-      resume: latest_resume(where: {path: $path}) {
+    `query resume($path: String) {
+      resume: latest_resume(
+        where: {
+          path: { _eq: $path }
+        }
+        order_by: { version_date: desc }
+        limit: 1
+      ) {
         content
         metadata
         path
@@ -124,7 +130,7 @@ function findByPath(req, res, path) {
         last_modified
       }
     }`,
-    { path: { _eq: path } },
+    { path },
     req,
     res,
     function(data) {
