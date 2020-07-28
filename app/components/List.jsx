@@ -166,8 +166,8 @@ class ListAll extends Component {
                         </Link>
                       </TableCell>
                       <TableCell>
-                        <Link className={this.classes.link}  to={`app/${resume.path}`}>
-                          {resume.path}
+                        <Link className={this.classes.link}  to={`app/${resume.uuid}/view`}>
+                          {resume.uuid}
                         </Link>
                       </TableCell>
                       <TableCell>

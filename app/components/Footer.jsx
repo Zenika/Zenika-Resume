@@ -7,8 +7,6 @@ import { Config } from './../Config';
 import {
   FormattedMessage,
 } from 'react-intl';
-const buildPath = require('../../build-path');
-
 
 const { string, func } = PropTypes;
 
@@ -51,21 +49,6 @@ export default class Footer extends Component {
     });
   }
 
-  getPath() {
-    let path = '';
-    if (this.props.path) {
-      path = this.props.path;
-    }
-    else if (this.props.metadata) {
-      if (this.props.metadata.firstname) {
-        path = buildPath(`${this.props.metadata.firstname} ${this.props.metadata.name} ${this.props.metadata.agency} ${this.props.metadata.lang}`);
-      } else {
-        path = buildPath(this.props.metadata.name);
-      }
-    }
-    return path;
-  }
-
   render() {
     return (
       <footer className="main">
@@ -77,9 +60,9 @@ export default class Footer extends Component {
         </div>
         <a className="btn" onClick={this.showHelp}><i className="fa fa-question-circle-o" aria-hidden="true"></i><FormattedMessage id="help" /></a>
         <Sync />
-        <span className="viewLink"><FormattedMessage id="read" />
-          <Link to={`/app/${this.getPath()}`}>
-            {this.getPath()}
+        <span className="viewLink">
+          <Link to={`/app/${this.props.uuid}/view`}>
+            <FormattedMessage id="read" />
           </Link>
         </span>
         <span className="viewLink">
