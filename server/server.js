@@ -11,8 +11,6 @@ const redirectSsl = require("redirect-ssl");
 const app = express();
 const api = express.Router();
 
-const buildPath = require("./build-path");
-
 const jwt = require("express-jwt");
 const jwks = require("jwks-rsa");
 
@@ -113,30 +111,6 @@ function buildDocumentFromQueryResult(data) {
   return data;
 }
 
-function findByPath(req, res, path) {
-  executeQueryWithCallback(
-    `query resume($path: String_comparison_exp) {
-      resume: latest_resume(where: {path: $path}) {
-        content
-        metadata
-        path
-        version
-        last_modified
-      }
-    }`,
-    { path: { _eq: path } },
-    req,
-    res,
-    function(data) {
-      if (data.rows.length < 1) {
-        findByUuid(req, res, path);
-      } else {
-        res.status(200).json(buildDocumentFromQueryResult(data));
-      }
-    }
-  );
-}
-
 function findByUuidForVersionDate(req, res, uuid, versionDate) {
   executeQueryWithCallback(
     `query resume($uuid: uuid, $version_date: date) {
@@ -223,12 +197,6 @@ api.put("/documents/:uuid", jwtCheck, bodyParser.json(), async (req, res) => {
   document.metadata = JSON.stringify(req.body.metadata);
   document.last_modified = moment().format("YYYY-MM-DD HH:mm:ss");
 
-  const path = req.body.metadata.firstname
-    ? buildPath(
-        `${req.body.metadata.firstname} ${req.body.metadata.name} ${req.body.metadata.agency} ${req.body.metadata.lang}`
-      )
-    : buildPath(req.body.metadata.name + "");
-
   executeQueryWithCallback(
     `
       mutation upsertResume($resume: resume_insert_input!) {
@@ -242,7 +210,7 @@ api.put("/documents/:uuid", jwtCheck, bodyParser.json(), async (req, res) => {
         content: document.content,
         metadata: document.metadata,
         uuid,
-        path,
+        path: null,
         version: 1,
         last_modified: document.last_modified
       }

@@ -18,7 +18,6 @@ COPY app/ app/
 COPY lib lib/
 COPY webpack.config.js .
 COPY app.json .
-COPY build-path.js .
 COPY .babelrc .
 RUN npm run build
 
@@ -30,7 +29,6 @@ COPY server/package.json .
 COPY server/package-lock.json .
 RUN npm ci
 COPY server/server.js .
-COPY server/build-path.js .
 
 
 EXPOSE 3000
