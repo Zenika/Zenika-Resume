@@ -114,9 +114,12 @@ class App extends Component {
       );
     });
 
-    this.props.controller.dispatch('action:init', {
+    const isViewing = window.location.hash.includes("/view")
+    const versionDate = (window.location.hash.match(/version_date=(\d\d\d\d-\d\d-\d\d)/) || [])[1]
+
+    this.props.controller.dispatch('action:init', { 
       id: window.location.hash.match(/\/app\/([^\/]+)($|\/)/)[1],
-      secret: ''
+      versionDate: isViewing ? versionDate : undefined
     });
   }
 
@@ -326,6 +329,7 @@ class App extends Component {
             toggleLocale={this.toggleLocale}
             changeTheme={this.changeTheme}
             currentLocale={locale}
+            sync={!viewMode}
           />
         </div>
       </IntlProvider>

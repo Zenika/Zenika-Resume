@@ -59,7 +59,7 @@ export default class Footer extends Component {
           <a href="https://github.com/TailorDev/monod">Monod</a>
         </div>
         <a className="btn" onClick={this.showHelp}><i className="fa fa-question-circle-o" aria-hidden="true"></i><FormattedMessage id="help" /></a>
-        <Sync />
+        {this.props.sync ? <Sync /> : null}
         <span className="viewLink">
           <Link to={`/app/${this.props.uuid}/view`}>
             <FormattedMessage id="read" />

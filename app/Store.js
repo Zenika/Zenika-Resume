@@ -57,60 +57,52 @@ export default class Store {
    *     2.2 Not found => Events.DOCUMENT_NOT_FOUND
    *
    */
-  load(id, secret) {
+  load(id, versionDate) {
     if (!id) {
       this.events.emit(Events.NO_DOCUMENT_ID, this.state);
       return Promise.resolve(this.state);
     }
 
-    return this
-      .localforage
-      .getItem(id)
+    let url = `${this.endpoint}/documents/${id}`
+    if (versionDate) {
+      url += `?version_date=${versionDate}`
+    }
+
+    return request
+      .get(url)
+      .set('Accept', 'application/json')
+      .set('Content-Type', 'application/json')
+      .set('Authorization', `Bearer ${auth.accessToken}`)
+      .then(this._handleRequestSuccess.bind(this))
+      .catch(this._handleRequestError.bind(this))
+      .then((res) => {
+        return Promise.resolve(new Document({
+          uuid: res.body.uuid,
+          content: res.body.content,
+          metadata: res.body.metadata,
+          path: res.body.path,
+          last_modified: res.body.last_modified
+        }));
+      })
       .then((document) => {
-        if (null === document) {
-          return Promise.reject(new Error('document not found'));
+        let metadata = document.get('metadata');
+        try {
+          metadata = document.get('metadata').toJS();
+        } catch (err) {
         }
 
-        return Promise.resolve(Immutable.fromJS(document));
-      })
-      .catch(() => {
-        return request
-          .get(`${this.endpoint}/documents/${id}`)
-          .set('Accept', 'application/json')
-          .set('Content-Type', 'application/json')
-          .set('Authorization', `Bearer ${auth.accessToken}`)
-          .then(this._handleRequestSuccess.bind(this))
-          .catch(this._handleRequestError.bind(this))
-          .then((res) => {
-            return Promise.resolve(new Document({
-              uuid: res.body.uuid,
-              content: res.body.content,
-              metadata: res.body.metadata,
-              path: res.body.path,
-              last_modified: res.body.last_modified
-            }));
-          });
-      })
-      .then((document) => {
-            let metadata = document.get('metadata');
-            try {
-              metadata = document.get('metadata').toJS();
-            } catch (err) {
-            }
-
-            this._setState({
-              document: new Document({
-                uuid: document.get('uuid'),
-                content: document.get('content'),
-                metadata: metadata,
-                path: document.get('path'),
-                last_modified: document.get('last_modified'),
-                last_modified_locally: document.get('last_modified_locally')
-              }),
-              secret: secret
-            });
-            return this._localPersist();
-          });
+        this._setState({
+          document: new Document({
+            uuid: document.get('uuid'),
+            content: document.get('content'),
+            metadata: metadata,
+            path: document.get('path'),
+            last_modified: document.get('last_modified'),
+            last_modified_locally: document.get('last_modified_locally')
+          })
+        });
+        return this._localPersist();
+      });
 
   }
 
@@ -282,20 +274,8 @@ export default class Store {
 
   // Impure / side-effect free method
   _localPersist() {
-    const doc = this.state.document;
-
-        this.localforage.setItem(
-          doc.get('uuid'),
-          new Document({
-            uuid: doc.get('uuid'),
-            content: doc.get('content'),
-            metadata: doc.get('metadata'),
-            path: doc.get('path'),
-            last_modified: doc.get('last_modified'),
-            last_modified_locally: doc.get('last_modified_locally')
-          }).toJS()
-        );
-        return Promise.resolve(this.state);
+    // I've disabled local persistence, yolo!
+    return Promise.resolve(this.state);
   }
 
   // Impure / side-effect free method
