@@ -2,7 +2,7 @@ import './scss/main.scss';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Route, Redirect, HashRouter } from 'react-router-dom';
+import { HashRouter as Router, Route } from 'react-router-dom';
 import { EventEmitter } from 'events';
 import localforage from 'localforage';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
@@ -42,9 +42,8 @@ const theme = createMuiTheme({
 
 auth.handleAuthentication().then(authResult => {
   if (authResult) {
-    window.location.hash = '';
     ReactDOM.render(
-      <HashRouter>
+      <Router>
         <MuiThemeProvider theme={theme}>
           <Header />
           <Route path="/app" component={() => <App key={Date.now()} version={appVersion} controller={controller} />} />
@@ -54,7 +53,7 @@ auth.handleAuthentication().then(authResult => {
           <Route exact path="/404" component={Page404} />
           <Route exact path="/bye" component={Bye} />
         </MuiThemeProvider>
-      </HashRouter>,
+      </Router>,
       appElement
     );
   } else {

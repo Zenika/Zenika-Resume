@@ -19,8 +19,8 @@ export default class Controller {
     this.events.emit(name, data);
   }
 
-  onInit({ id, secret }) {
-    this.store.load(id, secret);
+  onInit({ id, versionDate }) {
+    this.store.load(id, versionDate);
   }
 
   onUpdate(document) {

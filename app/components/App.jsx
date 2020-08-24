@@ -114,9 +114,12 @@ class App extends Component {
       );
     });
 
-    this.props.controller.dispatch('action:init', {
-      id: window.location.hash.slice(6),
-      secret: ''
+    const isViewing = window.location.hash.includes("/view")
+    const versionDate = (window.location.hash.match(/version_date=(\d\d\d\d-\d\d-\d\d)/) || [])[1]
+
+    this.props.controller.dispatch('action:init', { 
+      id: window.location.hash.match(/\/app\/([^\/]+)($|\/)/)[1],
+      versionDate: isViewing ? versionDate : undefined
     });
   }
 
@@ -136,7 +139,7 @@ class App extends Component {
         doc.get('uuid') !== window.history.state.uuid)
     ) {
       if (uri.indexOf('undefined') == -1) {
-        window.history.pushState({ uuid: doc.get('uuid') }, `Zenika Resume - ${doc.get('uuid')}`, uri);
+        window.history.pushState({ uuid: doc.get('uuid') }, `Zenika Resume - ${doc.get('uuid')}`);
       }
     }
   }
@@ -198,7 +201,7 @@ class App extends Component {
     const locale = this.state.userPref.locale;
     const messages = Translations[locale];
 
-    if (!this.state.document.uuid) {
+    if (!this.state.document.uuid || window.location.hash.includes("/view")) {
       viewMode = 'viewMode';
     }
 
@@ -322,10 +325,11 @@ class App extends Component {
           <Footer
             version={this.props.version}
             metadata={this.state.document.get('metadata')}
-            path={this.state.document.get('path')}
+            uuid={this.state.document.get('uuid')}
             toggleLocale={this.toggleLocale}
             changeTheme={this.changeTheme}
             currentLocale={locale}
+            sync={!viewMode}
           />
         </div>
       </IntlProvider>

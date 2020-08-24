@@ -53,7 +53,7 @@ function ResumeCard(props) {
                     </Typography>
                 </CardContent>
                 <CardActions className={classes.cardActions}>
-                    <Link to={`app/${data.path}`}>
+                    <Link to={`app/${data.uuid}/view`}>
                         <Button variant="contained" color="primary">
                             View
                         </Button>
