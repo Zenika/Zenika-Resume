@@ -49,7 +49,7 @@ auth.handleAuthentication().then(authResult => {
           <Route path="/app" component={() => <App key={Date.now()} version={appVersion} controller={controller} />} />
           <Route path="/list" component={List} />
           <Route path="/help" component={Help} />
-          <Route path="/" component={Home} />
+          <Route exact path="/" component={Home} />
           <Route exact path="/404" component={Page404} />
           <Route exact path="/bye" component={Bye} />
         </MuiThemeProvider>
