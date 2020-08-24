@@ -35,6 +35,7 @@ class Auth {
         if (err) {
           reject(err);
         } else {
+          window.location.hash = '';
           if (authResult && authResult.accessToken && authResult.idToken) {
             this.setSession(authResult);
           }
