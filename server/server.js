@@ -210,7 +210,7 @@ api.put("/documents/:uuid", jwtCheck, bodyParser.json(), async (req, res) => {
         content: document.content,
         metadata: document.metadata,
         uuid,
-        path: null,
+        path: "",
         version: 1,
         last_modified: document.last_modified
       }
