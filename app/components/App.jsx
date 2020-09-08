@@ -115,10 +115,11 @@ class App extends Component {
     });
 
     const isViewing = window.location.hash.includes("/view")
-    const versionDate = (window.location.hash.match(/version_date=(\d\d\d\d-\d\d-\d\d)/) || [])[1]
+    const [, versionDate] = window.location.hash.match(/version_date=(\d\d\d\d-\d\d-\d\d)/) || []
+    const [, id] = window.location.hash.match(/\/app\/([^\/]+)($|\/)/) || []
 
     this.props.controller.dispatch('action:init', { 
-      id: window.location.hash.match(/\/app\/([^\/]+)($|\/)/)[1],
+      id: id || window.location.hash.slice(6),
       versionDate: isViewing ? versionDate : undefined
     });
   }
