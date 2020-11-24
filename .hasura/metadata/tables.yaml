@@ -1,0 +1,53 @@
+- table:
+    schema: public
+    name: latest_resume
+  select_permissions:
+  - role: world
+    permission:
+      columns:
+      - uuid
+      - metadata
+      - content
+      - path
+      - version
+      - last_modified
+      - version_date
+      filter: {}
+- table:
+    schema: public
+    name: resume
+  insert_permissions:
+  - role: world
+    permission:
+      check: {}
+      columns:
+      - version
+      - content
+      - metadata
+      - path
+      - last_modified
+      - uuid
+  select_permissions:
+  - role: world
+    permission:
+      columns:
+      - content
+      - last_modified
+      - metadata
+      - path
+      - uuid
+      - version
+      - version_date
+      filter: {}
+  update_permissions:
+  - role: world
+    permission:
+      columns:
+      - version
+      - content
+      - metadata
+      - path
+      - last_modified
+      - uuid
+      filter: {}
+      check: null
