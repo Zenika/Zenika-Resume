@@ -185,7 +185,7 @@ workflows:
 
       - deploy-hasura:
           name: deploy-hasura-production
-          hasura-clever-app-id: app_fc7b0e28-2b2d-49b8-a848-a3f144c4dfa0
+          hasura-clever-app-id: app_a8b7bb4b-ac7b-4c38-b7b8-29bfb71c9fd1
           requires:
             - ui-build
             - server-install-dependencies
