@@ -87,7 +87,7 @@ jobs:
 
   run-migrations:
       docker:
-        - image: hasura/graphql-engine:v1.3.3.cli-migrations-v2
+        - image: hasura/graphql-engine:v1.3.2.cli-migrations-v2
       parameters:
         hasura-admin-secret:
           type: string
