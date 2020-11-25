@@ -87,6 +87,7 @@ jobs:
 
   run-migrations:
       docker:
+        # using 1.3.2 instead of 1.3.3 because of https://github.com/hasura/graphql-engine/issues/6234
         - image: hasura/graphql-engine:v1.3.2.cli-migrations-v2
       parameters:
         hasura-admin-secret:
