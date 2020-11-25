@@ -173,7 +173,7 @@ workflows:
           hasura-admin-secret: $HASURA_ADMIN_SECRET_STAGING
           hasura-endpoint: $HASURA_ENDPOINT_STAGING
           requires:
-            - deploy-hasura
+            - deploy-hasura-staging
           filters: *deploy-staging-filters
       - deploy:
           name: deploy-staging
