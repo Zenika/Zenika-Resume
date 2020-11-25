@@ -165,6 +165,7 @@ workflows:
           requires:
             - ui-build
             - server-install-dependencies
+          context: clever-cloud2-zenika-dev
           filters: &deploy-staging-filters
             branches:
               only: upgrade_hasura
@@ -189,6 +190,7 @@ workflows:
           requires:
             - ui-build
             - server-install-dependencies
+          context: clever-cloud2-zenika-dev
           filters: &deploy-production-filters
             branches:
               ignore: /.*/
