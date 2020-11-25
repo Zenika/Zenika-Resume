@@ -167,7 +167,7 @@ workflows:
             - server-install-dependencies
           filters: &deploy-staging-filters
             branches:
-              only: master
+              only: upgrade_hasura
       - run-migrations:
           name: run-migrations-staging
           hasura-admin-secret: $HASURA_ADMIN_SECRET_STAGING
