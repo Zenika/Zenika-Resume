@@ -1,0 +1,2 @@
+
+CREATE TABLE "resume"("uuid" uuid NOT NULL, "metadata" text NOT NULL, "content" text NOT NULL, "path" text NOT NULL, "version" integer NOT NULL, "last_modified" timestamptz NOT NULL, PRIMARY KEY ("uuid") );
