@@ -115,7 +115,7 @@ class Header extends Component {
                     <Typography variant="subheading" color="inherit" className={this.classes.grow}>Home</Typography>
                   </Link> -
                    <Link to={`list`}>
-                    <Typography variant="subheading" color="inherit" className={this.classes.grow}>List</Typography>
+                    <Typography variant="subheading" color="inherit" className={this.classes.grow}>Search</Typography>
                   </Link> -
                   <Link to={`help`}>
                     <Typography variant="subheading" color="inherit" className={this.classes.grow}>Help</Typography>

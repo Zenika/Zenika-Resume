@@ -15,7 +15,8 @@ import Paper from '@material-ui/core/Paper';
 import Avatar from '@material-ui/core/Avatar';
 import SearchIcon from '@material-ui/icons/Search';
 import Input from '@material-ui/core/Input';
-import { authorizedFetch } from '../auth';
+import { abortableAuthorizedFetch } from '../auth';
+import debounce from "lodash.debounce";
 
 const theme = createMuiTheme();
 
@@ -49,9 +50,6 @@ const styles = theme => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
     background: '#c30030',
-    marginBottom: '20px',
-    // borderBottomLeftRadius: 0,
-    // borderBottomRightRadius: 0,
     color: 'white',
     backgroundColor: '#c30030',
     marginLeft: 0,
@@ -65,6 +63,9 @@ const styles = theme => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  searchTip: {
+    marginBottom: '20px'
   },
   inputRoot: {
     color: 'white',
@@ -86,42 +87,35 @@ const styles = theme => ({
   }
 });
 
+const lastModifiedFormatter = new Intl.DateTimeFormat()
+
 class ListAll extends Component {
 
   constructor(props) {
     super(props);
     const { classes } = props;
     this.classes = classes;
-    this.state = { resumes: [], filteredResumes: [] };
+    this.state = { resumes: [], abortFetch: () => {} };
 
-    this.filterList = this.filterList.bind(this);
+    this.searchResumesWithDebounce = debounce(this.searchResumes.bind(this), 200);
   }
 
-  componentDidMount() {
-    authorizedFetch(`/resumes`)
-      .then(res => res.json())
-      .then(data => {
-        this.setState({ resumes: data, filteredResumes: data });
+  searchResumes(search) {
+    const url = new URL("/resumes", "http://example.com");
+    url.searchParams.set("search", search);
+    this.state.abortFetch();
+    const { promise, abort } = abortableAuthorizedFetch(url.pathname + url.search);
+    this.setState({ abortFetch: abort })
+    promise
+      .then((res) => res.json())
+      .then((data) => {
+        this.setState({ resumes: data });
       });
-  }
-
-  filterList(event) {
-    if (event.target.value.length < 3) {
-      this.setState({ filteredResumes: this.state.resumes });
-    } else {
-      this.setState({
-        filteredResumes: this.state.resumes.filter(resume => {
-          return JSON.stringify(resume).toLocaleLowerCase().includes(event.target.value.toLocaleLowerCase());
-        })
-      });
-    }
   }
 
   render() {
     return (
         <div className={classNames(this.classes.layout, this.classes.cardGrid)}>
-          <h4>Resumes ({this.state.resumes.length})</h4>
-          <br/><br/>
           <div className={this.classes.search}>
             <div className={this.classes.searchIcon}>
               <SearchIcon />
@@ -133,8 +127,11 @@ class ListAll extends Component {
                 root: this.classes.inputRoot,
                 input: this.classes.inputInput,
               }}
-              onChange={this.filterList}
+              onChange={event => this.searchResumesWithDebounce(event.target.value)}
             />
+          </div>
+          <div className={this.classes.searchTip}>
+            <small>Tip: use quotes to match exact phrases, the OR keyword to match at least one term, and the minus sign to exclude terms</small>
           </div>
 
           <Paper className={this.classes.root}>
@@ -151,7 +148,7 @@ class ListAll extends Component {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {this.state.filteredResumes.map(resume => {
+                {this.state.resumes.map(resume => {
                   return (
                     <TableRow key={resume.uuid}>
                       <TableCell component="th" scope="resume">
@@ -162,12 +159,12 @@ class ListAll extends Component {
                       </TableCell>
                       <TableCell>
                         <Link className={this.classes.link}  to={`app/${resume.uuid}`}>
-                          {resume.uuid}
+                          Edit
                         </Link>
                       </TableCell>
                       <TableCell>
                         <Link className={this.classes.link}  to={`app/${resume.uuid}/view`}>
-                          {resume.uuid}
+                          View
                         </Link>
                       </TableCell>
                       <TableCell>
@@ -177,7 +174,7 @@ class ListAll extends Component {
                         {resume.metadata.lang}
                       </TableCell>
                       <TableCell>
-                        {resume.last_modified}
+                        {lastModifiedFormatter.format(new Date(resume.last_modified))}
                       </TableCell>
                     </TableRow>
                   );

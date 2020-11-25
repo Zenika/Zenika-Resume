@@ -268,29 +268,57 @@ api.get("/resumes/mine", jwtCheck, async (req, res) => {
 
 // API
 api.get("/resumes", jwtCheck, (req, res) => {
-  executeQueryWithCallback(
-    `
-    {
-      resume: latest_resume(order_by: {last_modified: desc}) {
-        uuid
-        metadata
-        path
-        version
-        last_modified
+  const { search } = req.query;
+  if (search && search.length > 0) {
+    executeQueryWithCallback(
+      `query ($search: String) {
+        resume: search_resume(args: {search: $search} limit: 50) {
+          uuid
+          metadata
+          path
+          version
+          last_modified
+        }
+      }`,
+      { search },
+      req,
+      res,
+      function (data) {
+        res.status(200).json(
+          data.rows.map(row => {
+            row.metadata = JSON.parse(row.metadata);
+            return row;
+          })
+        );
       }
-    }`,
-    undefined,
-    req,
-    res,
-    function(data) {
-      res.status(200).json(
-        data.rows.map(row => {
-          row.metadata = JSON.parse(row.metadata);
-          return row;
-        })
-      );
-    }
-  );
+    );
+  } else if (search === "") {
+    res.status(200).json([]);
+  } else {
+    executeQueryWithCallback(
+      `
+      {
+        resume: latest_resume(order_by: {last_modified: desc}) {
+          uuid
+          metadata
+          path
+          version
+          last_modified
+        }
+      }`,
+      undefined,
+      req,
+      res,
+      function (data) {
+        res.status(200).json(
+          data.rows.map(row => {
+            row.metadata = JSON.parse(row.metadata);
+            return row;
+          })
+        );
+      }
+    );
+  }
 });
 
 api.get("/resumes/complete", authApi, (req, res) => {

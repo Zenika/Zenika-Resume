@@ -91,4 +91,12 @@ export const authorizedFetch = (url, init) => {
   });
 };
 
+export const abortableAuthorizedFetch = (url, init) => {
+  const abortController = new AbortController();
+  init = init || {};
+  init.signal = abortController.signal;
+  const promise = authorizedFetch(url, init)
+  return { promise, abort: () => abortController.abort() };
+}
+
 export default auth;
