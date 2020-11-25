@@ -169,7 +169,7 @@ workflows:
           context: clever-cloud2-zenika-dev
           filters: &deploy-staging-filters
             branches:
-              only: upgrade_hasura
+              only: master
       - run-migrations:
           name: run-migrations-staging
           hasura-admin-secret: $HASURA_ADMIN_SECRET_STAGING
