@@ -57,7 +57,7 @@ jobs:
 
   run-migrations:
       docker:
-        - image: hasura/graphql-engine:v1.0.0.cli-migrations
+        - image: hasura/graphql-engine:v1.3.3.cli-migrations
       parameters:
         hasura-admin-secret:
           type: string
@@ -72,6 +72,7 @@ jobs:
             command: |
               cd .hasura
               hasura-cli migrate apply --admin-secret << parameters.hasura-admin-secret >> --endpoint << parameters.hasura-endpoint >>
+              hasura-cli meatadata apply --admin-secret << parameters.hasura-admin-secret >> --endpoint << parameters.hasura-endpoint >>
 
   deploy:
     docker:
