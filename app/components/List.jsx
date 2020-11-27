@@ -96,8 +96,14 @@ class ListAll extends Component {
     const { classes } = props;
     this.classes = classes;
     this.state = { resumes: [], abortFetch: () => {} };
-
+  }
+  
+  componentDidMount() {
     this.searchResumesWithDebounce = debounce(this.searchResumes.bind(this), 200);
+  }
+
+  componentWillUnmount() {
+    this.searchResumesWithDebounce.cancel();
   }
 
   searchResumes(search) {
